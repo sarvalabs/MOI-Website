@@ -1,3 +1,5 @@
+import { useState, useEffect, useRef } from "react";
+
 // Litepaper URL — set to your PDF or doc link
 const LITEPAPER_URL = "/MOILitePaper.pdf";
 
@@ -25,9 +27,95 @@ const GLYPH_SVG = [
 const GLYPH_MASK =
   "radial-gradient(ellipse 72% 60% at 50% 47%, transparent 0%, transparent 36%, rgba(0,0,0,0.3) 52%, rgba(0,0,0,0.7) 74%, black 100%)";
 
+const LOADING_LINES = ["MOI:", "The Participant", "Layer"];
+const CHAR_MS = 95;
+const LINE_PAUSE_MS = 320;
+const END_PAUSE_MS = 700;
+const FADE_MS = 550;
+
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [lineIndex, setLineIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [showContent, setShowContent] = useState(false);
+  const timersRef = useRef([]);
+
+  useEffect(() => {
+    if (!isLoading) return;
+    const clear = () => timersRef.current.forEach((t) => clearTimeout(t));
+
+    const currentLine = LOADING_LINES[lineIndex];
+    const isLineComplete = charIndex >= currentLine.length;
+    const isLastLine = lineIndex === LOADING_LINES.length - 1;
+
+    if (isLineComplete) {
+      if (isLastLine) {
+        const t = setTimeout(() => {
+          setIsLoading(false);
+          // Don't push this into timersRef — cleanup would cancel it and content would stay blank
+          setTimeout(() => setShowContent(true), 50);
+        }, END_PAUSE_MS);
+        timersRef.current.push(t);
+      } else {
+        const t = setTimeout(() => {
+          setLineIndex((i) => i + 1);
+          setCharIndex(0);
+        }, LINE_PAUSE_MS);
+        timersRef.current.push(t);
+      }
+      return clear;
+    }
+
+    const t = setTimeout(() => setCharIndex((c) => c + 1), CHAR_MS);
+    timersRef.current.push(t);
+    return clear;
+  }, [isLoading, lineIndex, charIndex]);
+
+  const skipAnimation = () => {
+    setIsLoading(false);
+    setTimeout(() => setShowContent(true), 50);
+  };
+
+  if (isLoading) {
+    const currentLine = LOADING_LINES[lineIndex];
+    const visible = currentLine.slice(0, charIndex);
+    return (
+      <div
+        className="fixed inset-0 z-[100] flex cursor-pointer items-center justify-center bg-[#f5f3ef]"
+        aria-hidden="false"
+        aria-busy="true"
+        onClick={skipAnimation}
+        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && skipAnimation()}
+        role="button"
+        tabIndex={0}
+        title="Click to skip"
+      >
+        <div className="text-center">
+          {LOADING_LINES.slice(0, lineIndex).map((line, i) => (
+            <div
+              key={i}
+              className="font-serif text-[clamp(3.5rem,10vw,9rem)] leading-[0.9] tracking-[-0.03em] text-[#1c1c1c]"
+            >
+              {line}
+            </div>
+          ))}
+          <div className="font-serif text-[clamp(3.5rem,10vw,9rem)] leading-[0.9] tracking-[-0.03em] text-[#1c1c1c]">
+            {visible}
+            <span
+              className="cursor-caret inline-block w-[0.08em] h-[0.85em] ml-[0.02em] align-middle bg-[#1c1c1c]"
+              aria-hidden
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative flex flex-col min-h-screen bg-[#f5f3ef] text-[#1c1c1c] overflow-hidden selection:bg-[#1c1c1c]/10">
+    <div
+      className="relative flex flex-col min-h-screen bg-[#f5f3ef] text-[#1c1c1c] overflow-hidden selection:bg-[#1c1c1c]/10 transition-opacity duration-[550ms] ease-out"
+      style={{ opacity: showContent ? 1 : 0 }}
+    >
 
       {/* Navigation */}
       <nav className="relative z-10 flex items-center justify-between px-10 lg:px-16 h-[72px]">
