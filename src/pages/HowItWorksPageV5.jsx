@@ -705,26 +705,302 @@ function ContextSuperstate() {
           </div>
         </div>
 
-        <div className="ss-formula gs">
-          <span className="ss-formula-text">ψ(P, C, I) → (P, C', V)</span>
+        <div className="ss-formula">
+          <span className="ss-formula-text gs">ψ(P, C, I) → (P, C', V)</span>
+          <p className="ss-formula-tagline gs">
+            The participant persists. The context transforms. Value is produced.
+          </p>
         </div>
-        <p
-          className="gs"
-          style={{
-            fontFamily: "var(--mono)",
-            fontSize: "13px",
-            color: "rgba(26,26,26,0.35)",
-            marginTop: "1rem",
-          }}
-        >
-          The participant persists. The context transforms. Value is produced.
-        </p>
       </div>
     </section>
   );
 }
 
+const ARCH_P = [
+  { name: "Alice", color: "#7B5EA7", speed: 0.6 },
+  { name: "Bob", color: "#3A8F6E", speed: 0.8 },
+  { name: "Charlie", color: "#C47A2D", speed: 0.5 },
+  { name: "Diana", color: "#2D7EC4", speed: 0.7 },
+  { name: "Eve", color: "#C44D5A", speed: 0.55 },
+];
+const ARCH_BRIDGES = [
+  { from: 0, to: 1, x: 0.35, label: "swap" },
+  { from: 2, to: 3, x: 0.65, label: "lend" },
+];
+
 function ArchitectureSection() {
+  const funnelRef = useRef(null);
+  const lanesRef = useRef(null);
+
+  useEffect(() => {
+    const cleanups = [];
+
+    function initCanvas(canvas, drawFn) {
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      let animId = null;
+
+      function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.clientWidth * dpr;
+        canvas.height = canvas.clientHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      function loop(time) {
+        drawFn(ctx, canvas.clientWidth, canvas.clientHeight, time);
+        animId = requestAnimationFrame(loop);
+      }
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              if (!animId) animId = requestAnimationFrame(loop);
+            } else {
+              if (animId) { cancelAnimationFrame(animId); animId = null; }
+            }
+          });
+        },
+        { rootMargin: "100px" }
+      );
+      io.observe(canvas);
+
+      cleanups.push(() => {
+        window.removeEventListener("resize", resize);
+        if (animId) cancelAnimationFrame(animId);
+        io.disconnect();
+      });
+    }
+
+    /* ── Funnel draw ── */
+    const txs = [];
+    let lastSpawn = 0;
+    let blockNum = 1045;
+    let blockTxCount = 0;
+
+    function drawFunnel(ctx, W, H, time) {
+      ctx.clearRect(0, 0, W, H);
+
+      const pLeft = W * 0.05;
+      const neckX = W * 0.6;
+      const neckY = H * 0.5;
+      const blockX = W * 0.72;
+      const blockW = W * 0.12;
+      const blockH = H * 0.4;
+      const pSpacing = H * 0.15;
+      const pTop = H * 0.5 - (4 * pSpacing) / 2;
+
+      ARCH_P.forEach((p, i) => {
+        const py = pTop + i * pSpacing;
+        ctx.beginPath();
+        ctx.arc(pLeft + 30, py, 6, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = 0.7;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.font = '300 9px "DM Mono", monospace';
+        ctx.fillStyle = "rgba(26,26,26,0.3)";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillText(p.name, pLeft + 20, py);
+        ctx.beginPath();
+        ctx.moveTo(pLeft + 38, py);
+        ctx.quadraticCurveTo(W * 0.35, py, neckX, neckY + (i - 2) * 3);
+        ctx.strokeStyle = "rgba(196,77,90,0.08)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+
+      if (time - lastSpawn > 100 + Math.random() * 80) {
+        lastSpawn = time;
+        txs.push({
+          progress: 0,
+          pIdx: Math.floor(Math.random() * 5),
+          wobble: Math.random() * Math.PI * 2,
+          lane: (Math.random() - 0.5) * 0.7,
+        });
+        if (txs.length > 50) txs.shift();
+      }
+
+      ctx.beginPath();
+      ctx.roundRect(blockX, neckY - blockH / 2, blockW, blockH, 6);
+      ctx.fillStyle = "rgba(26,26,26,0.02)";
+      ctx.strokeStyle = "rgba(26,26,26,0.06)";
+      ctx.lineWidth = 1;
+      ctx.fill();
+      ctx.stroke();
+      ctx.font = '400 8px "DM Mono", monospace';
+      ctx.fillStyle = "rgba(26,26,26,0.25)";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.fillText("Block #" + blockNum, blockX + blockW / 2, neckY - blockH / 2 + 6);
+
+      for (let g = 1; g <= 3; g++) {
+        const gx = blockX + (blockW + 6) * g;
+        ctx.beginPath();
+        ctx.roundRect(gx, neckY - blockH / 2 + g * 4, blockW * 0.8, blockH - g * 8, 4);
+        ctx.fillStyle = `rgba(26,26,26,${0.015 / g})`;
+        ctx.strokeStyle = `rgba(26,26,26,${0.03 / g})`;
+        ctx.lineWidth = 0.5;
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      let bottleneckCount = 0;
+      txs.forEach((tx) => {
+        tx.progress += 0.003 + Math.random() * 0.001;
+        const pr = Math.min(1, tx.progress);
+        const srcY = pTop + tx.pIdx * pSpacing;
+        let x, y, alpha = 1;
+        if (pr < 0.4) {
+          const t = pr / 0.4;
+          x = (pLeft + 38) + (neckX - pLeft - 38) * t * t;
+          y = srcY + (neckY - srcY) * t * t;
+        } else if (pr < 0.7) {
+          const t = (pr - 0.4) / 0.3;
+          x = neckX + (blockX - neckX) * t;
+          y = neckY + tx.lane * 18 + Math.sin(time * 0.004 + tx.wobble) * 3;
+          bottleneckCount++;
+        } else {
+          const t = (pr - 0.7) / 0.3;
+          const slotX = blockX + 8 + (tx.pIdx % 3) * 12;
+          const slotY = neckY - blockH / 2 + 22 + Math.floor(tx.pIdx / 3) * 12;
+          x = blockX + (slotX - blockX) * t;
+          y = neckY + (slotY - neckY) * t;
+          alpha = 1 - t * 0.3;
+        }
+        if (pr >= 1) return;
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = ARCH_P[tx.pIdx].color;
+        ctx.globalAlpha = alpha * 0.6;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+
+      for (let i = txs.length - 1; i >= 0; i--) {
+        if (txs[i].progress >= 1) {
+          txs.splice(i, 1);
+          blockTxCount++;
+          if (blockTxCount >= 8) { blockTxCount = 0; blockNum++; }
+        }
+      }
+
+      if (bottleneckCount > 3) {
+        ctx.font = '400 9px "DM Mono", monospace';
+        ctx.fillStyle = "rgba(196,77,90,0.45)";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillText(bottleneckCount + " txns waiting...", neckX - 10, neckY + 36);
+        ctx.font = '500 7px "DM Mono", monospace';
+        ctx.fillStyle = "rgba(196,77,90,0.3)";
+        ctx.fillText("⚠ HIGH CONTENTION", neckX - 10, neckY + 48);
+      }
+
+      ctx.font = '300 8px "DM Mono", monospace';
+      ctx.fillStyle = "rgba(26,26,26,0.15)";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "alphabetic";
+      ctx.fillText("one block at a time →", blockX + blockW / 2, neckY + blockH / 2 + 16);
+    }
+
+    /* ── Lanes draw ── */
+    function drawLanes(ctx, W, H, time) {
+      ctx.clearRect(0, 0, W, H);
+      const lL = W * 0.18;
+      const lR = W * 0.82;
+      const lW = lR - lL;
+      const sp = H / (ARCH_P.length + 1);
+
+      ARCH_P.forEach((p, i) => {
+        const ly = sp * (i + 1);
+        ctx.beginPath();
+        ctx.moveTo(lL, ly);
+        ctx.lineTo(lR, ly);
+        ctx.strokeStyle = p.color;
+        ctx.globalAlpha = 0.12;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+
+        ctx.beginPath();
+        ctx.arc(lL - 8, ly, 8, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = 0.7;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        ctx.font = '400 9px "DM Mono", monospace';
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = 0.5;
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillText(p.name, lL - 22, ly);
+        ctx.globalAlpha = 1;
+
+        for (let d = 0; d < 6; d++) {
+          const phase = ((time * 0.0001 * p.speed + d * 0.17 + i * 0.23) % 1);
+          const dx = lL + phase * lW;
+          const dy = ly + Math.sin(phase * Math.PI * 3 + i + d) * 2;
+          ctx.beginPath();
+          ctx.arc(dx, dy, 3, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = 0.15 + Math.sin(phase * Math.PI) * 0.25;
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+
+        const bn = Math.floor(time * (0.0004 + i * 0.00015)) % 9000 + 1000;
+        const chipX = lR + 10;
+        ctx.beginPath();
+        ctx.roundRect(chipX, ly - 12, 44, 24, 4);
+        ctx.fillStyle = "rgba(26,26,26,0.015)";
+        ctx.strokeStyle = "rgba(26,26,26,0.05)";
+        ctx.lineWidth = 0.5;
+        ctx.fill();
+        ctx.stroke();
+        ctx.font = '400 8px "DM Mono", monospace';
+        ctx.fillStyle = "rgba(26,26,26,0.25)";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("#" + bn, chipX + 22, ly);
+      });
+
+      ARCH_BRIDGES.forEach((br) => {
+        const y1 = sp * (br.from + 1);
+        const y2 = sp * (br.to + 1);
+        const bx = lL + br.x * lW;
+        ctx.beginPath();
+        ctx.setLineDash([3, 3]);
+        ctx.moveTo(bx, y1);
+        ctx.lineTo(bx, y2);
+        ctx.strokeStyle = "rgba(123,94,167,0.2)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.setLineDash([]);
+        const tPhase = ((time * 0.0008 + br.x * 3) % 2) / 2;
+        const ty = y1 + (y2 - y1) * tPhase;
+        ctx.beginPath();
+        ctx.arc(bx, ty, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(123,94,167,0.5)";
+        ctx.fill();
+        ctx.font = '300 7px "DM Mono", monospace';
+        ctx.fillStyle = "rgba(123,94,167,0.3)";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillText(br.label, bx, Math.min(y1, y2) - 6);
+      });
+    }
+
+    initCanvas(funnelRef.current, drawFunnel);
+    initCanvas(lanesRef.current, drawLanes);
+
+    return () => cleanups.forEach((fn) => fn());
+  }, []);
+
   return (
     <section className="s10 s-arch" id="archSection">
       <div className="sec-inner">
@@ -743,107 +1019,19 @@ function ArchitectureSection() {
         <div className="arch-split gs">
           <div className="arch-side arch-today">
             <div className="arch-side-header">Today — shared chain</div>
-
-            <div className="arch-funnel">
-              <div className="funnel-participants">
-                <div className="funnel-dot" style={{ background: "#7B5EA7" }} />
-                <div className="funnel-dot" style={{ background: "#3A8F6E" }} />
-                <div className="funnel-dot" style={{ background: "#C47A2D" }} />
-                <div className="funnel-dot" style={{ background: "#2D7EC4" }} />
-                <div className="funnel-dot" style={{ background: "#C44D5A" }} />
-              </div>
-              <div className="funnel-neck">
-                <div className="funnel-arrow">→</div>
-              </div>
-              <div className="funnel-block">
-                <span>Block #N</span>
-              </div>
+            <div className="arch-canvas-wrap">
+              <canvas ref={funnelRef} />
             </div>
-
-            <div className="arch-side-details">
-              <div className="arch-detail-row">
-                <span className="arch-detail-label">Processing</span>
-                <span className="arch-detail-val arch-detail-bad">Sequential</span>
-              </div>
-              <div className="arch-detail-row">
-                <span className="arch-detail-label">Finality</span>
-                <span className="arch-detail-val arch-detail-bad">
-                  Waits for global consensus
-                </span>
-              </div>
-              <div className="arch-detail-row">
-                <span className="arch-detail-label">Bottleneck</span>
-                <span className="arch-detail-val arch-detail-bad">
-                  Everyone shares one queue
-                </span>
-              </div>
-            </div>
-
-            <p className="arch-side-caption">One block at a time. Everyone waits.</p>
+            <p className="arch-side-caption">One block at a time →</p>
           </div>
 
           <div className="arch-divider" />
 
           <div className="arch-side arch-moi">
-            <div className="arch-side-header">With MOI — parallel lanes</div>
-
-            <div className="arch-lanes">
-              <div className="arch-lane">
-                <div className="lane-dot" style={{ background: "#7B5EA7" }} />
-                <div className="lane-bar">
-                  <div className="lane-bar-fill" style={{ width: "75%", background: "#7B5EA7" }} />
-                </div>
-                <span className="lane-label">Alice</span>
-              </div>
-              <div className="arch-lane">
-                <div className="lane-dot" style={{ background: "#3A8F6E" }} />
-                <div className="lane-bar">
-                  <div className="lane-bar-fill" style={{ width: "60%", background: "#3A8F6E" }} />
-                </div>
-                <span className="lane-label">Bob</span>
-              </div>
-              <div className="arch-lane">
-                <div className="lane-dot" style={{ background: "#C47A2D" }} />
-                <div className="lane-bar">
-                  <div className="lane-bar-fill" style={{ width: "85%", background: "#C47A2D" }} />
-                </div>
-                <span className="lane-label">Charlie</span>
-              </div>
-              <div className="arch-lane">
-                <div className="lane-dot" style={{ background: "#2D7EC4" }} />
-                <div className="lane-bar">
-                  <div className="lane-bar-fill" style={{ width: "45%", background: "#2D7EC4" }} />
-                </div>
-                <span className="lane-label">Diana</span>
-              </div>
-              <div className="arch-lane">
-                <div className="lane-dot" style={{ background: "#C44D5A" }} />
-                <div className="lane-bar">
-                  <div className="lane-bar-fill" style={{ width: "70%", background: "#C44D5A" }} />
-                </div>
-                <span className="lane-label">Eve</span>
-              </div>
+            <div className="arch-side-header">With MOI — MDAG architecture</div>
+            <div className="arch-canvas-wrap">
+              <canvas ref={lanesRef} />
             </div>
-
-            <div className="arch-side-details">
-              <div className="arch-detail-row">
-                <span className="arch-detail-label">Processing</span>
-                <span className="arch-detail-val arch-detail-good">Parallel</span>
-              </div>
-              <div className="arch-detail-row">
-                <span className="arch-detail-label">Finality</span>
-                <span className="arch-detail-val arch-detail-good">
-                  Immediate per interaction
-                </span>
-              </div>
-              <div className="arch-detail-row">
-                <span className="arch-detail-label">Bottleneck</span>
-                <span className="arch-detail-val arch-detail-good">
-                  None — independent execution
-                </span>
-              </div>
-            </div>
-
             <p className="arch-side-caption">
               Every participant runs independently.
             </p>
