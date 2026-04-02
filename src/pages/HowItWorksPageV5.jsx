@@ -2,11 +2,12 @@ import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "../components/Navbar.jsx";
+import LandingFooter from "../components/LandingFooter.jsx";
 import "../styles/how-it-works.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const LITEPAPER_URL = "/MOILitePaper.pdf";
+const LITEPAPER_URL = "https://moi.technology/litepaper";
 
 /* ────────────────────────────────────────────────
    Section sub-components (no special JS)
@@ -207,6 +208,12 @@ function TrustChain() {
           By the 4th agent, Alice's identity is gone. The bank has no idea who
           authorized this transaction.
         </p>
+
+        <div className="stat-center gs">
+          <div className="stat-center-num">73%</div>
+          <p className="stat-center-desc">of autonomous agent deployments experienced unintended authority escalation in 2025</p>
+          <p className="stat-center-source">— Agent of Chaos, 2025</p>
+        </div>
       </div>
     </section>
   );
@@ -380,6 +387,12 @@ function Custody() {
           <div className="custody-stat"><div className="val">0 contracts</div><div className="lbl">you control</div></div>
           <div className="custody-stat"><div className="val" style={{ color: "var(--eve)" }}>1 paused</div><div className="lbl">funds inaccessible</div></div>
         </div>
+
+        <div className="stat-center gs">
+          <div className="stat-center-num">$2.8B</div>
+          <p className="stat-center-desc">lost in bridge exploits alone — Ronin ($625M), Wormhole ($320M), Nomad ($190M)</p>
+          <p className="stat-center-source">— DeFi exploit data, 2022–2025</p>
+        </div>
       </div>
     </section>
   );
@@ -390,6 +403,13 @@ function PivotSection() {
     <section className="s4-pivot">
       <div className="sec-inner" style={{ textAlign: "center" }}>
         <div className="pill gs">Act 2 — The Pivot</div>
+
+        <div className="who-missing gs">
+          <p className="who-dim">WHAT — logic, programs</p>
+          <p className="who-dim">WHERE — storage, persistence</p>
+          <p className="who-dim">HOW — execution, consensus</p>
+          <p className="who-dim who-absent">WHO — <span>absent</span></p>
+        </div>
 
         <h2 className="pivot-headline gs">
           <span className="pivot-l1">Three problems.</span>
@@ -405,10 +425,9 @@ function PivotSection() {
           </p>
         </div>
 
-        <div className="moi-reveal gs">
-          <p className="moi-q">Who remembers?</p>
-          <div className="moi-word">MOI</div>
-          <p className="moi-tag">The one who remembers.</p>
+        <div className="existence-line gs">
+          <p>Not just identity. Not just memory.</p>
+          <p className="existence-em">Existence.</p>
         </div>
       </div>
     </section>
@@ -461,6 +480,10 @@ function ScopedDelegation() {
             <span className="spoke-scope">confirm_payment</span>
             <span className="spoke-check" id="ck3">✓ Verified</span>
           </div>
+        </div>
+
+        <div className="callout-quote gs">
+          <p className="callout-text">Agents and apps log into <em>you</em>.<br />Not the other way around.</p>
         </div>
       </div>
     </section>
@@ -1047,13 +1070,36 @@ function CallToAction() {
     <section className="s11">
       <div className="sec-inner">
         <div className="pill gs">Act 5</div>
-        <h2 className="cta-hl gs">Ready to explore?</h2>
+        <blockquote className="closing-quote gs">
+          <p>You are no longer a row in a database,<br />a wallet in a contract,<br />or a profile in an app.</p>
+          <p className="closing-em">You have independent existence.</p>
+          <p className="closing-tag">This is what the digitally interacting world requires.</p>
+        </blockquote>
+        <h2 className="cta-hl gs">
+          The participant layer
+          <br />
+          is live.
+        </h2>
         <p className="cta-sub gs">
-          Discover how MOI gives every participant a persistent, portable identity layer.
+          Read the full thesis. Or start building today.
         </p>
         <div className="cta-btns gs">
-          <a href={LITEPAPER_URL} className="btn-primary">Read the Litepaper →</a>
-          <a href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer" className="btn-secondary">Start Building →</a>
+          <a
+            href={LITEPAPER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary"
+          >
+            Read the Litepaper →
+          </a>
+          <a
+            href="https://docs.moi.technology"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary"
+          >
+            Start Building →
+          </a>
         </div>
       </div>
     </section>
@@ -1145,17 +1191,28 @@ export default function HowItWorksPageV5() {
       <Navbar activePage="how-it-works" />
       <div ref={pageRef} className="how-it-works-page">
         <TrustChain />
+        <div className="section-divider" />
         <ColdStart />
+        <div className="section-divider" />
         <Custody />
+        <div className="section-divider" />
         <PivotSection />
+        <div className="section-divider" />
         <ScopedDelegation />
+        <div className="section-divider" />
         <Preferences />
+        <div className="section-divider" />
         <Assets />
+        <div className="section-divider" />
         <Permissions />
+        <div className="section-divider" />
         <ContextSuperstate />
+        <div className="section-divider" />
         <ArchitectureSection />
+        <div className="section-divider" />
         <CallToAction />
       </div>
+      <LandingFooter />
     </>
   );
 }
