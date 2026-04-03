@@ -214,7 +214,7 @@ function TrustChain() {
           <p className="stat-center-source">— Agent of Chaos, 2025</p>
         </div>
 
-        <p className="impact-line gs">By the 4th hop, you don&apos;t exist.</p>
+        <p className="impact-line gs">By the 4th hop, you don&apos;t <em>exist</em>.</p>
       </div>
     </section>
   );
@@ -298,7 +298,7 @@ function ColdStart() {
 
         <p className="caption gs">The same questions. The same blank slate. Every single time.</p>
 
-        <p className="impact-line gs">No memory. No continuity. No you.</p>
+        <p className="impact-line gs">No memory. No continuity. No <em>you</em>.</p>
       </div>
     </section>
   );
@@ -397,7 +397,7 @@ function Custody() {
           <p className="stat-center-source">— DeFi exploit data, 2022–2025</p>
         </div>
 
-        <p className="impact-line gs">You own nothing. The contract owns everything.</p>
+        <p className="impact-line gs">You own <em>nothing</em>. The contract owns everything.</p>
       </div>
     </section>
   );
@@ -446,7 +446,7 @@ function RootCauseSection() {
         </div>
 
         <p className="impact-line gs s-root-cause-thesis">
-          The participant does not exist in the machine.
+          The <em>participant</em> does not exist in the machine.
         </p>
       </div>
     </section>
@@ -515,7 +515,7 @@ function Act2RevealSection() {
         </p>
 
         <p className="impact-line gs">
-          Not just identity. Not just memory. Existence.
+          Not just identity. Not just memory. <em>Existence.</em>
         </p>
       </div>
     </section>
@@ -623,7 +623,7 @@ function Preferences() {
         </div>
 
         <p className="impact-line gs">
-          Your context follows you. Not the other way around.
+          Your <em>context</em> follows you. Not the other way around.
         </p>
       </div>
     </section>
@@ -824,7 +824,9 @@ function ContextSuperstate() {
           <span className="ss-formula-text gs">ψ(P, C, I) → (P, C', V)</span>
         </div>
 
-        <p className="impact-line gs">The participant persists. The context transforms. Value is produced.</p>
+        <p className="impact-line gs">
+          The participant <em>persists</em>. The context transforms. Value is produced.
+        </p>
       </div>
     </section>
   );
@@ -1152,7 +1154,9 @@ function ArchitectureSection() {
           </div>
         </div>
 
-        <p className="impact-line gs">No global queue. No shared bottleneck. Just participants.</p>
+        <p className="impact-line gs">
+          No global queue. No shared bottleneck. Just <em>participants</em>.
+        </p>
       </div>
     </section>
   );
