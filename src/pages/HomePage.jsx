@@ -549,7 +549,7 @@ export default function HomePage() {
         <section className="home-hero" ref={heroSectionRef}>
           <ParticipantCanvas parentRef={heroSectionRef} />
           <div ref={heroRef} className="home-hero-inner fade-slide-up">
-            <p className="home-hero-tag">Powered by the Participant Layer</p>
+            <p className="home-hero-tag">Powered by Contextual Compute</p>
             <h1 className="home-hero-hl">
               The Context Infrastructure
               <br />
@@ -559,6 +559,7 @@ export default function HomePage() {
               MOI gives every participant — human or agent — persistent, portable
               existence in computation.
             </p>
+            <p className="home-hero-layer">The Participant Layer</p>
             <div className="home-hero-ctas">
               <a href={WHITEPAPER_URL} className="btn-primary">
                 Read the whitepaper →
