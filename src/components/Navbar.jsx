@@ -56,7 +56,7 @@ export default function Navbar({ activePage = "home" }) {
             Litepaper
           </a>
           <a
-            href="https://docs.moi.technology"
+            href="https://voyage.moi.technology"
             target="_blank"
             rel="noopener noreferrer"
             className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#F5F3EE] bg-[#1A1A1A] hover:bg-[#7B5EA7] rounded-full px-5 py-2 transition-all duration-300"
@@ -104,7 +104,7 @@ export default function Navbar({ activePage = "home" }) {
           <hr className="border-[#1A1A1A]/8" />
           <a href={LITEPAPER_URL} className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/60">Litepaper</a>
           <a
-            href="https://docs.moi.technology"
+            href="https://voyage.moi.technology"
             target="_blank"
             rel="noopener noreferrer"
             className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#F5F3EE] bg-[#1A1A1A] rounded-full px-5 py-2.5 text-center"
