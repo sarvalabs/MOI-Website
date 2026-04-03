@@ -379,16 +379,12 @@ function Custody() {
               You're row #2 in a mapping. The contract owner can pause, upgrade,
               or drain the pool — and you can't stop them.
             </p>
-            <div className="custody-paused-stamp">
-              <span>1 contract paused — funds frozen</span>
-            </div>
           </div>
         </div>
 
         <div className="custody-stats gs">
           <div className="custody-stat"><div className="val">3 contracts</div><div className="lbl">hold your assets</div></div>
           <div className="custody-stat"><div className="val">0 contracts</div><div className="lbl">you control</div></div>
-          <div className="custody-stat"><div className="val" style={{ color: "var(--eve)" }}>1 paused</div><div className="lbl">funds inaccessible</div></div>
         </div>
 
         <div className="stat-center gs">
@@ -498,9 +494,9 @@ function Act2RevealSection() {
   return (
     <section className="s-act2-reveal">
       <div className="sec-inner" style={{ textAlign: "center" }}>
-        <div className="pill gs">Act 2 — The Answer</div>
+        <div className="pill gs">Act 2 — The New Dimension</div>
 
-        <p className="act2-moi-q gs">Who adds the missing dimension?</p>
+        <p className="act2-moi-q gs">The missing dimension.</p>
 
         <div className="act2-moi-word-wrap gs">
           <div className="act2-moi-word" ref={moiRef} aria-label="MOI">
@@ -508,14 +504,14 @@ function Act2RevealSection() {
           </div>
         </div>
 
-        <p className="act2-moi-tag gs">The participant layer of the internet.</p>
-
-        <p className="act2-moi-sub gs">
-          Providing existence to participants through the Context Superstate.
-        </p>
+        <p className="act2-moi-tag gs">The Participant Layer of the Internet.</p>
 
         <p className="impact-line gs">
           Not just identity. Not just memory. <em>Existence.</em>
+        </p>
+
+        <p className="act2-moi-sub gs">
+          Providing existence to participants through the <em>Context Superstate</em>.
         </p>
       </div>
     </section>
@@ -646,7 +642,7 @@ function Assets() {
 
         <div className="assets-split gs">
           <div className="assets-side assets-today">
-            <div className="assets-side-header">Today</div>
+            <div className="assets-side-header">Today - communal vault</div>
             <div className="assets-scattered">
               <div className="assets-contract">
                 <span className="assets-contract-name">SwapRouter.sol</span>
@@ -667,7 +663,7 @@ function Assets() {
           <div className="assets-divider" />
 
           <div className="assets-side assets-moi">
-            <div className="assets-side-header">With MOI</div>
+            <div className="assets-side-header">With MOI - personal safe</div>
             <div className="assets-unified">
               <div className="assets-context-label">Your context superstate</div>
               <div className="assets-grid">
@@ -820,12 +816,25 @@ function ContextSuperstate() {
           </div>
         </div>
 
-        <div className="ss-formula">
-          <span className="ss-formula-text gs">ψ(P, C, I) → (P, C', V)</span>
+        <div className="formula-vs gs">
+          <div className="formula-old">
+            <div className="formula-old-label">Classical Compute (WHO = 0)</div>
+            <div className="formula-old-eq">δ(S, I) → (S&apos;, O)</div>
+            <div className="formula-old-note">Anonymous. Copyable. Context-free.</div>
+          </div>
+          <div className="formula-new">
+            <div className="formula-new-label">Contextual Compute (WHO &gt; 0)</div>
+            <div className="formula-pill">
+              ψ(<span className="fp-highlight">P</span>, C, I) → (<span className="fp-highlight">P</span>, C&apos;, V)
+            </div>
+            <div className="formula-new-note">
+              Participant-indexed. Linear. Participant-bound.
+            </div>
+          </div>
         </div>
 
         <p className="impact-line gs">
-          The participant <em>persists</em>. The context transforms. Value is produced.
+          The <em>participant</em> persists. The context transforms. Value is produced.
         </p>
       </div>
     </section>
@@ -1155,7 +1164,8 @@ function ArchitectureSection() {
         </div>
 
         <p className="impact-line gs">
-          No global queue. No shared bottleneck. Just <em>participants</em>.
+          No global queue. No shared bottleneck. Truly <em>parallel</em>. Truly{" "}
+          <em>contextual</em>.
         </p>
       </div>
     </section>
