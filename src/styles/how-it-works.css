@@ -85,7 +85,7 @@
   font-size: 13px;
   font-weight: 400;
   line-height: 1.7;
-  color: rgba(26, 26, 26, .6);
+  color: rgba(26, 26, 26, .7);
   max-width: 620px;
   letter-spacing: .02em;
 }
@@ -94,7 +94,7 @@
   font-size: 12px;
   font-weight: 400;
   font-style: italic;
-  color: rgba(26, 26, 26, .45);
+  color: rgba(26, 26, 26, .55);
   line-height: 1.6;
   margin-top: 2rem;
 }
@@ -160,7 +160,7 @@
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: .15em;
-  color: rgba(26, 26, 26, .4);
+  color: rgba(26, 26, 26, .55);
   font-weight: 500;
 }
 .signal-bars { display: flex; gap: 2px; align-items: flex-end }
@@ -177,8 +177,8 @@
   border-radius: 8px;
   font-size: 10px;
 }
-.field-label { color: rgba(26, 26, 26, .4); font-weight: 400 }
-.field-val { font-weight: 500; color: rgba(26, 26, 26, .65) }
+.field-label { color: rgba(26, 26, 26, .55); font-weight: 400 }
+.field-val { font-weight: 500; color: rgba(26, 26, 26, .75) }
 .field-ok { background: rgba(58, 159, 126, .05) }
 .field-ok .field-val { color: var(--bob) }
 .field-deg { background: rgba(212, 133, 58, .06) }
@@ -196,7 +196,7 @@
 .agent-note {
   font-size: 10px;
   font-style: italic;
-  color: rgba(26, 26, 26, .5);
+  color: rgba(26, 26, 26, .6);
   line-height: 1.4;
 }
 .trust-bar {
@@ -272,7 +272,7 @@
   flex: 1;
   margin-left: 6px;
   letter-spacing: .04em;
-  color: rgba(26, 26, 26, .4);
+  color: rgba(26, 26, 26, .55);
 }
 .mem-badge { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--eve) }
 .mem-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--eve); animation: blink 1.5s ease infinite }
@@ -286,7 +286,7 @@
 }
 .msg-agent {
   background: rgba(26, 26, 26, .04);
-  color: rgba(26, 26, 26, .6);
+  color: rgba(26, 26, 26, .7);
   align-self: flex-start;
   border-bottom-left-radius: 4px;
 }
@@ -307,7 +307,7 @@
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: .12em;
-  color: rgba(26, 26, 26, .4);
+  color: rgba(26, 26, 26, .55);
   font-weight: 500;
 }
 .frust-track { flex: 1; height: 4px; background: rgba(26, 26, 26, .04); border-radius: 2px; overflow: hidden }
@@ -350,7 +350,7 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: .15em;
-  color: rgba(26, 26, 26, .5);
+  color: rgba(26, 26, 26, .6);
   margin-bottom: 1.5rem;
   display: block;
 }
@@ -397,13 +397,13 @@
 
 .custody-card-caption {
   font-size: 10px;
-  color: rgba(26, 26, 26, .5);
+  color: rgba(26, 26, 26, .6);
   line-height: 1.5;
   font-style: italic;
   margin-top: auto;
 }
 .custody-card-caption--red {
-  color: rgba(196, 77, 90, .5);
+  color: rgba(196, 77, 90, .65);
 }
 
 /* Right card — contract ledger */
@@ -429,7 +429,7 @@
 .custody-contract-name {
   font-size: 10px;
   font-weight: 500;
-  color: rgba(26, 26, 26, .6);
+  color: rgba(26, 26, 26, .7);
   letter-spacing: .04em;
 }
 .custody-contract-owns {
@@ -460,9 +460,9 @@
   border-left: 2px solid var(--eve);
   padding-left: 10px;
 }
-.custody-addr { color: rgba(26, 26, 26, .5) }
-.custody-arrow { color: rgba(26, 26, 26, .12) }
-.custody-amt { color: rgba(26, 26, 26, .65) }
+.custody-addr { color: rgba(26, 26, 26, .6) }
+.custody-arrow { color: rgba(26, 26, 26, .2) }
+.custody-amt { color: rgba(26, 26, 26, .75) }
 .custody-ledger-row--you .custody-addr,
 .custody-ledger-row--you .custody-amt {
   color: var(--eve);
@@ -503,7 +503,7 @@
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: .12em;
-  color: rgba(26, 26, 26, .45);
+  color: rgba(26, 26, 26, .55);
   margin-top: 3px;
   font-weight: 500;
 }
@@ -563,7 +563,7 @@
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 500;
-  color: rgba(26, 26, 26, .4);
+  color: rgba(26, 26, 26, .55);
   text-transform: uppercase;
   letter-spacing: .12em;
   margin-bottom: 8px;
@@ -571,7 +571,7 @@
 .act2-card-text {
   font-family: var(--mono);
   font-size: 13px;
-  color: rgba(26, 26, 26, .6);
+  color: rgba(26, 26, 26, .7);
   line-height: 1.7;
   letter-spacing: .02em;
 }
@@ -614,7 +614,7 @@
 .act2-dim {
   font-family: var(--mono);
   font-size: 11px;
-  color: rgba(26, 26, 26, .3);
+  color: rgba(26, 26, 26, .45);
   padding: 7px 16px;
   border: 1px solid rgba(26, 26, 26, .05);
   border-radius: 10px;
@@ -673,7 +673,7 @@
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 400;
-  color: rgba(26, 26, 26, .28);
+  color: rgba(26, 26, 26, .4);
   letter-spacing: .14em;
   text-transform: uppercase;
   text-align: center;
@@ -724,7 +724,7 @@
 .act2-moi-sub {
   font-family: var(--mono);
   font-size: 13px;
-  color: rgba(26, 26, 26, .5);
+  color: rgba(26, 26, 26, .6);
   letter-spacing: .02em;
   line-height: 1.6;
   text-align: center;
@@ -832,7 +832,7 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, .04);
 }
 .spoke-name { font-size: 9px; font-weight: 500; color: var(--ink); letter-spacing: .04em }
-.spoke-scope { font-size: 8px; color: rgba(26, 26, 26, .5) }
+.spoke-scope { font-size: 8px; color: rgba(26, 26, 26, .6) }
 .spoke-check {
   font-size: 10px;
   color: var(--success);
@@ -934,7 +934,7 @@
   align-items: center;
   gap: 5px;
   font-size: 11px;
-  color: rgba(26, 26, 26, .55);
+  color: rgba(26, 26, 26, .65);
   padding: 2px 0;
 }
 .pref-field .check { color: var(--success); font-weight: 500 }
@@ -965,7 +965,7 @@
   font-weight: 500;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: rgba(26, 26, 26, .4);
+  color: rgba(26, 26, 26, .55);
   margin-bottom: 1.5rem;
 }
 .assets-divider {
@@ -986,7 +986,7 @@
   font-family: var(--mono);
   font-size: 11px;
 }
-.assets-contract-name { color: rgba(26, 26, 26, .55) }
+.assets-contract-name { color: rgba(26, 26, 26, .65) }
 .assets-contract-val { color: rgba(26, 26, 26, .7); font-weight: 500 }
 .assets-context-label {
   font-family: var(--mono);
@@ -1011,7 +1011,7 @@
 }
 .assets-side-caption {
   font-size: 11px;
-  color: rgba(26, 26, 26, .45);
+  color: rgba(26, 26, 26, .55);
   margin-top: 1.25rem;
   font-style: italic;
   line-height: 1.5;
@@ -1126,7 +1126,7 @@
   letter-spacing: .06em;
   margin-bottom: 4px;
 }
-.ss-ctx-desc { font-family: var(--mono); font-size: 10px; color: rgba(26, 26, 26, .55); line-height: 1.5 }
+.ss-ctx-desc { font-family: var(--mono); font-size: 10px; color: rgba(26, 26, 26, .65); line-height: 1.5 }
 .ss-footer {
   display: flex;
   justify-content: center;
@@ -1136,7 +1136,7 @@
   border-top: 1px solid rgba(26, 26, 26, .04);
   font-family: var(--mono);
   font-size: 9px;
-  color: rgba(26, 26, 26, .35);
+  color: rgba(26, 26, 26, .5);
   letter-spacing: .06em;
 }
 /* Classical (greyed) vs contextual (illuminated pill) */
@@ -1150,7 +1150,7 @@
 }
 .formula-old {
   text-align: center;
-  opacity: .35;
+  opacity: .5;
 }
 .formula-old-label {
   font-family: var(--mono);
@@ -1172,7 +1172,7 @@
 .formula-old-note {
   font-family: var(--mono);
   font-size: 10px;
-  color: rgba(26, 26, 26, .4);
+  color: rgba(26, 26, 26, .55);
   margin-top: .5rem;
 }
 .formula-new {
@@ -1210,7 +1210,7 @@
 .formula-new-note {
   font-family: var(--mono);
   font-size: 10px;
-  color: rgba(26, 26, 26, .4);
+  color: rgba(26, 26, 26, .55);
   margin-top: .75rem;
 }
 @media (max-width: 768px) {
@@ -1257,7 +1257,7 @@
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(26, 26, 26, 0.55);
+  color: rgba(26, 26, 26, 0.65);
   margin-bottom: 1.5rem;
 }
 .arch-divider {
@@ -1280,7 +1280,7 @@
 
 .arch-side-caption {
   font-size: 11px;
-  color: rgba(26, 26, 26, 0.45);
+  color: rgba(26, 26, 26, 0.55);
   font-style: italic;
 }
 
@@ -1307,7 +1307,7 @@
 .stat-center-desc {
   font-family: var(--mono);
   font-size: 12px;
-  color: rgba(26, 26, 26, .45);
+  color: rgba(26, 26, 26, .55);
   line-height: 1.7;
   max-width: 380px;
   margin: .75rem auto 0;
@@ -1316,7 +1316,7 @@
 .stat-center-source {
   font-family: var(--mono);
   font-size: 11px;
-  color: rgba(26, 26, 26, .45);
+  color: rgba(26, 26, 26, .55);
   font-style: normal;
   font-weight: 500;
   margin: .75rem auto 0;
@@ -1366,7 +1366,7 @@
 .closing-quote p {
   font-family: var(--serif);
   font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-  color: rgba(26, 26, 26, .6);
+  color: rgba(26, 26, 26, .7);
   font-weight: 400;
   line-height: 1.5;
   font-style: italic;
@@ -1382,7 +1382,7 @@
 .closing-tag {
   font-family: var(--mono) !important;
   font-size: 12px !important;
-  color: rgba(26, 26, 26, .35) !important;
+  color: rgba(26, 26, 26, .5) !important;
   font-style: normal !important;
   margin-top: 1rem;
   letter-spacing: .04em;
@@ -1403,7 +1403,7 @@
 .cta-sub {
   font-family: var(--mono);
   font-size: 14px;
-  color: rgba(26, 26, 26, .6);
+  color: rgba(26, 26, 26, .7);
   line-height: 1.8;
   max-width: 480px;
   margin: 1rem auto 0;
