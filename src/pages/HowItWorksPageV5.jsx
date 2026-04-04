@@ -538,9 +538,9 @@ function ScopedDelegation() {
           <div className="hub-center"><span className="hub-center-label">Alice's<br />Superstate</span></div>
 
           <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 1 }} viewBox="0 0 480 400">
-            <line x1="240" y1="200" x2="100" y2="75" stroke="var(--purple)" strokeWidth="1" strokeDasharray="4 4" opacity=".2" />
-            <line x1="240" y1="200" x2="380" y2="75" stroke="var(--purple)" strokeWidth="1" strokeDasharray="4 4" opacity=".2" />
-            <line x1="240" y1="200" x2="240" y2="355" stroke="var(--purple)" strokeWidth="1" strokeDasharray="4 4" opacity=".2" />
+            <line x1="240" y1="200" x2="100" y2="75" stroke="var(--purple)" strokeWidth="1.5" strokeDasharray="4 4" opacity=".45" />
+            <line x1="240" y1="200" x2="380" y2="75" stroke="var(--purple)" strokeWidth="1.5" strokeDasharray="4 4" opacity=".45" />
+            <line x1="240" y1="200" x2="240" y2="355" stroke="var(--purple)" strokeWidth="1.5" strokeDasharray="4 4" opacity=".45" />
             <circle className="pulse-dot" r="4"><animateMotion dur="1.5s" repeatCount="indefinite" path="M100,75 L240,200" /></circle>
             <circle className="pulse-dot" r="4"><animateMotion dur="1.5s" repeatCount="indefinite" begin="0.5s" path="M380,75 L240,200" /></circle>
             <circle className="pulse-dot" r="4"><animateMotion dur="1.5s" repeatCount="indefinite" begin="1s" path="M240,355 L240,200" /></circle>
@@ -646,15 +646,15 @@ function Assets() {
             <div className="assets-scattered">
               <div className="assets-contract">
                 <span className="assets-contract-name">SwapRouter.sol</span>
-                <span className="assets-contract-val">80 MOI</span>
+                <span className="assets-contract-val">3,200 MOI</span>
               </div>
               <div className="assets-contract">
                 <span className="assets-contract-name">VaultV2.sol</span>
                 <span className="assets-contract-val">0.5 ETH</span>
               </div>
               <div className="assets-contract">
-                <span className="assets-contract-name">StakePool.sol</span>
-                <span className="assets-contract-val">3,200 MOI</span>
+                <span className="assets-contract-name">LendPool.sol</span>
+                <span className="assets-contract-val">1,200 USDC</span>
               </div>
             </div>
             <p className="assets-side-caption">Scattered across 3 contracts you don't control.</p>
@@ -670,7 +670,6 @@ function Assets() {
                 <div className="assets-item">3,200 MOI</div>
                 <div className="assets-item">0.5 ETH</div>
                 <div className="assets-item">1,200 USDC</div>
-                <div className="assets-item">NFT #0471</div>
               </div>
             </div>
             <p className="assets-side-caption">All in one place. Apps never hold them.</p>
@@ -923,11 +922,11 @@ function ArchitectureSection() {
         ctx.beginPath();
         ctx.arc(pLeft + 30, py, 6, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = 0.7;
+        ctx.globalAlpha = 0.85;
         ctx.fill();
         ctx.globalAlpha = 1;
         ctx.font = '300 9px "DM Mono", monospace';
-        ctx.fillStyle = "rgba(26,26,26,0.3)";
+        ctx.fillStyle = "rgba(26,26,26,0.45)";
         ctx.textAlign = "right";
         ctx.textBaseline = "middle";
         ctx.fillText(p.name, pLeft + 20, py);
@@ -958,7 +957,7 @@ function ArchitectureSection() {
       ctx.fill();
       ctx.stroke();
       ctx.font = '400 8px "DM Mono", monospace';
-      ctx.fillStyle = "rgba(26,26,26,0.25)";
+      ctx.fillStyle = "rgba(26,26,26,0.4)";
       ctx.textAlign = "center";
       ctx.textBaseline = "top";
       ctx.fillText("Block #" + blockNum, blockX + blockW / 2, neckY - blockH / 2 + 6);
@@ -1026,7 +1025,7 @@ function ArchitectureSection() {
       }
 
       ctx.font = '300 8px "DM Mono", monospace';
-      ctx.fillStyle = "rgba(26, 26, 26, 0.15)";
+      ctx.fillStyle = "rgba(26, 26, 26, 0.3)";
       ctx.textAlign = "center";
       ctx.textBaseline = "alphabetic";
       ctx.fillText("one block at a time →", blockX + blockW / 2, neckY + blockH / 2 + 16);
@@ -1046,7 +1045,7 @@ function ArchitectureSection() {
         ctx.moveTo(lL, ly);
         ctx.lineTo(lR, ly);
         ctx.strokeStyle = p.color;
-        ctx.globalAlpha = 0.12;
+        ctx.globalAlpha = 0.2;
         ctx.lineWidth = 1.5;
         ctx.stroke();
         ctx.globalAlpha = 1;
@@ -1060,7 +1059,7 @@ function ArchitectureSection() {
 
         ctx.font = '400 9px "DM Mono", monospace';
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = 0.5;
+        ctx.globalAlpha = 0.65;
         ctx.textAlign = "right";
         ctx.textBaseline = "middle";
         ctx.fillText(p.name, lL - 22, ly);
@@ -1088,7 +1087,7 @@ function ArchitectureSection() {
         ctx.fill();
         ctx.stroke();
         ctx.font = '400 8px "DM Mono", monospace';
-        ctx.fillStyle = "rgba(26,26,26,0.25)";
+        ctx.fillStyle = "rgba(26,26,26,0.4)";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText("#" + bn, chipX + 22, ly);
