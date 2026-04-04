@@ -64,25 +64,47 @@ const SOCIAL_LINKS = [
   },
 ];
 
+const FOOTER_NAV = [
+  { label: "Docs", href: "https://docs.moi.technology", external: true },
+  { label: "Whitepaper", href: "/MOILitePaper.pdf", external: false },
+  { label: "How It Works", href: "/how-it-works", external: false },
+  { label: "GitHub", href: "https://github.com/sarvalabs", external: true },
+  { label: "Community", href: "https://discord.gg/ytQGU7ZP", external: true },
+];
+
 export default function LandingFooter() {
   return (
     <footer className="site-footer">
       <div className="footer-inner">
-        <div className="footer-left">
-          <img src="/logo-moi-dark.svg" alt="MOI" className="footer-logo-img" />
-          <span className="footer-divider" />
-          <span className="footer-copy">&copy; 2026 Sarva Labs. All rights reserved.</span>
+        <div className="footer-top">
+          <div className="footer-left">
+            <img src="/logo-moi-dark.svg" alt="MOI" className="footer-logo-img" />
+            <span className="footer-divider" />
+            <span className="footer-copy">&copy; 2026 Sarva Labs. All rights reserved.</span>
+          </div>
+          <div className="footer-socials">
+            {SOCIAL_LINKS.map(({ href, label, svg }) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+              >
+                {svg}
+              </a>
+            ))}
+          </div>
         </div>
-        <div className="footer-socials">
-          {SOCIAL_LINKS.map(({ href, label, svg }) => (
+        <div className="footer-nav">
+          {FOOTER_NAV.map(({ label, href, external }) => (
             <a
               key={href}
               href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={label}
+              {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              className="footer-nav-link"
             >
-              {svg}
+              {label}
             </a>
           ))}
         </div>
