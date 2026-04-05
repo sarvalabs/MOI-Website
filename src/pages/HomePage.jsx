@@ -577,6 +577,34 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Closing CTA */}
+        <section className="s-home-cta">
+          <div className="home-cta-inner fade-slide-up">
+            <h2 className="home-cta-hl">Ready to build?</h2>
+            <p className="home-cta-sub">
+              Explore the docs, read the whitepaper, or join the community.
+            </p>
+            <div className="home-cta-links">
+              <a
+                href="https://docs.moi.technology"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+              >
+                Start Building →
+              </a>
+              <a
+                href="https://discord.gg/ytQGU7ZP"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost"
+              >
+                Join the Community →
+              </a>
+            </div>
+          </div>
+        </section>
+
         <LandingFooter />
       </div>
     </>
