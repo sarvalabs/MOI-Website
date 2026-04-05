@@ -723,6 +723,9 @@
   max-width: 24rem;
   margin: 0.25rem auto 0;
 }
+.act2-moi-tag .act2-moi-name {
+  color: var(--purple);
+}
 .act2-moi-sub {
   font-family: var(--mono);
   font-size: 13px;

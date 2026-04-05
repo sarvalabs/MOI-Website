@@ -523,8 +523,25 @@ function Act2RevealSection() {
           </div>
         </div>
 
+        <div className="formula-vs gs">
+          <div className="formula-old">
+            <div className="formula-old-label">Classical Compute (WHO = 0)</div>
+            <div className="formula-old-eq">δ(S, I) → (S&apos;, O)</div>
+            <div className="formula-old-note">Anonymous. Copyable. Context-free.</div>
+          </div>
+          <div className="formula-new">
+            <div className="formula-new-label">Contextual Compute (WHO &gt; 0)</div>
+            <div className="formula-pill">
+              ψ(<span className="fp-highlight">P</span>, C, I) → (<span className="fp-highlight">P</span>, C&apos;, V)
+            </div>
+            <div className="formula-new-note">
+              Participant-indexed. Linear. Participant-bound.
+            </div>
+          </div>
+        </div>
+
         <p className="act2-moi-tag gs" style={{ marginTop: "2.5rem" }}>
-          This is MOI. The Participant Layer of the Internet.
+          This is <span className="act2-moi-name">MOI</span>. The Participant Layer of the Internet.
         </p>
 
         <p className="impact-line gs">
@@ -770,7 +787,7 @@ function Permissions() {
   );
 }
 
-/* ContextSuperstate removed — content moved to Act2RevealSection, formulas moved to ArchitectureSection */
+/* ContextSuperstate UI lives in Act2RevealSection; classical vs contextual formulas sit under the superstate grid */
 
 const ARCH_P = [
   { name: "Alice", color: "#7B5EA7", speed: 0.6 },
@@ -1090,23 +1107,6 @@ function ArchitectureSection() {
             <p className="arch-side-caption">
               Every participant runs independently.
             </p>
-          </div>
-        </div>
-
-        <div className="formula-vs gs">
-          <div className="formula-old">
-            <div className="formula-old-label">Classical Compute (WHO = 0)</div>
-            <div className="formula-old-eq">δ(S, I) → (S&apos;, O)</div>
-            <div className="formula-old-note">Anonymous. Copyable. Context-free.</div>
-          </div>
-          <div className="formula-new">
-            <div className="formula-new-label">Contextual Compute (WHO &gt; 0)</div>
-            <div className="formula-pill">
-              ψ(<span className="fp-highlight">P</span>, C, I) → (<span className="fp-highlight">P</span>, C&apos;, V)
-            </div>
-            <div className="formula-new-note">
-              Participant-indexed. Linear. Participant-bound.
-            </div>
           </div>
         </div>
 
