@@ -586,11 +586,13 @@
 /* Act 2 — MOI reveal             */
 /* ══════════════════════════════ */
 .s-act2-reveal {
-  background: var(--cream);
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(213, 199, 232, .12), transparent 55%),
+    var(--cream);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5rem 1.5rem 2.5rem;
+  padding: 5rem 1.5rem 4rem;
 }
 .s-act2-reveal .pill {
   border-color: rgba(123, 94, 167, .2);

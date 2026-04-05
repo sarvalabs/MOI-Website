@@ -449,69 +449,86 @@ function RootCauseSection() {
   );
 }
 
-/** Act 2 — MOI reveal only */
+/** Act 2 — WHO as a primitive + Context Superstate reveal */
 function Act2RevealSection() {
-  const moiRef = useRef(null);
-
-  useEffect(() => {
-    const el = moiRef.current;
-    if (!el) return;
-
-    const reveal = () => {
-      el.classList.add("vis");
-    };
-
-    const tryReveal = () => {
-      if (el.classList.contains("vis")) return;
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      if (r.bottom > 0 && r.top < vh * 0.94) reveal();
-    };
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          reveal();
-          obs.disconnect();
-        }
-      },
-      { threshold: 0, rootMargin: "160px 0px" }
-    );
-    obs.observe(el);
-
-    tryReveal();
-    requestAnimationFrame(() => requestAnimationFrame(tryReveal));
-    const t1 = window.setTimeout(tryReveal, 120);
-    const t2 = window.setTimeout(tryReveal, 600);
-
-    return () => {
-      obs.disconnect();
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-    };
-  }, []);
-
   return (
     <section className="s-act2-reveal">
       <div className="sec-inner" style={{ textAlign: "center" }}>
-        <div className="pill gs">Act 2 — The New Dimension</div>
+        <div className="pill gs">Act 2 — The Missing Dimension</div>
 
-        <p className="act2-moi-q gs">The missing dimension.</p>
+        <h2 className="headline gs" style={{ textAlign: "center" }}>
+          What if <em>who</em> was a
+          <br />
+          first-class primitive?
+        </h2>
 
-        <div className="act2-moi-word-wrap gs">
-          <div className="act2-moi-word" ref={moiRef} aria-label="MOI">
-            MOI
+        <p className="subline gs" style={{ margin: "0 auto", textAlign: "center" }}>
+          Not an address. Not a login. Not a session cookie.
+          A persistent, portable existence — one data structure that represents
+          everything about a participant: what they own, what they&apos;ve permitted,
+          what they prefer, and who they trust.
+        </p>
+
+        {/* Context Superstate — the actual product */}
+        <div className="pill gs" style={{ marginTop: "3rem" }}>The Context Superstate</div>
+        <p className="subline gs" style={{ margin: "0.5rem auto 0", textAlign: "center" }}>
+          The cryptographic data structure that represents your entire
+          existence in computation. Always current. Always available. Always
+          sovereign.
+        </p>
+
+        <div className="superstate-card gs">
+          <div className="ss-identity">
+            <div className="ss-identity-icon">ψ</div>
+            <div className="ss-identity-label">alice.moi</div>
+          </div>
+          <div className="ss-grid">
+            <div className="ss-ctx">
+              <div className="ss-ctx-name">Assets</div>
+              <div className="ss-ctx-desc">Native tokens, balances, metadata</div>
+            </div>
+            <div className="ss-ctx">
+              <div className="ss-ctx-name">Trust</div>
+              <div className="ss-ctx-desc">Witness sets, delegation chains</div>
+            </div>
+            <div className="ss-ctx">
+              <div className="ss-ctx-name">Storage</div>
+              <div className="ss-ctx-desc">Participant-owned data, records</div>
+            </div>
+            <div className="ss-ctx">
+              <div className="ss-ctx-name">Logic</div>
+              <div className="ss-ctx-desc">Deployed code, interaction handlers</div>
+            </div>
+            <div className="ss-ctx">
+              <div className="ss-ctx-name">Keys</div>
+              <div className="ss-ctx-desc">Cryptographic keys, rotation</div>
+            </div>
+            <div className="ss-ctx">
+              <div className="ss-ctx-name">Preferences</div>
+              <div className="ss-ctx-desc">Privacy policies, constraints</div>
+            </div>
+            <div className="ss-ctx ss-ctx-wide">
+              <div className="ss-ctx-name">Intelligence</div>
+              <div className="ss-ctx-desc">
+                Participant embeddings, interaction patterns
+              </div>
+            </div>
+          </div>
+          <div className="ss-footer">
+            <span>Merkle-committed</span>
+            <span>·</span>
+            <span>One hash</span>
+            <span>·</span>
+            <span>One participant</span>
           </div>
         </div>
 
-        <p className="act2-moi-tag gs">The Participant Layer of the Internet.</p>
-
-        <p className="impact-line gs">
-          Not just identity. Not just memory. <em>Existence.</em>
+        <p className="act2-moi-tag gs" style={{ marginTop: "2.5rem" }}>
+          This is MOI. The Participant Layer of the Internet.
         </p>
 
-        <p className="act2-moi-sub gs">
-          Providing existence to participants through the <em>Context Superstate</em>.
+        <p className="impact-line gs">
+          The <em>participant</em> persists. The context transforms. Value is produced.
         </p>
       </div>
     </section>
@@ -753,92 +770,7 @@ function Permissions() {
   );
 }
 
-function ContextSuperstate() {
-  return (
-    <section className="s-superstate">
-      <div className="sec-inner" style={{ textAlign: "center" }}>
-        <div className="pill gs">The Context Superstate</div>
-        <h2 className="headline gs" style={{ textAlign: "center" }}>
-          Seven sub-contexts.
-          <br />
-          One participant.
-        </h2>
-        <p className="subline gs" style={{ margin: "0 auto" }}>
-          The cryptographic data structure that represents your entire
-          existence in computation. Always current. Always available. Always
-          sovereign.
-        </p>
-
-        <div className="superstate-card gs">
-          <div className="ss-identity">
-            <div className="ss-identity-icon">ψ</div>
-            <div className="ss-identity-label">alice.moi</div>
-          </div>
-          <div className="ss-grid">
-            <div className="ss-ctx">
-              <div className="ss-ctx-name">Assets</div>
-              <div className="ss-ctx-desc">Native tokens, balances, metadata</div>
-            </div>
-            <div className="ss-ctx">
-              <div className="ss-ctx-name">Trust</div>
-              <div className="ss-ctx-desc">Witness sets, delegation chains</div>
-            </div>
-            <div className="ss-ctx">
-              <div className="ss-ctx-name">Storage</div>
-              <div className="ss-ctx-desc">Participant-owned data, records</div>
-            </div>
-            <div className="ss-ctx">
-              <div className="ss-ctx-name">Logic</div>
-              <div className="ss-ctx-desc">Deployed code, interaction handlers</div>
-            </div>
-            <div className="ss-ctx">
-              <div className="ss-ctx-name">Keys</div>
-              <div className="ss-ctx-desc">Cryptographic keys, rotation</div>
-            </div>
-            <div className="ss-ctx">
-              <div className="ss-ctx-name">Preferences</div>
-              <div className="ss-ctx-desc">Privacy policies, constraints</div>
-            </div>
-            <div className="ss-ctx ss-ctx-wide">
-              <div className="ss-ctx-name">Intelligence</div>
-              <div className="ss-ctx-desc">
-                Participant embeddings, interaction patterns
-              </div>
-            </div>
-          </div>
-          <div className="ss-footer">
-            <span>Merkle-committed</span>
-            <span>·</span>
-            <span>One hash</span>
-            <span>·</span>
-            <span>One participant</span>
-          </div>
-        </div>
-
-        <div className="formula-vs gs">
-          <div className="formula-old">
-            <div className="formula-old-label">Classical Compute (WHO = 0)</div>
-            <div className="formula-old-eq">δ(S, I) → (S&apos;, O)</div>
-            <div className="formula-old-note">Anonymous. Copyable. Context-free.</div>
-          </div>
-          <div className="formula-new">
-            <div className="formula-new-label">Contextual Compute (WHO &gt; 0)</div>
-            <div className="formula-pill">
-              ψ(<span className="fp-highlight">P</span>, C, I) → (<span className="fp-highlight">P</span>, C&apos;, V)
-            </div>
-            <div className="formula-new-note">
-              Participant-indexed. Linear. Participant-bound.
-            </div>
-          </div>
-        </div>
-
-        <p className="impact-line gs">
-          The <em>participant</em> persists. The context transforms. Value is produced.
-        </p>
-      </div>
-    </section>
-  );
-}
+/* ContextSuperstate removed — content moved to Act2RevealSection, formulas moved to ArchitectureSection */
 
 const ARCH_P = [
   { name: "Alice", color: "#7B5EA7", speed: 0.6 },
@@ -1161,6 +1093,23 @@ function ArchitectureSection() {
           </div>
         </div>
 
+        <div className="formula-vs gs">
+          <div className="formula-old">
+            <div className="formula-old-label">Classical Compute (WHO = 0)</div>
+            <div className="formula-old-eq">δ(S, I) → (S&apos;, O)</div>
+            <div className="formula-old-note">Anonymous. Copyable. Context-free.</div>
+          </div>
+          <div className="formula-new">
+            <div className="formula-new-label">Contextual Compute (WHO &gt; 0)</div>
+            <div className="formula-pill">
+              ψ(<span className="fp-highlight">P</span>, C, I) → (<span className="fp-highlight">P</span>, C&apos;, V)
+            </div>
+            <div className="formula-new-note">
+              Participant-indexed. Linear. Participant-bound.
+            </div>
+          </div>
+        </div>
+
         <p className="impact-line gs">
           No global queue. No shared bottleneck. Truly <em>parallel</em>. Truly{" "}
           <em>contextual</em>.
@@ -1312,8 +1261,6 @@ export default function HowItWorksPageV5() {
         <Assets />
         <div className="section-divider" />
         <Permissions />
-        <div className="section-divider" />
-        <ContextSuperstate />
         <div className="section-divider" />
         <ArchitectureSection />
         <div className="section-divider" />
