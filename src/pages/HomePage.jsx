@@ -561,8 +561,8 @@ export default function HomePage() {
               <a href={WHITEPAPER_URL} className="btn-primary">
                 Read the whitepaper →
               </a>
-              <Link to="/how-it-works" className="btn-ghost">
-                See How It Works →
+              <Link to="/why-moi" className="btn-ghost">
+                Why MOI →
               </Link>
             </div>
           </div>

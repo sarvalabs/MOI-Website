@@ -1242,7 +1242,7 @@ export default function HowItWorksPageV5() {
 
   return (
     <>
-      <Navbar activePage="how-it-works" />
+      <Navbar activePage="why-moi" />
       <div ref={pageRef} className="how-it-works-page">
         <TrustChain />
         <div className="section-divider" />

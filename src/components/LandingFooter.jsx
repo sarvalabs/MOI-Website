@@ -67,7 +67,7 @@ const SOCIAL_LINKS = [
 const FOOTER_NAV = [
   { label: "Docs", href: "https://docs.moi.technology", external: true },
   { label: "Whitepaper", href: "/MOILitePaper.pdf", external: false },
-  { label: "How It Works", href: "/how-it-works", external: false },
+  { label: "Why MOI", href: "/why-moi", external: false },
   { label: "GitHub", href: "https://github.com/sarvalabs", external: true },
   { label: "Community", href: "https://discord.gg/ytQGU7ZP", external: true },
 ];
