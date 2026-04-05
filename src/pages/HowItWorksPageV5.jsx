@@ -543,10 +543,6 @@ function Act2RevealSection() {
         <p className="act2-moi-tag gs" style={{ marginTop: "2.5rem" }}>
           This is <span className="act2-moi-name">MOI</span>. The Participant Layer of the Internet.
         </p>
-
-        <p className="impact-line gs">
-          The <em>participant</em> persists. The context transforms. Value is produced.
-        </p>
       </div>
     </section>
   );
