@@ -562,7 +562,7 @@ export default function HomePage() {
                 Read the whitepaper →
               </a>
               <Link to="/why-moi" className="btn-ghost">
-                Why MOI →
+                Why MOI? →
               </Link>
             </div>
           </div>
