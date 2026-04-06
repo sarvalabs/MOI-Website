@@ -556,7 +556,7 @@ export default function HomePage() {
               MOI gives every participant — human or agent — persistent, portable
               existence in computation.
             </p>
-            <p className="home-hero-layer">The context infrastructure for the AI economy</p>
+            <p className="home-hero-layer">The <span className="purple">context infrastructure</span> for the AI economy</p>
             <div className="home-hero-ctas">
               <a href={WHITEPAPER_URL} className="btn-primary">
                 Read the whitepaper →
