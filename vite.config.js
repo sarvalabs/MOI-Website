@@ -7,7 +7,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/chat': {
-        target: new URL(process.env.DATA_ROOM_CHAT_URL || 'http://localhost:3001').origin,
+        target: process.env.DATA_ROOM_CHAT_URL
+          ? new URL(process.env.DATA_ROOM_CHAT_URL).origin
+          : 'https://dataroom.moi.technology',
         changeOrigin: true,
       },
     },
