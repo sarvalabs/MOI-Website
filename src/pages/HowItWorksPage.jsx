@@ -480,7 +480,7 @@ export default function HowItWorksPage() {
             className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#1A1A1A] transition-colors duration-300"
             style={{ fontWeight: 500 }}
           >
-            Why MOI?
+            The Shift
           </span>
           <a
             href={WHITEPAPER_URL}
