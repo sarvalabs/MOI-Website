@@ -536,6 +536,7 @@ export default function HomePage() {
   const heroSectionRef = useRef(null);
   const heroRef = useScrollReveal();
   const askRef = useScrollReveal();
+  const ctaRef = useScrollReveal();
 
   return (
     <>
@@ -579,7 +580,7 @@ export default function HomePage() {
 
         {/* Closing CTA */}
         <section className="s-home-cta">
-          <div className="home-cta-inner fade-slide-up">
+          <div ref={ctaRef} className="home-cta-inner fade-slide-up">
             <h2 className="home-cta-hl">Ready to build?</h2>
             <p className="home-cta-sub">
               Explore the docs, read the whitepaper, or join the community.
