@@ -595,7 +595,7 @@ export default function HomePage() {
                 Start Building →
               </a>
               <a
-                href="https://discord.gg/ytQGU7ZP"
+                href="https://discord.gg/QX3Y3zYWf8"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-ghost"

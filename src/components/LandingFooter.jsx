@@ -9,7 +9,7 @@ const SOCIAL_LINKS = [
     ),
   },
   {
-    href: "https://discord.gg/ytQGU7ZP",
+    href: "https://discord.gg/QX3Y3zYWf8",
     label: "Discord",
     svg: (
       <svg viewBox="0 0 24 24" fill="currentColor" width={18} height={18} aria-hidden>
@@ -69,7 +69,7 @@ const FOOTER_NAV = [
   { label: "Whitepaper", href: "/MOILitePaper.pdf", external: false },
   { label: "Why MOI", href: "/why-moi", external: false },
   { label: "GitHub", href: "https://github.com/sarvalabs", external: true },
-  { label: "Community", href: "https://discord.gg/ytQGU7ZP", external: true },
+  { label: "Community", href: "https://discord.gg/QX3Y3zYWf8", external: true },
 ];
 
 export default function LandingFooter() {
