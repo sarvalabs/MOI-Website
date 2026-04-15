@@ -56,7 +56,7 @@ jobs:
             rm -rf /var/www/moi-website/*
             cp -r dist/* /var/www/moi-website/
 
-            echo "Cleaning old backend..."
+            echo "Cleaning old backend.."
             pm2 delete moi-website-backend || true
 
             echo "Starting backend..."
