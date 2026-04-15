@@ -56,7 +56,10 @@ jobs:
             rm -rf /var/www/moi-website/*
             cp -r dist/* /var/www/moi-website/
 
-            echo "Restarting backend..."
-            pm2 start server/index.js --name moi-website-backend || pm2 restart moi-website-backend
+            echo "Cleaning old backend..."
+            pm2 delete moi-website-backend || true
+
+            echo "Starting backend..."
+            pm2 start server/index.js --name moi-website-backend
 
             pm2 save
