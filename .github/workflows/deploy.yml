@@ -2,7 +2,7 @@ name: Deploy MOI Website
 
 on:
   push:
-    branches: [main]
+    branches: [ci/cicd-workflows]
   workflow_dispatch:
 
 jobs:
@@ -25,41 +25,4 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           envs: ANTHROPIC_API_KEY,OPENAI_API_KEY,SUPABASE_URL,SUPABASE_KEY,VITE_CHATBOT_API,DATA_ROOM_CHAT_URL
           script: |
-            cd ~/MOI-Website
-
-            echo "Stopping backend..."
-            pm2 stop moi-website-backend || true
-
-            echo "Syncing latest code..."
-            git fetch origin main
-            git reset --hard origin/main
-
-            echo "Creating server env..."
-            cat > server/.env << EOF
-            ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
-            OPENAI_API_KEY=${OPENAI_API_KEY}
-            SUPABASE_URL=${SUPABASE_URL}
-            SUPABASE_KEY=${SUPABASE_KEY}
-            PORT=3001
-            VITE_CHATBOT_API=${VITE_CHATBOT_API}
-            DATA_ROOM_CHAT_URL=${DATA_ROOM_CHAT_URL}
-            EOF
-
-            echo "Installing dependencies..."
-            npm install
-            npm install --prefix server
-
-            echo "Building frontend..."
-            npm run build
-
-            echo "Deploying frontend to nginx..."
-            rm -rf /var/www/moi-website/*
-            cp -r dist/* /var/www/moi-website/
-
-            echo "Cleaning old backend.."
-            pm2 delete moi-website-backend || true
-
-            echo "Starting backend..."
-            pm2 start server/index.js --name moi-website-backend
-
-            pm2 save
+            bash ~/scripts/deploy-moi-website.sh
