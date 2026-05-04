@@ -1,6 +1,7 @@
 import { config as loadEnv } from "dotenv";
 import express from "express";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 import Anthropic from "@anthropic-ai/sdk";
 import OpenAI from "openai";
 import { createClient } from "@supabase/supabase-js";
@@ -13,7 +14,20 @@ const __dirname = path.dirname(__filename);
 loadEnv({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
-app.use(cors());
+
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173")
+  .split(",")
+  .map((o) => o.trim());
+app.use(cors({ origin: allowedOrigins }));
+
+const chatLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later" },
+});
+
 app.use(express.json());
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -55,8 +69,7 @@ async function findRelevantChunks(embedding) {
     match_threshold: 0.3,
     match_count: 6,
   });
-  console.log('RPC error:', error);
-  console.log('RPC data:', data);
+  if (error) console.error('RPC error:', error);
   if (error) throw error;
   return data || [];
 }
@@ -79,7 +92,7 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-app.post("/api/chat", async (req, res) => {
+app.post("/api/chat", chatLimiter, async (req, res) => {
   try {
     let message;
     let history = [];
@@ -154,13 +167,13 @@ app.post("/api/chat", async (req, res) => {
     stream.on("error", (err) => {
       clearInterval(flushInterval);
       console.error("Stream error:", err);
-      writeSse(res, { type: "error", error: err.message });
+      writeSse(res, { type: "error", error: "Something went wrong" });
       res.end();
     });
   } catch (err) {
     console.error("Chat error:", err);
     if (!res.headersSent) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({ error: "Internal server error" });
     }
   }
 });
