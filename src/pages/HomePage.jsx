@@ -570,9 +570,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Community Calendar */}
-        <CommunityCalendar />
-
         {/* Ask chatbot */}
         <section className="s-ask">
           <div ref={askRef} className="ask-center fade-slide-up">
@@ -581,6 +578,9 @@ export default function HomePage() {
             <AskChat />
           </div>
         </section>
+
+        {/* Community Calendar */}
+        <CommunityCalendar />
 
         {/* Closing CTA */}
         <section className="s-home-cta">
