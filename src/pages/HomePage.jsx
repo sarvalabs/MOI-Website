@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import LandingFooter from "../components/LandingFooter";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
+import CommunityCalendar from "../components/CommunityCalendar";
 import { WHITEPAPER_URL } from "../phases/constants.js";
 import {
   stripMarkdown,
@@ -568,6 +569,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Community Calendar */}
+        <CommunityCalendar />
 
         {/* Ask chatbot */}
         <section className="s-ask">
