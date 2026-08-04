@@ -42,7 +42,7 @@ draft: false
 | `date` | ISO date | ✓ | Publication date; format `2026-06-15` |
 | `updated` | ISO date | optional | Last update date; if omitted, defaults to `date` |
 | `author` | object | optional | `{name, role, url}`; displayed under title |
-| `tags` | array | optional | String tags; rendered as `#tag` at article bottom |
+| `tags` | array | optional | String tags; rendered as pills at article bottom |
 | `takeaways` | array | optional | 2-3 bullet points; rendered in a highlighted box near top |
 | `faq` | array | optional | `[{q, a}, ...]`; rendered as collapsible FAQ section at bottom |
 | `cover` | string | optional | URL to cover image for OG tags |
@@ -96,7 +96,18 @@ The blog is **statically generated** so AI crawlers (GPTBot, ClaudeBot, Perplexi
 - **Question-shaped h2s** — where feasible, phrase headings as questions ("Why is X important?" vs "The Importance of X")
   - LLMs parse q→a patterns readily; pose h2s as genuine questions, then answer in the section
 - **One declarative sentence early** — in the first paragraph, state the main claim of the article
-  - E.g.: "Context infrastructure is the foundation that allows AI agents to operate reliably at scale."
+  - E.g.: "On-chain authority is a model where your agents act under scoped, revocable permission anchored to you."
+
+### Voice
+
+Follow the MOI brand voice — it is not optional styling, it is how the site reads:
+
+- **Second person.** "You scope what each agent can touch." Almost never "we".
+- **Declarative, short, hard line breaks.** State the fact, then the consequence.
+- **Sentence case** headlines. UPPERCASE only for small section labels.
+- **No emoji.**
+- **Vocabulary**: say `participant`, `authority`, `scope`, `revoke`, `on chain`,
+  `agent`. Avoid `user`, `permissions`, `blockchain`, `AI assistant`.
 
 ### Content Patterns Crawlers Favor
 
@@ -128,7 +139,7 @@ Open Graph and Twitter Card tags are also generated from title, summary, and cov
 
 ## Example Post
 
-See `content/posts/context-infrastructure.md` for a complete example exercising all frontmatter fields and Markdown syntax.
+See `content/posts/why-agents-need-onchain-authority.md` for a complete example exercising every frontmatter field plus code blocks, tables, blockquotes, and lists.
 
 ## Frontmatter Validation
 
@@ -147,7 +158,7 @@ Fix the frontmatter and rebuild.
 Posts are automatically routed:
 
 - **Blog index**: `/blog` (lists all posts)
-- **Individual post**: `/blog/[slug]` (e.g., `/blog/context-infrastructure`)
+- **Individual post**: `/blog/[slug]` (e.g., `/blog/why-agents-need-onchain-authority`)
 
 The slug is derived from the filename: `content/posts/my-article.md` → `/blog/my-article`
 
@@ -175,7 +186,7 @@ Use `curl` to verify static HTML:
 curl -s http://localhost:5173/blog | grep "Essays on context"
 # Should return HTML with that text (not empty, not "<!DOCTYPE html><script>")
 
-curl -s http://localhost:5173/blog/context-infrastructure | grep "Context Infrastructure"
+curl -s http://localhost:5173/blog/why-agents-need-onchain-authority | grep "on-chain authority"
 # Should return the article HTML
 ```
 
@@ -187,18 +198,25 @@ Example: "3,247 words · 12 min read"
 
 ## Styling
 
-The blog uses:
+Styles live in `src/styles/blog.css` and follow the MOI brand book, matching the
+manifesto page rather than inventing a separate look:
 
-- **Serif** (Newsreader): body text, measure capped at ~68ch, line-height 1.7
-- **Serif** (Instrument Serif): headings, tight letter-spacing
-- **Monospace** (DM Mono): UI labels, dates, tags
-- **Monospace** (JetBrains Mono): code blocks
-- **Palette**: warm off-white paper (#F5F3EE), ink (#1A1A1A), MOI indigo (#2D2BB6) for accents
-- **Layout**: single-column article, no sidebars, generous vertical rhythm
-- **Headings**: clean h2/h3 hierarchy, auto-anchor links for click-to-permalink
-- **Reduced motion**: respects `prefers-reduced-motion`
+- **Poppins only** — weights 400/500/600/700. The brand has one typeface; there is
+  no serif and no italic. The only exception is code, where a system monospace
+  stack is used because code needs character alignment.
+- **Palette**: Almost Lavender paper (`#FCFBFF`), text `#15102B`, muted `#5B5570`,
+  MOI Main (`#4B17E5`) as the single accent, MOI Black (`#0A0026`) for code
+  surfaces. Do not introduce new hues.
+- **Layout**: single column, 40rem measure, hairline rules instead of cards.
+- **Headings**: h2/h3 wrapped in self-anchors for click-to-permalink.
+- **Reduced motion**: respects `prefers-reduced-motion`.
 
-No dark mode; light theme only. No gradients, no glassmorphism, no card-based UI.
+Light theme only. No dark mode, no gradients, no glassmorphism, no cards.
+
+**Root font size:** the site root is 10px (Tailwind reset), so blog routes add a
+`blog-root` class to `<html>` that restores a 16px root — the same trick
+`/manifesto` uses. Without it, every rem value in the blog renders at 62.5% size.
+Both blog components add and remove this class on mount/unmount.
 
 ## Deployment
 
@@ -212,7 +230,9 @@ The build script:
 1. Processes all Markdown posts in `content/posts/*.md`
 2. Validates frontmatter
 3. Generates static HTML + metadata (sitemap, RSS, llms.txt)
-4. Outputs JSON data files to `/blog-data` in the dist folder
-5. Copies everything to the server on deploy
+4. Writes JSON data + metadata into `public/`, which Vite copies to `dist/`
+   (generating into `public/` is what lets `npm run dev` serve the blog too —
+   these paths are gitignored)
+5. The deploy job ships `dist/` to the server
 
 Posts go live immediately after merge to `main`.

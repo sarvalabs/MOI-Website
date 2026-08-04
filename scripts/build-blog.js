@@ -5,7 +5,9 @@ import { getAllPosts, markdownToHtml, generateSitemap, generateRss, generateLlms
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const DIST_DIR = path.join(__dirname, '../dist');
+// Generated into public/ so Vite copies it to dist/ on build and the dev
+// server can serve it too — otherwise /blog has no data outside a prod build.
+const DIST_DIR = path.join(__dirname, '../public');
 const BLOG_DATA_DIR = path.join(DIST_DIR, 'blog-data');
 const BASE_URL = 'https://moi.technology';
 

@@ -68,6 +68,7 @@ const FOOTER_NAV = [
   { label: "Docs", href: "https://docs.moi.technology", external: true },
   { label: "Whitepaper", href: "/MOILitePaper.pdf", external: false },
   { label: "Manifesto", href: "/manifesto", external: false },
+  { label: "Blog", href: "/blog", external: false },
   { label: "GitHub", href: "https://github.com/sarvalabs", external: true },
   { label: "Community", href: "https://discord.gg/5gG6efFN4s", external: true },
 ];
