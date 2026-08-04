@@ -179,7 +179,7 @@ export default function BlogPost() {
 
       <Navbar activePage="blog" />
 
-      <article className="b-main">
+      <article className={`b-main${showToc ? " has-rail" : ""}`}>
         <Link to="/blog" className="b-back">
           ← All posts
         </Link>
@@ -221,7 +221,7 @@ export default function BlogPost() {
         )}
 
         {showToc && (
-          <details className="b-toc">
+          <details className="b-toc" open>
             <summary>Contents</summary>
             <ol>
               {headings.map((h) => (

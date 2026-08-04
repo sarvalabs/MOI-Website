@@ -31,11 +31,46 @@ html.blog-root { font-size: 16px; }
 /* Keep overscroll from flashing white above/below the fixed field. */
 body:has(.blog-page) { background-color: #0A0526; }
 
-/* ── Column ── */
+/* ── Column ──
+   45rem keeps the line length in the readable 70–80 character range at
+   1.05rem. Past that, extra width goes to the contents rail below rather
+   than to longer lines. */
 .b-main {
   padding: 7rem 1.5rem 5rem;
-  max-width: 40rem;
+  max-width: 45rem;
   margin: 0 auto;
+}
+
+/* On wide screens the leftover space becomes a sticky contents rail beside
+   the article instead of empty margin. The reading column keeps its measure. */
+@media (min-width: 1200px) {
+  .b-main.has-rail {
+    max-width: 68rem;
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 45rem);
+    column-gap: 4.5rem;
+    justify-content: center;
+    align-items: start;
+  }
+  .b-main.has-rail > * { grid-column: 2; }
+
+  .b-main.has-rail > .b-toc {
+    grid-column: 1;
+    grid-row: 1 / span 200;
+    position: sticky;
+    top: 7rem;
+    align-self: start;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    border-left: 1px solid var(--b-rule);
+    border-radius: 0;
+    padding-left: 1.25rem;
+  }
+  /* The rail is always open — the disclosure arrow is only for narrow. */
+  .b-main.has-rail > .b-toc summary { pointer-events: none; }
+  .b-main.has-rail > .b-toc summary::after { content: none; }
 }
 
 /* ── Eyebrow — the papers chip ── */
