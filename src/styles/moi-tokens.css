@@ -356,24 +356,38 @@ a.nav-cta:hover {
 /* Navbar pill is solid dark indigo regardless of page bg;
    text stays 82% white inactive / 100% white on hover + active. */
 
-/* The pill's inline style is translucent glass, tuned for the dark hero and
-   the dark /papers background. Over a light page it renders as a muddy
-   lavender slab, so light routes get the solid indigo the rule above
-   describes. Dark routes keep the glass. */
+/* The pill's inline style is dark translucent glass, tuned for the dark hero
+   and the dark /papers background. Light routes get the light counterpart:
+   frosted white rather than a dark slab. The hamburger icon is already
+   #0A051A and the logo wordmark sits inside the purple planet, so both were
+   drawn for a light pill — this restores that pairing. */
 .blog-page nav.fixed > div,
 .blog-page nav.fixed > div + div,
 .manifesto-page nav.fixed > div,
 .manifesto-page nav.fixed > div + div {
-  background: linear-gradient(180deg, #3D17A8 0%, #2C0F7D 100%) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border: 1px solid rgba(217, 204, 255, 0.22) !important;
-}
-.blog-page nav.fixed > div,
-.manifesto-page nav.fixed > div {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(10, 5, 26, 0.07) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 10px 30px rgba(10, 0, 38, 0.16) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 8px 28px rgba(10, 0, 38, 0.07) !important;
+}
+
+/* Link colours invert with the pill. The CTA keeps its own purple fill. */
+.blog-page nav.fixed a:not(.nav-cta),
+.manifesto-page nav.fixed a:not(.nav-cta) {
+  color: rgba(10, 5, 26, 0.66) !important;
+}
+.blog-page nav.fixed a:not(.nav-cta):hover,
+.manifesto-page nav.fixed a:not(.nav-cta):hover {
+  color: #0A051A !important;
+}
+/* Active route — MOI Main on a soft lavender pill. */
+.blog-page nav.fixed a.bg-white\/10,
+.manifesto-page nav.fixed a.bg-white\/10 {
+  color: var(--moi-main) !important;
+  background: rgba(75, 23, 229, 0.09) !important;
 }
 
 nav.fixed a,
