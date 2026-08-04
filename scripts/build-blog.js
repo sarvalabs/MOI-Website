@@ -14,14 +14,14 @@ const BASE_URL = 'https://moi.technology';
 async function buildBlog() {
   console.log('🔨 Building blog...');
 
-  // Ensure blog-data and blog directories exist
-  if (!fs.existsSync(BLOG_DATA_DIR)) {
-    fs.mkdirSync(BLOG_DATA_DIR, { recursive: true });
-  }
+  // Rebuild both output dirs from scratch. Writing in place would leave the
+  // JSON of a deleted or newly-drafted post behind, and that orphan keeps
+  // /blog/<slug> serving content that is no longer in content/posts.
   const blogDir = path.join(DIST_DIR, 'blog');
-  if (!fs.existsSync(blogDir)) {
-    fs.mkdirSync(blogDir, { recursive: true });
-  }
+  fs.rmSync(BLOG_DATA_DIR, { recursive: true, force: true });
+  fs.rmSync(blogDir, { recursive: true, force: true });
+  fs.mkdirSync(BLOG_DATA_DIR, { recursive: true });
+  fs.mkdirSync(blogDir, { recursive: true });
 
   const posts = getAllPosts();
   console.log(`📝 Found ${posts.length} posts`);
