@@ -5,7 +5,7 @@
 1. Create a new Markdown file in `content/posts/your-slug.md`
 2. Add frontmatter at the top with required fields (see schema below)
 3. Write your article in Markdown
-4. Push to `main` → GitHub Actions builds and deploys automatically
+4. Merge to `main` → Vercel builds and deploys automatically
 
 ## Frontmatter Schema
 
@@ -176,17 +176,17 @@ The build automatically generates:
 ```bash
 npm run build
 npm run preview
-# Visit http://localhost:5173/blog to see the index
-# Visit http://localhost:5173/blog/your-slug to see a post
+# Visit http://localhost:4173/blog to see the index
+# Visit http://localhost:4173/blog/your-slug to see a post
 ```
 
 Use `curl` to verify static HTML:
 
 ```bash
-curl -s http://localhost:5173/blog | grep "Essays on context"
+curl -s http://localhost:4173/blog | grep "Essays on context"
 # Should return HTML with that text (not empty, not "<!DOCTYPE html><script>")
 
-curl -s http://localhost:5173/blog/why-agents-need-onchain-authority | grep "on-chain authority"
+curl -s http://localhost:4173/blog/why-agents-need-onchain-authority | grep "on-chain authority"
 # Should return the article HTML
 ```
 
