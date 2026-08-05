@@ -19,5 +19,3 @@ Allow: /
 
 User-agent: anthropic-ai
 Allow: /
-
-Sitemap: https://moi.technology/blog/sitemap.xml

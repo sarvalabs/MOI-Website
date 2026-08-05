@@ -360,8 +360,7 @@ a.nav-cta:hover {
    and the dark /papers background. Light routes get the light counterpart:
    frosted white rather than a dark slab. The hamburger icon is already
    #0A051A and the logo wordmark sits inside the purple planet, so both were
-   drawn for a light pill — this restores that pairing.
-   /blog shares the /papers dark field, so it keeps the dark glass. */
+   drawn for a light pill — this restores that pairing. */
 .manifesto-page nav.fixed > div,
 .manifesto-page nav.fixed > div + div {
   background: rgba(255, 255, 255, 0.72) !important;
