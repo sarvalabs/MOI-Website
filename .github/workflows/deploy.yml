@@ -2,7 +2,7 @@ name: Deploy MOI Website
 
 on:
   push:
-    branches: [main]
+    branches: [ci/cicd-workflows]
   workflow_dispatch:
 
 jobs:
@@ -25,4 +25,5 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           envs: ANTHROPIC_API_KEY,OPENAI_API_KEY,SUPABASE_URL,SUPABASE_KEY,VITE_CHATBOT_API,DATA_ROOM_CHAT_URL
           script: |
+            export BRANCH=${{ github.ref_name }}
             bash ~/scripts/deploy-moi-website.sh
