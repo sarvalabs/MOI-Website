@@ -2,7 +2,7 @@ name: Deploy MOI Website
 
 on:
   push:
-    branches: [ci/cicd-workflows]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
