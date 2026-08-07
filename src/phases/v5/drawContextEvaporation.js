@@ -154,8 +154,8 @@ function drawAgentBubble(ctx, x, y, agent, fillProgress, evapProgress, alpha) {
   ctx.arc(x + w - 14, y + 16, 2.2, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.fillStyle = "#1A1A1A";
-  ctx.font = 'bold 9px "DM Mono", monospace';
+  ctx.fillStyle = "#0A051A";
+  ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
   ctx.textAlign = "left";
   ctx.fillText(agent.name, x + 24, y + 19);
 
@@ -174,15 +174,15 @@ function drawAgentBubble(ctx, x, y, agent, fillProgress, evapProgress, alpha) {
     if (!text) continue;
     const lineAlpha = Math.max(0, 1 - evapProgress * 2);
     ctx.globalAlpha = alpha * lineAlpha;
-    ctx.fillStyle = "#1A1A1A";
-    ctx.font = '9px "DM Mono", monospace';
+    ctx.fillStyle = "#0A051A";
+    ctx.font = '9px "Poppins", system-ui, sans-serif';
     ctx.fillText(text, x + 22, ly);
   }
 
   if (evapProgress > 0.15) {
     ctx.globalAlpha = alpha * evapProgress * 0.8;
     ctx.fillStyle = "#C0392B";
-    ctx.font = 'italic 10px "Instrument Serif", serif';
+    ctx.font = 'italic 10px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "center";
     ctx.fillText("context lost", x + w * 0.5, y + h * 0.58);
   }
@@ -215,7 +215,7 @@ export function drawContextEvaporation(ctx, state, tl, { cy, W }, particleState)
 
   ctx.save();
   ctx.globalAlpha = phase2Alpha * 0.2;
-  ctx.strokeStyle = "#7B5EA7";
+  ctx.strokeStyle = "#4B17E5";
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(aliceX - 44, cy - 200);
@@ -223,7 +223,7 @@ export function drawContextEvaporation(ctx, state, tl, { cy, W }, particleState)
   ctx.stroke();
   const ty = cy - 200 + phase2T * 410;
   ctx.globalAlpha = phase2Alpha * 0.75;
-  ctx.fillStyle = "#7B5EA7";
+  ctx.fillStyle = "#4B17E5";
   ctx.beginPath();
   ctx.arc(aliceX - 44, ty, 4, 0, Math.PI * 2);
   ctx.fill();
@@ -232,7 +232,7 @@ export function drawContextEvaporation(ctx, state, tl, { cy, W }, particleState)
     const active = (i === 0 && phase2T < 0.36) || (i === 1 && phase2T >= 0.32 && phase2T < 0.66) || (i === 2 && phase2T >= 0.68);
     ctx.globalAlpha = phase2Alpha * (active ? 0.35 : 0.1);
     ctx.fillStyle = AGENTS[i].color;
-    ctx.font = '7px "DM Mono", monospace';
+    ctx.font = '7px "Poppins", system-ui, sans-serif';
     ctx.fillText(name, aliceX - 36, y);
   });
   ctx.restore();
@@ -260,7 +260,7 @@ export function drawContextEvaporation(ctx, state, tl, { cy, W }, particleState)
       ctx.save();
       ctx.globalAlpha = phase2Alpha * 0.35 * smoothstep(ramp(phase2T, a.start, a.appearEnd + 0.05));
       ctx.fillStyle = "#C0392B";
-      ctx.font = '9px "DM Mono", monospace';
+      ctx.font = '9px "Poppins", system-ui, sans-serif';
       ctx.fillText("starting from zero again...", bubbleX + 8, ys[i] - 88);
       ctx.restore();
     }
@@ -269,7 +269,7 @@ export function drawContextEvaporation(ctx, state, tl, { cy, W }, particleState)
       ctx.save();
       ctx.globalAlpha = phase2Alpha * 0.22;
       ctx.fillStyle = "#C0392B";
-      ctx.font = '8px "DM Mono", monospace';
+      ctx.font = '8px "Poppins", system-ui, sans-serif';
       ctx.fillText("<- already known by Flight Agent", bubbleX + 130, ys[i] + 20);
       ctx.restore();
     }
@@ -280,9 +280,9 @@ export function drawContextEvaporation(ctx, state, tl, { cy, W }, particleState)
   if (phase2T > 0.82) {
     ctx.save();
     ctx.globalAlpha = phase2Alpha * smoothstep(ramp(phase2T, 0.82, 0.98)) * 0.35;
-    ctx.fillStyle = "#1A1A1A";
+    ctx.fillStyle = "#0A051A";
     ctx.textAlign = "center";
-    ctx.font = '10px "DM Mono", monospace';
+    ctx.font = '10px "Poppins", system-ui, sans-serif';
     ctx.fillText("valuable context evaporates after every interaction - nothing persists", W * 0.5, cy + 280);
     ctx.restore();
   }

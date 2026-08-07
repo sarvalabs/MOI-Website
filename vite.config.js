@@ -12,6 +12,10 @@ export default defineConfig({
           : 'https://dataroom.moi.technology',
         changeOrigin: true,
       },
+      '/api/community-calls': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
     },
   },
 })

@@ -29,7 +29,7 @@ export function drawFunnel(sctx, state, timeline, { cx, cy, W, spawnTx }) {
     sctx.arc(originX, oy, 6, 0, Math.PI * 2);
     sctx.fill();
     sctx.fillStyle = PARTICIPANTS[i].color + "90";
-    sctx.font = '9px "DM Mono", monospace';
+    sctx.font = '9px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "right";
     sctx.fillText(PARTICIPANTS[i].name, originX - 14, oy + 3);
   }
@@ -55,7 +55,7 @@ export function drawFunnel(sctx, state, timeline, { cx, cy, W, spawnTx }) {
   sctx.fill();
   sctx.stroke();
   sctx.fillStyle = "rgba(26,26,26,0.2)";
-  sctx.font = '10px "DM Mono", monospace';
+  sctx.font = '10px "Poppins", system-ui, sans-serif';
   sctx.textAlign = "center";
   const currentBlock = 1042 + (Math.floor(state.time * 0.005) % 100);
   sctx.fillText(`Block #${currentBlock}`, blockX + blockW / 2, cy - blockH / 2 + 16);
@@ -86,7 +86,7 @@ export function drawFunnel(sctx, state, timeline, { cx, cy, W, spawnTx }) {
     sctx.lineTo(pbx - 2, cy);
     sctx.stroke();
     sctx.fillStyle = `rgba(26,26,26,${0.22 * fade})`;
-    sctx.font = '7px "DM Mono", monospace';
+    sctx.font = '7px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.fillText(`#${currentBlock + pb}`, pbx + ghostW / 2, cy - ghostH / 2 + 10);
     sctx.strokeStyle = `rgba(26,26,26,${0.05 * fade})`;
@@ -148,16 +148,16 @@ export function drawFunnel(sctx, state, timeline, { cx, cy, W, spawnTx }) {
   if (waitCount > 3) {
     const counterPulse = Math.sin(state.time * 0.05) * 0.15 + 0.85;
     sctx.fillStyle = `rgba(196, 77, 90, ${0.55 * counterPulse})`;
-    sctx.font = '400 9px "DM Mono", monospace';
+    sctx.font = '400 9px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.textBaseline = "alphabetic";
     sctx.fillText(`${waitCount} txns waiting...`, bottleneckX, bottleneckY + neckW + 36);
     sctx.fillStyle = "rgba(196, 77, 90, 0.3)";
-    sctx.font = '500 7px "DM Mono", monospace';
+    sctx.font = '500 7px "Poppins", system-ui, sans-serif';
     sctx.fillText("⚠ HIGH CONTENTION", bottleneckX, bottleneckY + neckW + 48);
   }
   sctx.fillStyle = "rgba(26, 26, 26, 0.15)";
-  sctx.font = '300 8px "DM Mono", monospace';
+  sctx.font = '300 8px "Poppins", system-ui, sans-serif';
   sctx.fillText("one block at a time →", blockX + blockW / 2, cy + blockH / 2 + 16);
   sctx.restore();
 }

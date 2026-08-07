@@ -43,7 +43,7 @@ export function drawMDAGLanes(sctx, state, timeline, { cx, cy, W, H }) {
 
     sctx.globalAlpha = laneAlpha * 0.6;
     sctx.fillStyle = color;
-    sctx.font = '9px "DM Mono", monospace';
+    sctx.font = '9px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "right";
     sctx.fillText(PARTICIPANTS[i].name, laneLeft - 44, ly + 3);
 
@@ -63,7 +63,7 @@ export function drawMDAGLanes(sctx, state, timeline, { cx, cy, W, H }) {
     sctx.fill();
     sctx.stroke();
     sctx.fillStyle = "rgba(26,26,26,0.25)";
-    sctx.font = '7px "DM Mono", monospace';
+    sctx.font = '7px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.fillText("#" + blockNum, blockX + blockW / 2, ly + 3);
 
@@ -116,7 +116,7 @@ export function drawMDAGLanes(sctx, state, timeline, { cx, cy, W, H }) {
       const bdx = ix;
       const bdy = ay + (by - ay) * bridgeT;
       sctx.globalAlpha = laneAlpha * laneInterAlpha * Math.sin(bridgeT * Math.PI) * 0.6;
-      sctx.fillStyle = "#7B5EA7";
+      sctx.fillStyle = "#4B17E5";
       sctx.beginPath();
       sctx.arc(bdx, bdy, 2.5, 0, Math.PI * 2);
       sctx.fill();
@@ -125,7 +125,7 @@ export function drawMDAGLanes(sctx, state, timeline, { cx, cy, W, H }) {
       const midY = (ay + by) / 2;
       sctx.globalAlpha = laneAlpha * laneInterAlpha * 0.4;
       sctx.fillStyle = "rgba(123,94,167,0.8)";
-      sctx.font = '7px "DM Mono", monospace';
+      sctx.font = '7px "Poppins", system-ui, sans-serif';
       sctx.textAlign = "left";
       sctx.fillText(inter.label, ix + 6, midY + 3);
     }
@@ -136,7 +136,7 @@ export function drawMDAGLanes(sctx, state, timeline, { cx, cy, W, H }) {
     const finCount = Math.floor(state.time * 0.12);
     sctx.globalAlpha = laneAlpha * laneParallel * 0.3;
     sctx.fillStyle = "rgba(123,94,167,0.7)";
-    sctx.font = '10px "DM Mono", monospace';
+    sctx.font = '10px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.fillText(
       finCount + " interactions finalized in parallel",

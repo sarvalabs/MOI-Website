@@ -45,7 +45,7 @@ export function drawBlob(sctx, x, y, color, name, rad, alpha, t, showRing, globa
   if (rad >= 14 && name) {
     sctx.fillStyle = "#fff";
     const fontSize = Math.max(8, Math.min(15, rad * 0.38));
-    sctx.font = 'bold ' + Math.round(fontSize) + 'px "DM Mono", monospace';
+    sctx.font = 'bold ' + Math.round(fontSize) + 'px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.textBaseline = "middle";
     sctx.fillText(name, x, y + 1);
@@ -68,7 +68,7 @@ export function drawAppDot(sctx, x, y, color, name, rad, alpha, globalAlpha = 1)
   sctx.stroke();
   if (name) {
     sctx.fillStyle = color;
-    sctx.font = 'bold ' + Math.max(8, Math.round(rad * 0.55)) + 'px "DM Mono", monospace';
+    sctx.font = 'bold ' + Math.max(8, Math.round(rad * 0.55)) + 'px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.textBaseline = "middle";
     sctx.fillText(name, x, y + 1);
@@ -108,11 +108,11 @@ export function drawCard(sctx, x, y, color, name, hash, values, alpha, highlight
   sctx.arc(cx0 + 22, cy0 + 26, 7, 0, Math.PI * 2);
   sctx.fill();
   sctx.fillStyle = "#141414";
-  sctx.font = 'bold 16px "DM Mono", monospace';
+  sctx.font = 'bold 16px "Poppins", system-ui, sans-serif';
   sctx.textAlign = "left";
   sctx.fillText(name, cx0 + 36, cy0 + 32);
   sctx.fillStyle = "rgba(20,20,20,0.42)";
-  sctx.font = '9px "DM Mono", monospace';
+  sctx.font = '9px "Poppins", system-ui, sans-serif';
   sctx.fillText(hash, cx0 + 22, cy0 + 50);
   sctx.strokeStyle = "rgba(26,26,26,0.10)";
   sctx.lineWidth = 1;
@@ -128,10 +128,10 @@ export function drawCard(sctx, x, y, color, name, hash, values, alpha, highlight
     sctx.fillStyle = FIELD_COLORS[fi] + (isHi ? "ff" : "bb");
     sctx.beginPath(); sctx.arc(cx0 + 22, fy + 2, 4, 0, Math.PI * 2); sctx.fill();
     sctx.fillStyle = FIELD_COLORS[fi] + "aa";
-    sctx.font = 'bold 11px "DM Mono", monospace'; sctx.textAlign = "left";
+    sctx.font = 'bold 11px "Poppins", system-ui, sans-serif'; sctx.textAlign = "left";
     sctx.fillText(FIELD_KEYS[fi], cx0 + 32, fy + 6);
     sctx.fillStyle = isHi ? "rgba(16,16,16,0.85)" : "rgba(16,16,16,0.58)";
-    sctx.font = 'bold 11px "DM Mono", monospace'; sctx.textAlign = "right";
+    sctx.font = 'bold 11px "Poppins", system-ui, sans-serif'; sctx.textAlign = "right";
     sctx.fillText(values[fi], cx0 + cardW - 20, fy + 6);
     const bW = 36, bX = cx0 + cardW - 20 - bW;
     sctx.fillStyle = FIELD_COLORS[fi] + "20"; sctx.fillRect(bX, fy + 12, bW, 3);

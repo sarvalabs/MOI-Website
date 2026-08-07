@@ -115,7 +115,7 @@ export function drawContractBox(ctx, state, tl, { cx, cy, W }, particleState) {
   if (drawT > 0.8 && aftermathT < 0.95) {
     const bal = Math.round(3343 * (1 - leakT));
     ctx.fillStyle = "rgba(26,26,26,0.45)";
-    ctx.font = '8px "DM Mono", monospace';
+    ctx.font = '8px "Poppins", system-ui, sans-serif';
     ctx.fillText(`balances[alice]: ${bal}`, (lineStartX + lineEndX) * 0.5 - 42, aliceY - 7);
   }
   ctx.restore();
@@ -152,7 +152,7 @@ export function drawContractBox(ctx, state, tl, { cx, cy, W }, particleState) {
   ctx.stroke();
 
   ctx.fillStyle = "rgba(26,26,26,0.55)";
-  ctx.font = '10px "DM Mono", monospace';
+  ctx.font = '10px "Poppins", system-ui, sans-serif';
   ctx.textAlign = "left";
   ctx.fillText("DEX Contract", vaultX + 12, vaultY + 19);
 
@@ -169,7 +169,7 @@ export function drawContractBox(ctx, state, tl, { cx, cy, W }, particleState) {
   ctx.save();
   ctx.globalAlpha = phase3Alpha * setupT;
   ctx.fillStyle = "rgba(26,26,26,0.50)";
-  ctx.font = '8px "DM Mono", monospace';
+  ctx.font = '8px "Poppins", system-ui, sans-serif';
   ctx.fillText("mapping(address => uint256) balances", vaultX + 12, vaultY + 42);
   ctx.fillStyle = "rgba(26,26,26,0.40)";
   ctx.fillText("{", vaultX + 12, vaultY + 58);
@@ -194,7 +194,7 @@ export function drawContractBox(ctx, state, tl, { cx, cy, W }, particleState) {
       ctx.fillRect(vaultX + 20 + driftX, rowY - 10, 156, 15);
     }
     ctx.fillStyle = entry.color;
-    ctx.font = '8px "DM Mono", monospace';
+    ctx.font = '8px "Poppins", system-ui, sans-serif';
     ctx.fillText(`"${entry.key}" => ${val}`, vaultX + 24 + driftX, rowY);
     ctx.fillStyle = "rgba(26,26,26,0.14)";
     ctx.fillRect(vaultX + 156 + driftX, rowY - 6, 88 * (1 - leakLocal), 3);
@@ -219,11 +219,11 @@ export function drawContractBox(ctx, state, tl, { cx, cy, W }, particleState) {
 
     ctx.globalAlpha = phase3Alpha * bugT * 0.7;
     ctx.fillStyle = "rgba(192,57,43,0.9)";
-    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "left";
     ctx.fillText("SMART CONTRACT BUG", vaultX + 12, vaultY + vaultH + 16);
     ctx.fillStyle = "rgba(192,57,43,0.7)";
-    ctx.font = '8px "DM Mono", monospace';
+    ctx.font = '8px "Poppins", system-ui, sans-serif';
     ctx.fillText("drainBalances()", vaultX + 166, vaultY + vaultH + 16);
     ctx.restore();
   }
@@ -232,7 +232,7 @@ export function drawContractBox(ctx, state, tl, { cx, cy, W }, particleState) {
     ctx.save();
     ctx.globalAlpha = phase3Alpha * aftermathT * 0.45;
     ctx.fillStyle = "rgba(192,57,43,0.6)";
-    ctx.font = '11px "DM Mono", monospace';
+    ctx.font = '11px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "center";
     ctx.fillText("Smart contract bug: all tokens leaked.", cx, cy + 170);
     ctx.restore();

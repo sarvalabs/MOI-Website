@@ -13,7 +13,7 @@ const COLORS = {
 const RING_COLORS = [COLORS.alice, COLORS.authority, COLORS.preferences, COLORS.assets, COLORS.permissions, COLORS.trust];
 
 const TOKENS = [
-  { name: "kMOI",   amount: "12,500", color: "#7B5EA7" },
+  { name: "kMOI",   amount: "12,500", color: "#4B17E5" },
   { name: "BTC",    amount: "0.85",   color: "#F7931A" },
   { name: "ETH",    amount: "4.2",    color: "#627EEA" },
   { name: "SOL",    amount: "120",    color: "#9945FF" },
@@ -131,11 +131,11 @@ function drawPanelHeader(ctx, x, y, w, color, title, subtitle, alpha) {
   ctx.beginPath();
   ctx.arc(x + 18, y + 18, 5, 0, Math.PI * 2);
   ctx.fill();
-  ctx.font = 'bold 13px "DM Mono", monospace';
+  ctx.font = 'bold 13px "Poppins", system-ui, sans-serif';
   ctx.textAlign = "left";
   ctx.fillText(title, x + 30, y + 22);
   ctx.fillStyle = "rgba(26,26,26,0.42)";
-  ctx.font = '8px "DM Mono", monospace';
+  ctx.font = '8px "Poppins", system-ui, sans-serif';
   ctx.fillText(subtitle, x + 14, y + 38);
   ctx.strokeStyle = "rgba(26,26,26,0.10)";
   ctx.lineWidth = 1;
@@ -165,11 +165,11 @@ function drawTokenCard(ctx, x, y, name, amount, color, alpha, w, h) {
   ctx.roundRect(x, y, w, h, 10);
   ctx.stroke();
   ctx.fillStyle = color;
-  ctx.font = 'bold 11px "DM Mono", monospace';
+  ctx.font = 'bold 11px "Poppins", system-ui, sans-serif';
   ctx.textAlign = "center";
   ctx.fillText(name, x + w / 2, y + h * 0.38);
-  ctx.fillStyle = "#1A1A1A";
-  ctx.font = 'bold 14px "DM Mono", monospace';
+  ctx.fillStyle = "#0A051A";
+  ctx.font = 'bold 14px "Poppins", system-ui, sans-serif';
   ctx.fillText(amount, x + w / 2, y + h * 0.68);
   ctx.restore();
 }
@@ -217,10 +217,10 @@ function drawAliceNucleus(ctx, cx, cy, nucleusIn, phase4Alpha, time) {
 
   ctx.fillStyle = "#FFFFFF";
   ctx.textAlign = "center";
-  ctx.font = 'bold 14px "DM Mono", monospace';
+  ctx.font = 'bold 14px "Poppins", system-ui, sans-serif';
   ctx.fillText("Alice", cx, cy + 4);
   ctx.fillStyle = "rgba(26,26,26,0.25)";
-  ctx.font = '8px "DM Mono", monospace';
+  ctx.font = '8px "Poppins", system-ui, sans-serif';
   ctx.fillText("0x8b6c...f2", cx, cy + r + 16);
   ctx.fillStyle = "rgba(123,94,167,0.30)";
   ctx.fillText("context superstate", cx, cy + r + 28);
@@ -251,11 +251,11 @@ function drawAuthorityContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) {
       ctx.fillRect(px + 8, ry - 6, pw - 16, rowH);
     }
     ctx.fillStyle = COLORS.authority;
-    ctx.font = 'bold 10px "DM Mono", monospace';
+    ctx.font = 'bold 10px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "left";
     ctx.fillText(fields[i][0], px + 16, ry + 4);
-    ctx.fillStyle = "#1A1A1A";
-    ctx.font = '10px "DM Mono", monospace';
+    ctx.fillStyle = "#0A051A";
+    ctx.font = '10px "Poppins", system-ui, sans-serif';
     ctx.fillText(fields[i][1], px + 110, ry + 4);
     ctx.restore();
   }
@@ -275,11 +275,11 @@ function drawAuthorityContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) {
     ctx.roundRect(bx, by, pw - 28, 60, 8);
     ctx.stroke();
     ctx.fillStyle = "rgba(26,26,26,0.65)";
-    ctx.font = '9px "DM Mono", monospace';
+    ctx.font = '9px "Poppins", system-ui, sans-serif';
     ctx.fillText("Alice -> Personal -> Flight", bx + 12, by + 16);
     ctx.fillText("       -> Payment -> Bank", bx + 12, by + 30);
     ctx.fillStyle = "#27AE60";
-    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     ctx.fillText("all verified ✓", bx + 12, by + 46);
     ctx.restore();
   }
@@ -288,7 +288,7 @@ function drawAuthorityContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) {
     ctx.save();
     ctx.globalAlpha = cbA * 0.45;
     ctx.fillStyle = COLORS.authority;
-    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "left";
     ctx.fillText("-> solves delegation", px + 16, py + ph - 16);
     ctx.restore();
@@ -322,16 +322,16 @@ function drawPreferencesContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) 
     ctx.beginPath();
     ctx.arc(px + 22, ry + rowH * 0.35, 3.5, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#1A1A1A";
-    ctx.font = 'bold 10px "DM Mono", monospace';
+    ctx.fillStyle = "#0A051A";
+    ctx.font = 'bold 10px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "left";
     ctx.fillText(rows[i].text, px + 32, ry + rowH * 0.35);
     ctx.fillStyle = "rgba(26,26,26,0.40)";
-    ctx.font = '8px "DM Mono", monospace';
+    ctx.font = '8px "Poppins", system-ui, sans-serif';
     ctx.fillText(rows[i].src, px + 32, ry + rowH * 0.65);
     if (rows[i].extra) {
       ctx.fillStyle = "rgba(26,26,26,0.30)";
-      ctx.font = '7px "DM Mono", monospace';
+      ctx.font = '7px "Poppins", system-ui, sans-serif';
       ctx.fillText(rows[i].extra, px + 32, ry + rowH * 0.88);
     }
     ctx.restore();
@@ -341,7 +341,7 @@ function drawPreferencesContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) 
     ctx.save();
     ctx.globalAlpha = cbA * 0.45;
     ctx.fillStyle = COLORS.preferences;
-    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "left";
     ctx.fillText("-> solves context loss", px + 16, py + ph - 16);
     ctx.restore();
@@ -372,7 +372,7 @@ function drawAssetsContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) {
     ctx.save();
     ctx.globalAlpha = txtA * 0.55;
     ctx.fillStyle = COLORS.assets;
-    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "center";
     ctx.fillText("native objects — not ledger entries", px + pw / 2, py + ph - 40);
     ctx.restore();
@@ -382,7 +382,7 @@ function drawAssetsContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) {
     ctx.save();
     ctx.globalAlpha = cbA * 0.45;
     ctx.fillStyle = COLORS.assets;
-    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "left";
     ctx.fillText("-> solves token safety", px + 16, py + ph - 16);
     ctx.restore();
@@ -411,20 +411,20 @@ function drawPermissionsContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) 
       ctx.fillStyle = "rgba(196,77,90,0.04)";
       ctx.fillRect(px + 8, by, pw - 16, blockH - 4);
     }
-    ctx.fillStyle = "#1A1A1A";
-    ctx.font = 'bold 10px "DM Mono", monospace';
+    ctx.fillStyle = "#0A051A";
+    ctx.font = 'bold 10px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "left";
     ctx.fillText(a.name, px + 16, by + 16);
     const permLineH = (blockH - 28) / a.perms.length;
     for (let pi = 0; pi < a.perms.length; pi++) {
       const [perm, allowed] = a.perms[pi];
       ctx.fillStyle = allowed ? "#27AE60" : "rgba(196,77,90,0.60)";
-      ctx.font = '9px "DM Mono", monospace';
+      ctx.font = '9px "Poppins", system-ui, sans-serif';
       ctx.fillText(`${perm} ${allowed ? "✓" : "✗"}`, px + 140, by + 30 + pi * permLineH);
     }
     if (a.denied) {
       ctx.fillStyle = "rgba(26,26,26,0.35)";
-      ctx.font = '8px "DM Mono", monospace';
+      ctx.font = '8px "Poppins", system-ui, sans-serif';
       ctx.fillText(a.denied, px + 140, by + blockH - 8);
     }
     ctx.restore();
@@ -434,7 +434,7 @@ function drawPermissionsContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) 
     ctx.save();
     ctx.globalAlpha = footA * 0.50;
     ctx.fillStyle = COLORS.permissions;
-    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "left";
     ctx.fillText("scoped, signed, revocable", px + 16, py + ph - 16);
     ctx.restore();
@@ -447,8 +447,8 @@ function drawTrustContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) {
   const mid = py + ph * 0.38;
   ctx.save();
   ctx.globalAlpha = fa;
-  ctx.fillStyle = "#1A1A1A";
-  ctx.font = 'bold 36px "DM Mono", monospace';
+  ctx.fillStyle = "#0A051A";
+  ctx.font = 'bold 36px "Poppins", system-ui, sans-serif';
   ctx.textAlign = "center";
   ctx.fillText("0.94", px + pw / 2, mid);
   ctx.fillStyle = "rgba(26,26,26,0.08)";
@@ -460,7 +460,7 @@ function drawTrustContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) {
   ctx.roundRect(px + 20, mid + 16, (pw - 40) * 0.94, 10, 5);
   ctx.fill();
   ctx.fillStyle = "rgba(26,26,26,0.50)";
-  ctx.font = '10px "DM Mono", monospace';
+  ctx.font = '10px "Poppins", system-ui, sans-serif';
   ctx.fillText("47 interactions · 12 agents", px + pw / 2, mid + 48);
   ctx.fillText("0 disputes · 3 verified trips", px + pw / 2, mid + 66);
   const stats = [
@@ -473,11 +473,11 @@ function drawTrustContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) {
   const statW = (pw - 40) / stats.length;
   for (let i = 0; i < stats.length; i++) {
     const sx = px + 20 + i * statW + statW / 2;
-    ctx.fillStyle = "#1A1A1A";
-    ctx.font = 'bold 16px "DM Mono", monospace';
+    ctx.fillStyle = "#0A051A";
+    ctx.font = 'bold 16px "Poppins", system-ui, sans-serif';
     ctx.fillText(stats[i].val, sx, statTop);
     ctx.fillStyle = "rgba(26,26,26,0.35)";
-    ctx.font = '7px "DM Mono", monospace';
+    ctx.font = '7px "Poppins", system-ui, sans-serif';
     ctx.fillText(stats[i].label, sx, statTop + 14);
   }
   ctx.restore();
@@ -510,11 +510,11 @@ function drawHistoryContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) {
     ctx.arc(px + 22, ry + rowH * 0.4, 3, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "rgba(26,26,26,0.40)";
-    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "left";
     ctx.fillText(log[i].date, px + 32, ry + rowH * 0.35);
-    ctx.fillStyle = "#1A1A1A";
-    ctx.font = '10px "DM Mono", monospace';
+    ctx.fillStyle = "#0A051A";
+    ctx.font = '10px "Poppins", system-ui, sans-serif';
     ctx.fillText(log[i].text, px + 80, ry + rowH * 0.35);
     ctx.restore();
   }
@@ -523,7 +523,7 @@ function drawHistoryContent(ctx, px, py, pw, ph, contentAlpha, pp, ppStart) {
     ctx.save();
     ctx.globalAlpha = footA * 0.40;
     ctx.fillStyle = COLORS.history;
-    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "left";
     ctx.fillText("47 total interactions · full graph available", px + 16, py + ph - 16);
     ctx.restore();
@@ -655,14 +655,14 @@ export function drawParticipantCard(ctx, state, tl, { cx, cy, W, H }) {
       ctx.fill();
 
       ctx.fillStyle = "#FFFFFF";
-      ctx.font = 'bold 7px "DM Mono", monospace';
+      ctx.font = 'bold 7px "Poppins", system-ui, sans-serif';
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(b.key.slice(0, 4).toUpperCase(), tx, ty + 1);
       ctx.textBaseline = "alphabetic";
 
       ctx.fillStyle = b.color;
-      ctx.font = 'bold 9px "DM Mono", monospace';
+      ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
       const labelDist = 30;
       const lx = tx + Math.cos(angle) * labelDist;
       const ly = ty + Math.sin(angle) * labelDist;
@@ -674,8 +674,8 @@ export function drawParticipantCard(ctx, state, tl, { cx, cy, W, H }) {
   if (captionIn > 0.001) {
     ctx.save();
     ctx.globalAlpha = phase4Alpha * captionIn * 0.35;
-    ctx.fillStyle = "#1A1A1A";
-    ctx.font = '11px "DM Mono", monospace';
+    ctx.fillStyle = "#0A051A";
+    ctx.font = '11px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "center";
     ctx.fillText("One structure. Every interaction makes it richer.", cx, H - 44);
     ctx.restore();

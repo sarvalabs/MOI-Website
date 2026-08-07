@@ -1,0 +1,236 @@
+/* ──────────────────────────────────────────────────────────────────────
+   Mobile optimization layer — imported last so it wins same-specificity
+   cascade battles. Targets ≤768px first, with extra tightening ≤520px.
+   ────────────────────────────────────────────────────────────────────── */
+
+/* Universal safety: no element should cause horizontal overflow.
+   `clip` is the modern form and is declared second so supporting browsers
+   take it. It clips identically to `hidden` but does not turn html/body into
+   a scroll container, which is what silently breaks `position: sticky`
+   further down the tree. Older browsers fall back to `hidden` and simply
+   lose stickiness. */
+html, body {
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* ── ≤768px : core mobile pass ─────────────────────────────────────── */
+@media (max-width: 768px) {
+
+  /* Disable scroll-snap on mobile — sections are too short on phones */
+  .how-it-works-page,
+  .how-it-works-page > * {
+    scroll-snap-type: none !important;
+    scroll-snap-align: none !important;
+  }
+
+  /* ── HomePage hero ── */
+  .hero-headline,
+  .home-hero-hl,
+  .hero-hl {
+    font-size: clamp(2rem, 8vw, 2.75rem) !important;
+    line-height: 1.05 !important;
+  }
+  .hero-sub, .home-hero-sub, .hero-copy p {
+    font-size: 0.95rem !important;
+    line-height: 1.55 !important;
+  }
+  .hero-tagline {
+    font-size: clamp(1.05rem, 4.5vw, 1.4rem) !important;
+  }
+  .hero-grid { gap: 24px !important; }
+  .hero-ctas { flex-wrap: wrap; gap: 10px; }
+  .hero-btn { font-size: 13px !important; padding: 11px 18px !important; }
+
+  /* ── Section padding everywhere ── */
+  section.s-flow,
+  section.s-validators,
+  section.s-ask,
+  section.s-kitcta,
+  section.s-promise,
+  section.s-why,
+  .how-it-works-page section {
+    padding-top: 3.5rem !important;
+    padding-bottom: 3.5rem !important;
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+
+  /* ── Flow / promise grids → single column ── */
+  .flow-steps,
+  .s-promise .promise-grid,
+  .promise-grid,
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  .flow-step { padding: 1.25rem !important; }
+
+  /* ── KitKat CTA ── */
+  .kitcta-hl { font-size: clamp(1.8rem, 7vw, 2.6rem) !important; }
+  .kitcta-sub { font-size: 0.95rem !important; }
+  .kitcta-ctas { flex-direction: column; gap: 10px; align-items: stretch; }
+  .kitcta-btn { width: 100%; text-align: center; justify-content: center; }
+
+  /* ── Ask chat container ── */
+  .ask-container, .s-ask .ask-container {
+    max-height: 60vh !important;
+    padding: 16px !important;
+  }
+  .ask-hl { font-size: clamp(1.6rem, 6vw, 2.2rem) !important; }
+
+  /* ── How It Works headlines ── */
+  .how-it-works-page .headline,
+  .how-it-works-page .act2-hl,
+  .how-it-works-page .cta-hl,
+  .how-it-works-page .act2-hl-l1,
+  .how-it-works-page .act2-hl-l2 {
+    font-size: clamp(1.75rem, 7vw, 2.6rem) !important;
+    max-width: none !important;
+    line-height: 1.1 !important;
+  }
+  .how-it-works-page .subline,
+  .how-it-works-page .caption,
+  .how-it-works-page p {
+    font-size: 0.95rem !important;
+    line-height: 1.55 !important;
+  }
+
+  /* ── s1 chain grid → vertical stack ── */
+  .chain-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  .chain-grid .connector,
+  .chain-grid .arrow,
+  .chain-grid .chain-arrow { display: none !important; }
+  .chain-grid .field-val { white-space: normal !important; overflow: visible !important; }
+
+  /* ── s-root-cause: 4-card grid → 1col, dims pills wrap ── */
+  .how-it-works-page section.s-root-cause .act2-cards--four {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  .act2-dims { flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .act2-dim { font-size: 10px !important; padding: 6px 12px !important; }
+
+  /* ── s6 hub diagram ── */
+  .hub-wrap, .hub-frame {
+    max-width: 320px !important;
+    height: 320px !important;
+    margin: 0 auto !important;
+  }
+  .hub-wrap svg { width: 100% !important; height: 100% !important; }
+
+  /* ── s7 preferences ── */
+  .pref-layout {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* ── s8 assets split ── */
+  .assets-split {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .assets-split .divider,
+  .assets-split [class*="divider"] { display: none !important; }
+
+  /* ── s9 permissions table → cards ── */
+  .perm-table {
+    display: block !important;
+    max-width: 100% !important;
+  }
+  .perm-table thead { display: none !important; }
+  .perm-table tbody, .perm-table tr, .perm-table td {
+    display: block !important;
+    width: 100% !important;
+  }
+  .perm-table tr {
+    margin-bottom: 12px;
+    padding: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(200,191,239,0.18);
+    border-radius: 14px;
+  }
+  .perm-table td {
+    padding: 4px 0 !important;
+    border: none !important;
+    font-size: 13px !important;
+  }
+
+  /* ── s-superstate grid ── */
+  .ss-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* ── s11 closing stats ── */
+  .shift-stat-row {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .shift-stat-num,
+  .stat-num {
+    font-size: clamp(1.75rem, 7vw, 2.5rem) !important;
+  }
+
+  /* ── Papers page ── */
+  .papers-page { padding-top: 5.5rem !important; }
+  .papers-hero { padding: 2.5rem 1.25rem 2rem !important; }
+  .papers-hl { font-size: clamp(2rem, 7vw, 2.8rem) !important; }
+  .papers-grid {
+    grid-template-columns: 1fr !important;
+    padding: 0 1.25rem !important;
+    margin-bottom: 4rem !important;
+  }
+  .paper-card { min-height: auto !important; padding: 1.5rem 1.25rem !important; }
+
+  /* ── Manifesto ── */
+  .manifesto-page section, .m-section { padding: 3rem 1.25rem !important; }
+  .m-line { font-size: clamp(1rem, 4.5vw, 1.2rem) !important; }
+  .m-headline { font-size: clamp(2rem, 8vw, 3rem) !important; }
+
+  /* ── Footer ── */
+  .footer-nav-link { font-size: 13px !important; padding: 6px 0 !important; }
+  .footer-copy { font-size: 12px !important; }
+  .landing-footer { padding: 2.5rem 1.25rem !important; }
+
+  /* ── Chatbot panel ── */
+  .moi-chatbot-panel,
+  .chatbot-panel,
+  [class*="chatbot-panel"] {
+    width: min(400px, calc(100vw - 24px)) !important;
+    max-width: calc(100vw - 24px) !important;
+    right: 12px !important;
+    left: auto !important;
+    bottom: 12px !important;
+  }
+
+  /* ── Navbar tap targets ── */
+  nav.fixed button[aria-label="Toggle menu"] {
+    padding: 10px !important;
+  }
+}
+
+/* ── ≤520px : extra phone tightening ─────────────────────────────────── */
+@media (max-width: 520px) {
+  .hero-headline,
+  .home-hero-hl,
+  .hero-hl {
+    font-size: clamp(1.85rem, 9vw, 2.4rem) !important;
+  }
+  .how-it-works-page .headline,
+  .how-it-works-page .act2-hl,
+  .how-it-works-page .act2-hl-l1,
+  .how-it-works-page .act2-hl-l2 {
+    font-size: clamp(1.6rem, 8vw, 2.2rem) !important;
+  }
+  section, .how-it-works-page section {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  .hero-grid { gap: 16px !important; }
+  .kitcta-hl { font-size: clamp(1.6rem, 7.5vw, 2.2rem) !important; }
+  .papers-hl { font-size: clamp(1.8rem, 8vw, 2.4rem) !important; }
+}

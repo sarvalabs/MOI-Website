@@ -178,13 +178,13 @@ export function drawNetwork(ctx, state, tl, { cx, cy, W, H, mapRef }) {
       const t = (state.time * 0.004 + i * 0.5) % 1;
       const px = (1 - t) * (1 - t) * ax + 2 * (1 - t) * t * mx + t * t * bx;
       const py = (1 - t) * (1 - t) * cy + 2 * (1 - t) * t * my + t * t * cy;
-      ctx.fillStyle = "#7B5EA7";
+      ctx.fillStyle = "#4B17E5";
       ctx.beginPath();
       ctx.arc(px, py, 2.8, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.fillStyle = "rgba(26,26,26,0.5)";
-    ctx.font = '9px "DM Mono", monospace';
+    ctx.font = '9px "Poppins", system-ui, sans-serif';
     const label = ARC_LABELS[Math.floor(state.time * 0.003) % ARC_LABELS.length];
     ctx.textAlign = "center";
     ctx.fillText(label, cx, cy - 90);
@@ -193,7 +193,7 @@ export function drawNetwork(ctx, state, tl, { cx, cy, W, H, mapRef }) {
   if (phase6T > 0.7) {
     ctx.globalAlpha = phase6Alpha * smoothstep(ramp(phase6T, 0.7, 0.9)) * 0.18;
     ctx.fillStyle = "#7B6B8A";
-    ctx.font = '8px "DM Mono", monospace';
+    ctx.font = '8px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "center";
     ctx.fillText(`36 PARTICIPANTS · ${links.length} INTERACTIONS · ALL PARALLEL`, cx, H - 36);
   }

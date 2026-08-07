@@ -3,7 +3,7 @@ import { ramp, smoothstep } from "../timing.js";
 
 const NODES = [
   { name: "Alice", color: "#8B6CC1", rad: 30, isUser: true },
-  { name: "Personal Agent", color: "#7B5EA7", rad: 22, isUser: false },
+  { name: "Personal Agent", color: "#4B17E5", rad: 22, isUser: false },
   { name: "Flight Agent", color: "#3A9F7E", rad: 22, isUser: false },
   { name: "Payment Agent", color: "#D4853A", rad: 22, isUser: false },
   { name: "Bank Agent", color: "#2D7EC4", rad: 22, isUser: false },
@@ -57,13 +57,13 @@ function drawChainNode(ctx, x, y, node, alpha, time) {
   ctx.textAlign = "center";
   ctx.fillStyle = "#FFFFFF";
   if (node.isUser) {
-    ctx.font = 'bold 11px "DM Mono", monospace';
+    ctx.font = 'bold 11px "Poppins", system-ui, sans-serif';
     ctx.fillText("Alice", x, y + 4);
   } else {
     const [first, second] = node.name.split(" ");
-    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     ctx.fillText(first, x, y + 1);
-    ctx.font = '8px "DM Mono", monospace';
+    ctx.font = '8px "Poppins", system-ui, sans-serif';
     ctx.fillText(second || "", x, y + 12);
   }
   ctx.restore();
@@ -99,8 +99,8 @@ function drawAuthBadge(ctx, x, y, badgeState, alpha, reveal) {
   ctx.fill();
 
   ctx.textAlign = "left";
-  ctx.fillStyle = "#1A1A1A";
-  ctx.font = '9px "DM Mono", monospace';
+  ctx.fillStyle = "#0A051A";
+  ctx.font = '9px "Poppins", system-ui, sans-serif';
   for (let i = 0; i < badgeState.lines.length; i++) {
     ctx.fillText(badgeState.lines[i], x + 10, y0 + 15 + i * 10);
   }
@@ -187,7 +187,7 @@ export function drawDelegationChain(ctx, state, tl, { cx, cy }) {
     ctx.save();
     ctx.globalAlpha = phase1Alpha * r * 0.35;
     ctx.fillStyle = "#C0392B";
-    ctx.font = '8px "DM Mono", monospace';
+    ctx.font = '8px "Poppins", system-ui, sans-serif';
     ctx.fillText(item.text, p.x + 45, p.y + 2);
     ctx.restore();
   }
@@ -213,11 +213,11 @@ export function drawDelegationChain(ctx, state, tl, { cx, cy }) {
     ctx.arc(gx, gy, 16, 0, Math.PI * 2);
     ctx.stroke();
     ctx.fillStyle = "#C0392B";
-    ctx.font = 'bold 16px "Instrument Serif", serif';
+    ctx.font = 'bold 16px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "center";
     ctx.fillText("?", gx, gy + 5);
     ctx.textAlign = "left";
-    ctx.font = '10px "DM Mono", monospace';
+    ctx.font = '10px "Poppins", system-ui, sans-serif';
     ctx.fillText("Who authorized this?", gx + 22, gy + 3);
     ctx.restore();
   }
@@ -237,10 +237,10 @@ export function drawDelegationChain(ctx, state, tl, { cx, cy }) {
     ctx.lineTo(lx, bottom.y);
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.font = 'bold 12px "DM Mono", monospace';
+    ctx.font = 'bold 12px "Poppins", system-ui, sans-serif';
     ctx.fillStyle = "rgba(192,57,43,0.85)";
     ctx.fillText("×", lx - 4, (top.y + bottom.y) * 0.5);
-    ctx.font = '9px "DM Mono", monospace';
+    ctx.font = '9px "Poppins", system-ui, sans-serif';
     ctx.fillText("alice has no visibility", lx + 8, (top.y + bottom.y) * 0.5 + 3);
     ctx.restore();
   }
@@ -249,8 +249,8 @@ export function drawDelegationChain(ctx, state, tl, { cx, cy }) {
     const a = smoothstep(ramp(phase1T, 0.88, 1));
     ctx.save();
     ctx.globalAlpha = phase1Alpha * a * 0.35;
-    ctx.fillStyle = "#1A1A1A";
-    ctx.font = '10px "DM Mono", monospace';
+    ctx.fillStyle = "#0A051A";
+    ctx.font = '10px "Poppins", system-ui, sans-serif';
     ctx.textAlign = "center";
     ctx.fillText("authorization degrades at every hop - like a game of telephone", cx, cy + 250);
     ctx.restore();

@@ -1,6 +1,7 @@
 import { config as loadEnv } from "dotenv";
 import express from "express";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 import Anthropic from "@anthropic-ai/sdk";
 import OpenAI from "openai";
 import { createClient } from "@supabase/supabase-js";
@@ -13,7 +14,20 @@ const __dirname = path.dirname(__filename);
 loadEnv({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
-app.use(cors());
+
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173")
+  .split(",")
+  .map((o) => o.trim());
+app.use(cors({ origin: allowedOrigins }));
+
+const chatLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later" },
+});
+
 app.use(express.json());
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -55,8 +69,7 @@ async function findRelevantChunks(embedding) {
     match_threshold: 0.3,
     match_count: 6,
   });
-  console.log('RPC error:', error);
-  console.log('RPC data:', data);
+  if (error) console.error('RPC error:', error);
   if (error) throw error;
   return data || [];
 }
@@ -79,7 +92,90 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-app.post("/api/chat", async (req, res) => {
+/* ── Community Calls API ── */
+
+const ADMIN_KEY = process.env.ADMIN_API_KEY || "moi-admin-key";
+
+function requireAdmin(req, res, next) {
+  const key = req.headers["x-admin-key"];
+  if (key !== ADMIN_KEY) return res.status(401).json({ error: "Unauthorized" });
+  next();
+}
+
+let callsCache = { data: null, ts: 0 };
+const CACHE_TTL = 5 * 60 * 1000;
+
+app.get("/api/community-calls", async (_req, res) => {
+  try {
+    const now = Date.now();
+    if (callsCache.data && now - callsCache.ts < CACHE_TTL) {
+      return res.json(callsCache.data);
+    }
+    const { data, error } = await supabase
+      .from("community_calls")
+      .select("*")
+      .order("date", { ascending: true });
+    if (error) throw error;
+    callsCache = { data: data || [], ts: now };
+    res.json(data || []);
+  } catch (err) {
+    console.error("Fetch calls error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/api/community-calls", requireAdmin, async (req, res) => {
+  try {
+    const { title, description, date, duration_minutes, timezone, meeting_link, meeting_link_label, category, max_attendees } = req.body;
+    if (!title || !date) return res.status(400).json({ error: "title and date are required" });
+    const { data, error } = await supabase
+      .from("community_calls")
+      .insert({ title, description, date, duration_minutes, timezone, meeting_link, meeting_link_label, category, max_attendees })
+      .select()
+      .single();
+    if (error) throw error;
+    callsCache = { data: null, ts: 0 };
+    res.status(201).json(data);
+  } catch (err) {
+    console.error("Create call error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.put("/api/community-calls/:id", requireAdmin, async (req, res) => {
+  try {
+    const { title, description, date, duration_minutes, timezone, meeting_link, meeting_link_label, category, max_attendees } = req.body;
+    const { data, error } = await supabase
+      .from("community_calls")
+      .update({ title, description, date, duration_minutes, timezone, meeting_link, meeting_link_label, category, max_attendees, updated_at: new Date().toISOString() })
+      .eq("id", req.params.id)
+      .select()
+      .single();
+    if (error) throw error;
+    callsCache = { data: null, ts: 0 };
+    res.json(data);
+  } catch (err) {
+    console.error("Update call error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.delete("/api/community-calls/:id", requireAdmin, async (req, res) => {
+  try {
+    const { error } = await supabase
+      .from("community_calls")
+      .delete()
+      .eq("id", req.params.id);
+    if (error) throw error;
+    callsCache = { data: null, ts: 0 };
+    res.status(204).end();
+  } catch (err) {
+    console.error("Delete call error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/api/chat", chatLimiter, async (req, res) => {
   try {
     let message;
     let history = [];
@@ -154,13 +250,13 @@ app.post("/api/chat", async (req, res) => {
     stream.on("error", (err) => {
       clearInterval(flushInterval);
       console.error("Stream error:", err);
-      writeSse(res, { type: "error", error: err.message });
+      writeSse(res, { type: "error", error: "Something went wrong" });
       res.end();
     });
   } catch (err) {
     console.error("Chat error:", err);
     if (!res.headersSent) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({ error: "Internal server error" });
     }
   }
 });

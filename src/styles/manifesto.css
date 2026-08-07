@@ -1,0 +1,153 @@
+/* ── Manifesto — simple light reading page ── */
+
+/* Restore conventional 16px root on /manifesto so the rem-based
+   reading measure (~40rem) hits the intended ~640px column.
+   Site root is 10px (Tailwind reset); this is route-scoped. */
+html.manifesto-root { font-size: 16px; }
+
+.manifesto-page {
+  --m-bg:       #FCFBFF;
+  --m-text:     #15102B;
+  --m-muted:    #5B5570;
+  --m-accent:   #4B17E5;
+  --m-rule:     rgba(21, 16, 43, 0.08);
+
+  background: var(--m-bg);
+  color: var(--m-text);
+  min-height: 100vh;
+  font-family: var(--font-sans), "Poppins", system-ui, -apple-system, sans-serif;
+}
+
+body:has(.manifesto-page) { background-color: #FCFBFF; }
+
+/* ── Main column ── */
+.m-main {
+  padding: 7rem 1.5rem 5rem;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+/* ── Eyebrow + title ── */
+.m-header { margin-bottom: 2.5rem; }
+.m-eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--m-accent);
+  margin: 0 0 1rem;
+}
+.m-title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(2rem, 4.5vw, 2.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  color: var(--m-text);
+  margin: 0;
+}
+
+/* ── Column body ── */
+.m-column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Prose paragraphs (regular body) */
+.m-prose {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 1.075rem;
+  line-height: 1.75;
+  color: var(--m-muted);
+  margin: 0 0 1.25rem;
+}
+
+/* Load-bearing standalone lines */
+.m-line {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  color: var(--m-text);
+  margin: 0.5rem 0 1.5rem;
+}
+.m-line--accent { color: var(--m-accent); }
+
+/* ── Hairline divider ── */
+.m-hr {
+  border: 0;
+  height: 1px;
+  background: var(--m-rule);
+  margin: 2.25rem 0;
+}
+
+/* ── Declaration ── */
+.m-declaration {
+  margin: 2.25rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.m-decl-line {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  color: var(--m-text);
+  margin: 0;
+}
+.m-decl-line--accent { color: var(--m-accent); }
+
+/* ── Close CTAs ── */
+.m-close-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 2.5rem 0 0;
+}
+.m-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 24px;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  transition: transform 200ms cubic-bezier(0.22, 0.61, 0.36, 1),
+              background 200ms cubic-bezier(0.22, 0.61, 0.36, 1),
+              border-color 200ms cubic-bezier(0.22, 0.61, 0.36, 1),
+              color 200ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.m-cta:hover { transform: translateY(-1px); }
+.m-cta-primary {
+  background: var(--m-accent);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(75, 23, 229, 0.22);
+}
+.m-cta-primary:hover { background: #320F99; }
+.m-cta-ghost {
+  background: transparent;
+  border: 1px solid rgba(21, 16, 43, 0.18);
+  color: var(--m-text);
+}
+.m-cta-ghost:hover {
+  border-color: var(--m-accent);
+  color: var(--m-accent);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .m-main { padding: 5.5rem 1.25rem 3.5rem; }
+  .m-header { margin-bottom: 1.75rem; }
+  .m-prose { font-size: 1.025rem; }
+  .m-line, .m-decl-line { font-size: 1.125rem; }
+  .m-hr { margin: 1.75rem 0; }
+  .m-declaration { margin: 1.75rem 0 1.5rem; }
+  .m-close-ctas { margin-top: 2rem; }
+}

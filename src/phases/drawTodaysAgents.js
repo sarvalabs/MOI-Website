@@ -29,7 +29,7 @@ export function drawTodaysAgents(sctx, state, timeline, { cx, cy, W, H }) {
   // Agent sub-labels
   sctx.globalAlpha = todayAlpha * 0.45;
   sctx.fillStyle = TRAVEL_AGENT_COLOR;
-  sctx.font = '8px "DM Mono", monospace';
+  sctx.font = '8px "Poppins", system-ui, sans-serif';
   sctx.textAlign = "center";
   sctx.fillText("travel planner", agentAX, agentAY + AGENT_RADIUS + 18);
   sctx.fillStyle = FLIGHT_AGENT_COLOR;
@@ -53,7 +53,7 @@ export function drawTodaysAgents(sctx, state, timeline, { cx, cy, W, H }) {
     const warnAlpha = Math.min(1, (todayRepeatT - 0.5) * 2) * (0.5 + 0.3 * Math.sin(state.time * 0.06));
     sctx.globalAlpha = todayAlpha * warnAlpha * 0.6;
     sctx.fillStyle = "#C0392B";
-    sctx.font = 'bold 9px "DM Mono", monospace';
+    sctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.fillText("same context, repeated", cx, cy + USER_RADIUS + 40);
   }
@@ -115,7 +115,7 @@ function drawDataFlow(sctx, state, fromX, fromY, fromR, toX, toY, toR, fromColor
       if (dotAlpha > 0.3) {
         sctx.globalAlpha = alpha * dotAlpha * 0.55;
         sctx.fillStyle = isRepeat ? "#C0392B" : "rgba(26,26,26,0.5)";
-        sctx.font = '7px "DM Mono", monospace';
+        sctx.font = '7px "Poppins", system-ui, sans-serif';
         sctx.textAlign = "left";
         sctx.fillText(labels[i], px + 6, py + 3);
       }

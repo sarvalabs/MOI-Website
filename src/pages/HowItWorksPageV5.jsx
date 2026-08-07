@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "../components/Navbar.jsx";
@@ -9,6 +9,61 @@ import "../styles/how-it-works.css";
 gsap.registerPlugin(ScrollTrigger);
 
 /* ────────────────────────────────────────────────
+   Sticky act rail (left, desktop only)
+   ──────────────────────────────────────────────── */
+const SHIFT_RAIL_ITEMS = [
+  { id: "s1",           label: "Problem" },
+  { id: "act2Section",  label: "Missing dimension" },
+  { id: "archSection",  label: "Architecture" },
+  { id: "liveSection",  label: "Live" },
+];
+
+function ShiftActRail() {
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const fold = window.innerHeight * 0.4;
+      let next = 0;
+      SHIFT_RAIL_ITEMS.forEach((it, i) => {
+        const el = document.getElementById(it.id);
+        if (el && el.getBoundingClientRect().top <= fold) next = i;
+      });
+      setActiveIdx(next);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const jump = (id) => (e) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 88;
+    window.scrollTo({ top, behavior: "smooth" });
+  };
+
+  return (
+    <nav className="shift-rail" aria-label="The Shift — acts">
+      {SHIFT_RAIL_ITEMS.map((it, i) => (
+        <a
+          key={it.id}
+          href={`#${it.id}`}
+          onClick={jump(it.id)}
+          className={`shift-rail-item${i === activeIdx ? " is-active" : ""}`}
+        >
+          <span className="shift-rail-num">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <span>{it.label}</span>
+        </a>
+      ))}
+    </nav>
+  );
+}
+
+/* ────────────────────────────────────────────────
    Section sub-components (no special JS)
    ──────────────────────────────────────────────── */
 
@@ -16,7 +71,11 @@ function TrustChain() {
   return (
     <section className="s1" id="s1">
       <div className="sec-inner">
-        <div className="pill gs">Act 1 — The Problem</div>
+        <div className="pill gs">Act 01 — The Problem</div>
+        <p className="problem-tag gs">
+          <span className="problem-tag-num">01</span>
+          <span className="problem-tag-word">Propagation</span>
+        </p>
         <h2 className="headline gs">
           When agents delegate,
           <br />
@@ -224,6 +283,10 @@ function ColdStart() {
   return (
     <section className="s2">
       <div className="sec-inner">
+        <p className="problem-tag gs">
+          <span className="problem-tag-num">02</span>
+          <span className="problem-tag-word">Context Blindness</span>
+        </p>
         <h2 className="headline gs">
           Every agent starts
           <br />
@@ -308,6 +371,10 @@ function Custody() {
   return (
     <section className="s3">
       <div className="sec-inner">
+        <p className="problem-tag gs">
+          <span className="problem-tag-num">03</span>
+          <span className="problem-tag-word">Theft</span>
+        </p>
         <h2 className="headline gs">
           Your tokens live in
           <br />
@@ -416,27 +483,44 @@ function RootCauseSection() {
         </div>
 
         <h2 className="act2-hl gs">
-          <span className="act2-hl-l1">Three problems.</span>
+          <span className="act2-hl-l1">Four problems.</span>
           <span className="act2-hl-l2">One missing dimension.</span>
         </h2>
 
-        <div className="act2-cards gs">
+        <div className="act2-cards gs act2-cards--four">
           <div className="act2-card">
-            <div className="act2-card-label">Trust</div>
+            <div className="act2-card-num-glyph">01</div>
+            <div className="act2-card-label">Theft</div>
             <div className="act2-card-text">
-              By the 4th agent, Alice is unknown. No <em>who</em> persists across the chain.
+              Bits work in any hand. A token is just data — the system
+              can&apos;t tell the <em>thief</em> from the user.
             </div>
           </div>
+
           <div className="act2-card">
-            <div className="act2-card-label">Context</div>
+            <div className="act2-card-num-glyph">02</div>
+            <div className="act2-card-label">Propagation</div>
             <div className="act2-card-text">
-              Every agent asks the same questions. No <em>who</em> carries memory between them.
+              The sub-agent holds your <em>full authority</em>. Tokens
+              delegate copies, never just slices.
             </div>
           </div>
+
           <div className="act2-card">
-            <div className="act2-card-label">Assets</div>
+            <div className="act2-card-num-glyph">03</div>
+            <div className="act2-card-label">Revocation Drift</div>
             <div className="act2-card-text">
-              Your tokens live in someone else&apos;s mapping. No <em>who</em> actually owns them.
+              The kill switch is an <em>illusion</em>. Revocation propagates
+              slower than the agent acts.
+            </div>
+          </div>
+
+          <div className="act2-card">
+            <div className="act2-card-num-glyph">04</div>
+            <div className="act2-card-label">Context Blindness</div>
+            <div className="act2-card-text">
+              Bits are static; the world is dynamic. The agent holds the
+              token; the <em>rest has moved on</em>.
             </div>
           </div>
         </div>
@@ -449,12 +533,74 @@ function RootCauseSection() {
   );
 }
 
+/** Evidence — four stats that ground the four keywords */
+function EvidenceStatsSection() {
+  return (
+    <section className="s-evidence" id="evidenceSection">
+      <div className="sec-inner">
+        <p className="pill gs">The evidence</p>
+        <h2 className="headline gs">
+          The numbers behind
+          <br />
+          the four problems.
+        </h2>
+
+        <ul className="ev-grid gs">
+          <li className="ev-card">
+            <div className="ev-num">3,600×</div>
+            <div className="ev-label">Machine-Speed Gap</div>
+            <ul className="ev-bullets">
+              <li>50ms · Agent</li>
+              <li>3min · Human Review</li>
+            </ul>
+            <p className="ev-source">Berkeley AAI 2025</p>
+          </li>
+
+          <li className="ev-card">
+            <div className="ev-num">100:1</div>
+            <div className="ev-label">
+              Non-Human Identities vs Employees in Financial Services
+            </div>
+            <p className="ev-source">Cyentia 2026</p>
+          </li>
+
+          <li className="ev-card">
+            <div className="ev-num">$2.8B+</div>
+            <div className="ev-label">Unanchored Value</div>
+            <ul className="ev-bullets">
+              <li>Cross-Chain bridges</li>
+              <li>Cumulative on-chain</li>
+            </ul>
+          </li>
+
+          <li className="ev-card">
+            <div className="ev-card-head">
+              <div className="ev-num">95M+/mo</div>
+              <span className="ev-date">Mar 2026</span>
+            </div>
+            <div className="ev-label">Revocation Drift</div>
+            <ul className="ev-bullets">
+              <li>LiteLLM Compromise</li>
+              <li>Sonatype</li>
+            </ul>
+          </li>
+        </ul>
+
+        <p className="impact-line gs ev-thesis">
+          One root cause: authority-as-information is{" "}
+          <em>copyable</em>. And what&apos;s copyable cannot stay yours.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 /** Act 2 — WHO as a primitive + Context Superstate reveal */
 function Act2RevealSection() {
   return (
-    <section className="s-act2-reveal">
+    <section className="s-act2-reveal" id="act2Section">
       <div className="sec-inner" style={{ textAlign: "center" }}>
-        <div className="pill gs">Act 2 — The Missing Dimension</div>
+        <div className="pill gs">Act 02 — The Missing Dimension</div>
 
         <h2 className="headline gs" style={{ textAlign: "center" }}>
           What if <em>who</em> was a
@@ -462,16 +608,34 @@ function Act2RevealSection() {
           first-class primitive?
         </h2>
 
-        <p className="subline gs" style={{ margin: "0 auto", textAlign: "center" }}>
-          Not an address. Not a login. Not a session cookie.
-          A persistent, portable existence — one data structure that represents
-          everything about a participant: what they own, what they&apos;ve permitted,
-          what they prefer, and who they trust.
+        <p className="act2-deck gs">
+          Not an <em>address</em>. Not a <em>login</em>. Not a{" "}
+          <em>session cookie</em>.
         </p>
+        <p className="act2-deck act2-deck--lead gs">
+          A persistent, portable existence — one data structure that represents
+          everything about a participant.
+        </p>
+        <ul className="act2-traits gs">
+          <li>what they own</li>
+          <li>what they&apos;ve permitted</li>
+          <li>what they prefer</li>
+          <li>who they trust</li>
+        </ul>
+      </div>
+    </section>
+  );
+}
 
-        {/* Context Superstate — the actual product */}
-        <div className="pill gs" style={{ marginTop: "3rem" }}>The Context Superstate</div>
-        <p className="subline gs" style={{ margin: "0.5rem auto 0", textAlign: "center" }}>
+function ContextSuperstateSection() {
+  return (
+    <section className="s-superstate" id="superstateSection">
+      <div className="sec-inner" style={{ textAlign: "center" }}>
+        <div className="pill gs">The participant primitive</div>
+        <h2 className="headline gs" style={{ textAlign: "center" }}>
+          The Context <em>Superstate</em>.
+        </h2>
+        <p className="subline gs" style={{ margin: "1rem auto 0", textAlign: "center" }}>
           The cryptographic data structure that represents your entire
           existence in computation. Always current. Always available. Always
           sovereign.
@@ -488,8 +652,8 @@ function Act2RevealSection() {
               <div className="ss-ctx-desc">Native tokens, balances, metadata</div>
             </div>
             <div className="ss-ctx">
-              <div className="ss-ctx-name">Trust</div>
-              <div className="ss-ctx-desc">Witness sets, delegation chains</div>
+              <div className="ss-ctx-name">Intelligence</div>
+              <div className="ss-ctx-desc">Participant embeddings, interaction patterns</div>
             </div>
             <div className="ss-ctx">
               <div className="ss-ctx-name">Storage</div>
@@ -508,9 +672,9 @@ function Act2RevealSection() {
               <div className="ss-ctx-desc">Privacy policies, constraints</div>
             </div>
             <div className="ss-ctx ss-ctx-wide">
-              <div className="ss-ctx-name">Intelligence</div>
+              <div className="ss-ctx-name">Trust</div>
               <div className="ss-ctx-desc">
-                Participant embeddings, interaction patterns
+                Witness sets, delegation chains
               </div>
             </div>
           </div>
@@ -540,8 +704,10 @@ function Act2RevealSection() {
           </div>
         </div>
 
-        <p className="act2-moi-tag gs" style={{ marginTop: "2.5rem" }}>
-          This is <span className="act2-moi-name">MOI</span>. The Participant Layer of the Internet.
+        <p className="act2-moi-tag gs">
+          <span className="act2-moi-eyebrow">This is</span>
+          <span className="act2-moi-name">MOI</span>
+          <span className="act2-moi-line">The Participant Layer of the Internet.</span>
         </p>
       </div>
     </section>
@@ -551,8 +717,8 @@ function Act2RevealSection() {
 function ScopedDelegation() {
   return (
     <section className="s6" id="scopedSection">
-      <div className="sec-inner">
-        <div className="pill gs">Act 3 — The Solution</div>
+      <div className="sec-inner s6-inner">
+        <div className="pill gs">Scoped Delegation</div>
         <h2 className="headline gs">
           Delegation is scoped
           <br />
@@ -563,40 +729,46 @@ function ScopedDelegation() {
           doesn't degrade — it's verified at the source.
         </p>
 
-        <div className="hub-wrap gs" id="hubWrap">
-          <div className="hub-ring" />
-          <div className="hub-center"><span className="hub-center-label">Alice's<br />Superstate</span></div>
+        <div className="hub-stage">
+          <div className="hub-wrap gs" id="hubWrap">
+            <div className="hub-center"><span className="hub-center-label">Alice's<br />Superstate</span></div>
 
-          <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 1 }} viewBox="0 0 480 400">
-            <line x1="240" y1="200" x2="100" y2="75" stroke="var(--purple)" strokeWidth="1.5" strokeDasharray="4 4" opacity=".45" />
-            <line x1="240" y1="200" x2="380" y2="75" stroke="var(--purple)" strokeWidth="1.5" strokeDasharray="4 4" opacity=".45" />
-            <line x1="240" y1="200" x2="240" y2="355" stroke="var(--purple)" strokeWidth="1.5" strokeDasharray="4 4" opacity=".45" />
-            <circle className="pulse-dot" r="4"><animateMotion dur="1.5s" repeatCount="indefinite" path="M100,75 L240,200" /></circle>
-            <circle className="pulse-dot" r="4"><animateMotion dur="1.5s" repeatCount="indefinite" begin="0.5s" path="M380,75 L240,200" /></circle>
-            <circle className="pulse-dot" r="4"><animateMotion dur="1.5s" repeatCount="indefinite" begin="1s" path="M240,355 L240,200" /></circle>
-          </svg>
+            <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 1 }} viewBox="0 0 540 480" preserveAspectRatio="xMidYMid meet">
+              {/* Hub center (270, 220). Hub radius 55. Satellite radius 28.
+                  Equilateral satellites at radius 175:
+                    Top-left  (210°): (118, 132)
+                    Top-right (330°): (422, 132)
+                    Bottom    ( 90°): (270, 395)
+                  Lines extend right up to the circle edges (2px gap each). */}
+              <line x1="221" y1="192" x2="143" y2="147" stroke="#BCA6FF" strokeWidth="1.5" opacity=".42" />
+              <line x1="319" y1="192" x2="397" y2="147" stroke="#BCA6FF" strokeWidth="1.5" opacity=".42" />
+              <line x1="270" y1="277" x2="270" y2="365" stroke="#BCA6FF" strokeWidth="1.5" opacity=".42" />
+              <circle className="pulse-dot" r="3.5"><animateMotion dur="1.8s" repeatCount="indefinite" path="M143,147 L221,192" /></circle>
+              <circle className="pulse-dot" r="3.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0.6s" path="M397,147 L319,192" /></circle>
+              <circle className="pulse-dot" r="3.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="1.2s" path="M270,365 L270,277" /></circle>
+            </svg>
 
-          <div className="spoke-agent" style={{ top: 25, left: 30 }}>
-            <div className="spoke-circle">✈️</div>
-            <span className="spoke-name">Flight Agent</span>
-            <span className="spoke-scope">book_flight: true</span>
-            <span className="spoke-check" id="ck1">✓ Verified</span>
-          </div>
-          <div className="spoke-agent" style={{ top: 25, right: 30 }}>
-            <div className="spoke-circle">💳</div>
-            <span className="spoke-name">Payment Agent</span>
-            <span className="spoke-scope">charge: $500 max</span>
-            <span className="spoke-check" id="ck2">✓ Verified</span>
-          </div>
-          <div className="spoke-agent" style={{ bottom: 0, left: "50%", transform: "translateX(-50%)" }}>
-            <div className="spoke-circle">🏦</div>
-            <span className="spoke-name">Bank Agent</span>
-            <span className="spoke-scope">confirm_payment</span>
-            <span className="spoke-check" id="ck3">✓ Verified</span>
+            {/* Spoke positions in CSS px (1:1 with viewBox).
+                spoke-agent width 110; circle 56 -> top = centerY - 28; left = centerX - 55. */}
+            <div className="spoke-agent" style={{ top: 104, left: 63 }}>
+              <div className="spoke-circle">✈️</div>
+              <span className="spoke-name">Flight Agent</span>
+              <span className="spoke-check" id="ck1">✓ Verified</span>
+            </div>
+            <div className="spoke-agent" style={{ top: 104, left: 367 }}>
+              <div className="spoke-circle">💳</div>
+              <span className="spoke-name">Payment Agent</span>
+              <span className="spoke-check" id="ck2">✓ Verified</span>
+            </div>
+            <div className="spoke-agent" style={{ top: 367, left: 215 }}>
+              <div className="spoke-circle">🏦</div>
+              <span className="spoke-name">Bank Agent</span>
+              <span className="spoke-check" id="ck3">✓ Verified</span>
+            </div>
           </div>
         </div>
 
-        <p className="impact-line gs">Agents and apps log into <em>you</em>. Not the other way around.</p>
+        <p className="impact-line gs s6-impact">Agents and apps log into <em>you</em>. Not the other way around.</p>
       </div>
     </section>
   );
@@ -785,12 +957,14 @@ function Permissions() {
 
 /* ContextSuperstate UI lives in Act2RevealSection; classical vs contextual formulas sit under the superstate grid */
 
+/* All-indigo participant palette — varying intensities so the rows are
+   still distinguishable, but the page's 2-accent system is preserved. */
 const ARCH_P = [
-  { name: "Alice", color: "#7B5EA7", speed: 0.6 },
-  { name: "Bob", color: "#3A8F6E", speed: 0.8 },
-  { name: "Charlie", color: "#C47A2D", speed: 0.5 },
-  { name: "Diana", color: "#2D7EC4", speed: 0.7 },
-  { name: "Eve", color: "#C44D5A", speed: 0.55 },
+  { name: "Alice",   color: "#9B8FF0", speed: 0.6 },
+  { name: "Bob",     color: "#BCA6FF", speed: 0.8 },
+  { name: "Charlie", color: "#7B6CE8", speed: 0.5 },
+  { name: "Diana",   color: "#A89FC8", speed: 0.7 },
+  { name: "Eve",     color: "#E07B5B", speed: 0.55 },
 ];
 const ARCH_BRIDGES = [
   { from: 0, to: 1, x: 0.35, label: "swap" },
@@ -870,15 +1044,15 @@ function ArchitectureSection() {
         ctx.globalAlpha = 0.85;
         ctx.fill();
         ctx.globalAlpha = 1;
-        ctx.font = '300 9px "DM Mono", monospace';
-        ctx.fillStyle = "rgba(26,26,26,0.45)";
+        ctx.font = '300 9px "Poppins", system-ui, sans-serif';
+        ctx.fillStyle = "rgba(232,228,245,0.45)";
         ctx.textAlign = "right";
         ctx.textBaseline = "middle";
         ctx.fillText(p.name, pLeft + 20, py);
         ctx.beginPath();
         ctx.moveTo(pLeft + 38, py);
         ctx.quadraticCurveTo(W * 0.35, py, neckX, neckY + (i - 2) * 3);
-        ctx.strokeStyle = "rgba(26, 26, 26, 0.08)";
+        ctx.strokeStyle = "rgba(232,228,245,0.08)";
         ctx.lineWidth = 1;
         ctx.stroke();
       });
@@ -896,13 +1070,13 @@ function ArchitectureSection() {
 
       ctx.beginPath();
       ctx.roundRect(blockX, neckY - blockH / 2, blockW, blockH, 6);
-      ctx.fillStyle = "rgba(26,26,26,0.02)";
-      ctx.strokeStyle = "rgba(26,26,26,0.06)";
+      ctx.fillStyle = "rgba(232,228,245,0.02)";
+      ctx.strokeStyle = "rgba(232,228,245,0.06)";
       ctx.lineWidth = 1;
       ctx.fill();
       ctx.stroke();
-      ctx.font = '400 8px "DM Mono", monospace';
-      ctx.fillStyle = "rgba(26,26,26,0.4)";
+      ctx.font = '400 8px "Poppins", system-ui, sans-serif';
+      ctx.fillStyle = "rgba(232,228,245,0.4)";
       ctx.textAlign = "center";
       ctx.textBaseline = "top";
       ctx.fillText("Block #" + blockNum, blockX + blockW / 2, neckY - blockH / 2 + 6);
@@ -911,8 +1085,8 @@ function ArchitectureSection() {
         const gx = blockX + (blockW + 6) * g;
         ctx.beginPath();
         ctx.roundRect(gx, neckY - blockH / 2 + g * 4, blockW * 0.8, blockH - g * 8, 4);
-        ctx.fillStyle = `rgba(26,26,26,${0.015 / g})`;
-        ctx.strokeStyle = `rgba(26,26,26,${0.03 / g})`;
+        ctx.fillStyle = `rgba(232,228,245,${0.015 / g})`;
+        ctx.strokeStyle = `rgba(232,228,245,${0.03 / g})`;
         ctx.lineWidth = 0.5;
         ctx.fill();
         ctx.stroke();
@@ -959,18 +1133,18 @@ function ArchitectureSection() {
       }
 
       if (bottleneckCount > 3) {
-        ctx.font = '400 9px "DM Mono", monospace';
-        ctx.fillStyle = "rgba(196, 77, 90, 0.45)";
+        ctx.font = '400 9px "Poppins", system-ui, sans-serif';
+        ctx.fillStyle = "rgba(224,123,91,0.45)";
         ctx.textAlign = "center";
         ctx.textBaseline = "alphabetic";
         ctx.fillText(bottleneckCount + " txns waiting...", neckX, neckY + 36);
-        ctx.font = '500 7px "DM Mono", monospace';
-        ctx.fillStyle = "rgba(196, 77, 90, 0.3)";
+        ctx.font = '500 7px "Poppins", system-ui, sans-serif';
+        ctx.fillStyle = "rgba(224,123,91,0.3)";
         ctx.fillText("⚠ HIGH CONTENTION", neckX, neckY + 48);
       }
 
-      ctx.font = '300 8px "DM Mono", monospace';
-      ctx.fillStyle = "rgba(26, 26, 26, 0.3)";
+      ctx.font = '300 8px "Poppins", system-ui, sans-serif';
+      ctx.fillStyle = "rgba(232,228,245,0.3)";
       ctx.textAlign = "center";
       ctx.textBaseline = "alphabetic";
       ctx.fillText("one block at a time →", blockX + blockW / 2, neckY + blockH / 2 + 16);
@@ -1002,7 +1176,7 @@ function ArchitectureSection() {
         ctx.fill();
         ctx.globalAlpha = 1;
 
-        ctx.font = '400 9px "DM Mono", monospace';
+        ctx.font = '400 9px "Poppins", system-ui, sans-serif';
         ctx.fillStyle = p.color;
         ctx.globalAlpha = 0.65;
         ctx.textAlign = "right";
@@ -1026,13 +1200,13 @@ function ArchitectureSection() {
         const chipX = lR + 10;
         ctx.beginPath();
         ctx.roundRect(chipX, ly - 12, 44, 24, 4);
-        ctx.fillStyle = "rgba(26,26,26,0.015)";
-        ctx.strokeStyle = "rgba(26,26,26,0.05)";
+        ctx.fillStyle = "rgba(232,228,245,0.015)";
+        ctx.strokeStyle = "rgba(232,228,245,0.05)";
         ctx.lineWidth = 0.5;
         ctx.fill();
         ctx.stroke();
-        ctx.font = '400 8px "DM Mono", monospace';
-        ctx.fillStyle = "rgba(26,26,26,0.4)";
+        ctx.font = '400 8px "Poppins", system-ui, sans-serif';
+        ctx.fillStyle = "rgba(232,228,245,0.4)";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText("#" + bn, chipX + 22, ly);
@@ -1056,7 +1230,7 @@ function ArchitectureSection() {
         ctx.arc(bx, ty, 3.5, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(123,94,167,0.5)";
         ctx.fill();
-        ctx.font = '300 7px "DM Mono", monospace';
+        ctx.font = '300 7px "Poppins", system-ui, sans-serif';
         ctx.fillStyle = "rgba(123,94,167,0.3)";
         ctx.textAlign = "center";
         ctx.textBaseline = "alphabetic";
@@ -1073,7 +1247,7 @@ function ArchitectureSection() {
   return (
     <section className="s10 s-arch" id="archSection">
       <div className="sec-inner">
-        <div className="pill gs">Act 4 — The Architecture</div>
+        <div className="pill gs">Act 03 — The Architecture</div>
         <h2 className="headline gs">
           Independent. Parallel.
           <br />
@@ -1117,9 +1291,9 @@ function ArchitectureSection() {
 
 function CallToAction() {
   return (
-    <section className="s11">
+    <section className="s11" id="liveSection">
       <div className="sec-inner">
-        <div className="pill gs">Act 5</div>
+        <div className="pill gs">Live</div>
         <blockquote className="closing-quote gs">
           <p>You are no longer a row in a database,<br />a wallet in a contract,<br />or a profile in an app.</p>
           <p className="closing-em">You have independent existence.</p>
@@ -1131,24 +1305,40 @@ function CallToAction() {
           is live.
         </h2>
         <p className="cta-sub gs">
-          Read the full thesis. Or start building today.
+          Real network. Real adoption. Anchor yourself in.
         </p>
+
+        <div className="shift-stat-row gs">
+          <div className="shift-stat">
+            <span className="shift-stat-num">2,100+</span>
+            <span className="shift-stat-label">Nodes live</span>
+          </div>
+          <div className="shift-stat">
+            <span className="shift-stat-num">50+</span>
+            <span className="shift-stat-label">Adopters</span>
+          </div>
+          <div className="shift-stat">
+            <span className="shift-stat-num">&lt;100ms</span>
+            <span className="shift-stat-label">Authority issuance</span>
+          </div>
+        </div>
+
         <div className="cta-btns gs">
           <a
-            href={WHITEPAPER_SITE_URL}
+            href="https://voyage.moi.technology"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary"
           >
-            Read the whitepaper →
+            Explore the network <span aria-hidden="true">→</span>
           </a>
           <a
-            href="https://docs.moi.technology"
+            href={WHITEPAPER_SITE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-secondary"
           >
-            Start Building →
+            Read the whitepaper
           </a>
         </div>
       </div>
@@ -1241,25 +1431,16 @@ export default function HowItWorksPageV5() {
       <Navbar activePage="why-moi" />
       <div ref={pageRef} className="how-it-works-page">
         <TrustChain />
-        <div className="section-divider" />
         <ColdStart />
-        <div className="section-divider" />
         <Custody />
-        <div className="section-divider" />
         <RootCauseSection />
-        <div className="section-divider" />
         <Act2RevealSection />
-        <div className="section-divider" />
+        <ContextSuperstateSection />
         <ScopedDelegation />
-        <div className="section-divider" />
         <Preferences />
-        <div className="section-divider" />
         <Assets />
-        <div className="section-divider" />
         <Permissions />
-        <div className="section-divider" />
         <ArchitectureSection />
-        <div className="section-divider" />
         <CallToAction />
       </div>
       <LandingFooter />

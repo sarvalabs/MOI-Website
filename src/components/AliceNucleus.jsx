@@ -3,12 +3,12 @@
  * Pure CSS animation, no canvas needed.
  */
 const RING_COLORS = [
-  "#8B6CC1", // authority
-  "#3A9F7E", // preferences
-  "#D4853A", // assets
-  "#C44D5A", // permissions
-  "#2D7EC4", // trust
-  "#7A8B5A", // history
+  "#4B17E5", // authority   — MOI Main
+  "#BCA6FF", // preferences — accent on dark
+  "#6F45EA", // assets      — lav-4
+  "#320F99", // permissions — MOI Dark
+  "#E20FBF", // trust       — signal magenta
+  "#009EF7", // history     — signal blue
 ];
 
 export default function AliceNucleus({ size = 56 }) {
@@ -24,16 +24,16 @@ export default function AliceNucleus({ size = 56 }) {
         {/* Glow */}
         <defs>
           <radialGradient id="nucleus-glow">
-            <stop offset="0%" stopColor="#8B6CC1" stopOpacity="0.4" />
-            <stop offset="70%" stopColor="#8B6CC1" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="#8B6CC1" stopOpacity="0" />
+            <stop offset="0%" stopColor="#4B17E5" stopOpacity="0.4" />
+            <stop offset="70%" stopColor="#4B17E5" stopOpacity="0.1" />
+            <stop offset="100%" stopColor="#4B17E5" stopOpacity="0" />
           </radialGradient>
         </defs>
         <circle cx={r} cy={r} r={r} fill="url(#nucleus-glow)" />
 
         {/* Core */}
-        <circle cx={r} cy={r} r={r * 0.52} fill="#8B6CC1" opacity="0.85" />
-        <circle cx={r} cy={r} r={r * 0.3} fill="#A88CD4" opacity="0.5" />
+        <circle cx={r} cy={r} r={r * 0.52} fill="#4B17E5" opacity="0.85" />
+        <circle cx={r} cy={r} r={r * 0.3} fill="#BCA6FF" opacity="0.5" />
 
         {/* Segmented ring */}
         {RING_COLORS.map((color, i) => (
@@ -58,9 +58,9 @@ export default function AliceNucleus({ size = 56 }) {
           x={r}
           y={r + size * 0.46}
           textAnchor="middle"
-          fill="#1A1A1A"
+          fill="#0A051A"
           opacity="0.4"
-          style={{ fontSize: "7px", fontFamily: '"DM Mono", monospace' }}
+          style={{ fontSize: "7px", fontFamily: '"Poppins", system-ui, sans-serif' }}
         >
           alice
         </text>

@@ -1,0 +1,395 @@
+/* ============================================================
+   MOI DESIGN SYSTEM — Colors & Type
+   ------------------------------------------------------------
+   The on-chain authority layer for AI agents.
+   ONE TYPEFACE: Poppins. Weights 400 / 500 / 600 / 700 only.
+   No italic. No mono. No display alternate.
+   ============================================================ */
+
+/* Poppins is loaded via @fontsource in src/index.css */
+
+:root {
+  /* ===========================================================
+     COLOR — MOI Spectrum
+     Source: Figma /Work-Space-Background/Shades + metadata
+     =========================================================== */
+
+  /* Core brand (from MOI Brand Guidelines, pages C1–C3) */
+  --moi-main:       #4B17E5;  /* MOI Main  — primary brand purple        */
+  --moi-dark:       #320F99;  /* MOI Dark  — darker shade, gradient end  */
+  --moi-white:      #FFFFFF;  /* MOI White                                */
+  --moi-grey:       #BFBFBF;  /* MOI Grey  — neutral, gradient partner   */
+  --moi-black:      #0A0026;  /* MOI Black — sole dark background        */
+
+  /* Light backgrounds (page C4) */
+  --bg-pure-white:        #FFFFFF;
+  --bg-almost-lavender:   #FCFBFF;
+  --bg-certainly-lavender:#F5F2FF;
+  --bg-pastel-purple:     #D9CCFF;
+
+  /* Convenience aliases used across the kit (kept for backward compat) */
+  --moi-lavender:   #D9CCFF;   /* "Pastel Purple" — the soft lavender  */
+  --moi-mist:       #F5F2FF;   /* "Certainly Lavender" — soft surface  */
+  --moi-haze:       #F5F2FF;   /* alias                                */
+
+  /* MOI Main scale (×0.5 → ×5) — for tints/shades of the brand */
+  --main-0_5: #5722E9;
+  --main-1:   #4E1ED4;
+  --main-1_5: #461BBE;
+  --main-2:   #3D17A8;
+  --main-3:   #2C0F7D;
+  --main-4:   #1B0851;
+  --main-5:   #0A0026;
+
+  /* Lavender scale (Almost Lavender 1) */
+  --lav-0_5: #EBE5FC;
+  --lav-1:   #D9CEFA;
+  --lav-1_5: #C8B7F7;
+  --lav-2:   #B6A0F5;
+  --lav-3:   #9273EF;
+  --lav-4:   #6F45EA;
+  --lav-5:   #4B17E5;
+
+  /* Tint scale (Almost Lavender 2) — for veils & overlays */
+  --tint-0_5: #FBFAFF;
+  --tint-1:   #F7F5FF;
+  --tint-1_5: #F4F0FF;
+  --tint-2:   #F0EBFF;
+  --tint-3:   #E8E0FF;
+  --tint-4:   #E1D6FF;
+  --tint-5:   #D9CCFF;
+
+  /* Accents — used rarely */
+  --signal-magenta: #E20FBF;
+  --signal-blue:    #009EF7;
+
+  /* ===========================================================
+     SEMANTIC TOKENS
+     =========================================================== */
+
+  /* Backgrounds */
+  --bg:              var(--moi-white);
+  --bg-soft:         var(--moi-haze);
+  --bg-elev:         #FFFFFF;
+  --bg-inverse:      var(--moi-black);
+  --bg-brand:        var(--moi-main);
+  --bg-brand-soft:   var(--moi-lavender);
+  --bg-veil:         rgba(10, 0, 38, 0.50);
+  --bg-glass:        rgba(245, 242, 255, 0.06);
+
+  /* Foreground (text) — page D1 Typography Light
+     Brand uses opacity-on-black for text emphasis tiers.   */
+  --fg-accent:       var(--moi-main);              /* "Accent" — links, eyebrows */
+  --fg-1:            rgba(10, 5, 26, 0.85);        /* High Emphasis — headings + primary body */
+  --fg-2:            rgba(10, 5, 26, 0.69);        /* Medium Emphasis — secondary body */
+  --fg-3:            rgba(10, 5, 26, 0.55);        /* Low Emphasis — meta */
+  --fg-mute:         rgba(10, 5, 26, 0.30);        /* Disabled */
+  --fg-on-brand:     rgba(255, 255, 255, 1.00);    /* text on purple/dark */
+  --fg-on-brand-2:   rgba(255, 255, 255, 0.69);
+  --fg-on-dark-1:    rgba(255, 255, 255, 0.85);    /* High Emphasis on dark */
+  --fg-on-dark-2:    rgba(255, 255, 255, 0.69);
+  --fg-on-dark-3:    rgba(255, 255, 255, 0.30);
+  --fg-on-dark-accent: #BCA6FF;                    /* Accent on dark — page D1 right */
+  --fg-inverse:      var(--moi-white);
+  --fg-link:         var(--moi-main);
+
+  /* Borders & strokes */
+  --border:          #E2E2E2;
+  --border-soft:     rgba(217, 204, 255, 0.50);
+  --border-strong:   var(--moi-dark);
+  --hairline:        rgba(217, 204, 255, 0.25);
+  --ring:            rgba(75, 23, 229, 0.50);
+
+  /* Status */
+  --status-ok:       #1FAE6B;
+  --status-warn:     #F2A742;
+  --status-error:    #E2336B;
+  --status-info:     var(--signal-blue);
+
+  /* ===========================================================
+     TYPE — Poppins only.
+     Allowed weights: 400 Regular · 500 Medium · 600 SemiBold · 700 Bold.
+     Do NOT use 300 / 100 / 200 / 800 / 900 / italic.
+     Source: Figma /Work-Space-Background/Typography + brand guide.
+     =========================================================== */
+
+  --font-sans:    "Poppins", "Inter", system-ui, -apple-system, sans-serif;
+  /* Aliases retained for compatibility — they all resolve to Poppins. */
+  --font-display: var(--font-sans);
+  --font-mono:    var(--font-sans);
+  --font-italic:  var(--font-sans);
+
+  /* Sizes — 33-step modular ramp (1.125), rem-based @ 10px html font.
+     Source: Figma /Work-Space-Background/Typography. */
+  --size-7:    0.7rem;
+  --size-8:    0.8rem;
+  --size-9:    0.9rem;
+  --size-10:   1.0rem;
+  --size-11:   1.1rem;
+  --size-13:   1.3rem;
+  --size-14:   1.4rem;
+  --size-16:   1.6rem;   /* base */
+  --size-18:   1.8rem;
+  --size-20:   2.0rem;
+  --size-23:   2.3rem;
+  --size-26:   2.6rem;
+  --size-29:   2.9rem;
+  --size-32:   3.2rem;
+  --size-36:   3.6rem;
+  --size-41:   4.1rem;
+  --size-46:   4.6rem;
+  --size-52:   5.2rem;
+  --size-58:   5.8rem;
+  --size-66:   6.6rem;
+  --size-74:   7.4rem;
+  --size-83:   8.3rem;
+  --size-94:   9.4rem;
+  --size-105: 10.5rem;
+  --size-118: 11.8rem;
+  --size-133: 13.3rem;
+  --size-150: 15.0rem;
+  --size-169: 16.9rem;
+  --size-190: 19.0rem;
+  --size-214: 21.4rem;
+  --size-240: 24.0rem;
+  --size-270: 27.0rem;
+  --size-304: 30.4rem;
+
+  /* Weights — these four only */
+  --wt-regular:  400;
+  --wt-medium:   500;
+  --wt-semibold: 600;
+  --wt-bold:     700;
+
+  /* Tracking — DO NOT change tracking for any text except over-line text (D3). */
+  --tr-display: 0;
+  --tr-tight:   0;
+  --tr-normal:  0;
+  --tr-caps:    0.08em;        /* OK only for over-line / mono-style chips */
+  /* Leading per D3 */
+  --lh-tight:   1.00;
+  --lh-snug:    1.10;
+  --lh-heading: 1.25;          /* titles & headings */
+  --lh-body:    1.50;          /* body, paragraphs */
+  --lh-small:   1.75;          /* small text */
+
+  /* ===========================================================
+     RADII, SHADOWS, SPACING
+     =========================================================== */
+  --r-xs:  4px;
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  20px;
+  --r-xl:  32px;
+  --r-2xl: 48px;
+  --r-pill: 999px;
+
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* Shadows — MOI uses inset highlights + soft indigo-tinted outers. */
+  --shadow-inner-bright: inset 0 1.45px 33px rgba(255, 255, 255, 0.25);
+  --shadow-inner-soft:   inset 0 1px 18px rgba(217, 204, 255, 0.25);
+  --shadow-card-sm:      0 2px 6px rgba(50, 15, 153, 0.05),
+                         0 4px 12px rgba(50, 15, 153, 0.05);
+  --shadow-card:         0 4px 12px rgba(50, 15, 153, 0.08),
+                         0 12px 32px rgba(50, 15, 153, 0.07);
+  --shadow-card-lg:      0 8px 24px rgba(50, 15, 153, 0.10),
+                         0 24px 64px rgba(50, 15, 153, 0.10);
+  --shadow-glow:         0 0 40px rgba(75, 23, 229, 0.40);
+  --shadow-glow-soft:    0 0 80px rgba(152, 113, 242, 0.30);
+
+  /* Signature gradients — pages C2 + C5
+     OFFICIAL: Purple = Dark → Main. White = Grey → White. */
+  --grad-purple:    linear-gradient(180deg, #320F99 0%, #4B17E5 100%);
+  --grad-white:     linear-gradient(180deg, #BFBFBF 0%, #FFFFFF 100%);
+  /* Atmospheric variants used in marketing surfaces */
+  --grad-cosmos:    linear-gradient(180deg, #0A0026 0%, #320F99 100%);
+  --grad-lavender:  linear-gradient(180deg, #F5F2FF 0%, #D9CCFF 100%);
+  --grad-orb:       radial-gradient(circle at 30% 25%, #6F45EA 0%, #4B17E5 55%, #320F99 100%);
+  --grad-hairline:  linear-gradient(90deg, rgba(255,255,255,0) 0%, #FFFFFF 48%, rgba(255,255,255,0) 100%);
+}
+
+/* ============================================================
+   SEMANTIC ELEMENTS
+   ============================================================ */
+
+html { font-size: 10px; }   /* anchor: 1rem = 10px */
+
+body {
+  font-family: var(--font-sans);
+  font-weight: var(--wt-medium);            /* Brand rule D2: body is always Medium */
+  font-size: var(--size-16);
+  line-height: 1.5;                         /* Brand rule D3: body leading = 1.5x */
+  color: var(--fg-1);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Default paragraph color stays at high-emphasis on light, but inherits when set */
+p, .t-body { color: inherit; }
+
+/* Display = big bold uppercase Poppins. (Tracking 0% per D3 — letterspacing 0.) */
+.t-display {
+  font-family: var(--font-sans);
+  font-weight: var(--wt-bold);
+  letter-spacing: 0;
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+}
+
+/* Headings — Bold only (D2). Subheads = SemiBold. Tracking 0% (D3).
+   Headings INHERIT color from their section so they work on dark surfaces too —
+   sections set their own color explicitly. */
+h1, .t-h1 {
+  font-family: var(--font-sans);
+  font-weight: var(--wt-bold);
+  font-size: var(--size-83);
+  line-height: var(--lh-heading);
+  letter-spacing: 0;
+  color: inherit;
+}
+h2, .t-h2 {
+  font-family: var(--font-sans);
+  font-weight: var(--wt-bold);
+  font-size: var(--size-58);
+  line-height: var(--lh-heading);
+  letter-spacing: 0;
+  color: inherit;
+}
+h3, .t-h3 {
+  font-family: var(--font-sans);
+  font-weight: var(--wt-bold);
+  font-size: var(--size-41);
+  line-height: var(--lh-heading);
+  letter-spacing: 0;
+  color: inherit;
+}
+h4, .t-h4, .t-subhead {
+  font-family: var(--font-sans);
+  font-weight: var(--wt-semibold);
+  font-size: var(--size-29);
+  line-height: var(--lh-heading);
+  letter-spacing: 0;
+  color: inherit;
+}
+h5, .t-h5 {
+  font-family: var(--font-sans);
+  font-weight: var(--wt-semibold);
+  font-size: var(--size-23);
+  line-height: var(--lh-heading);
+  letter-spacing: 0;
+  color: inherit;
+}
+
+p, .t-body {
+  font-family: var(--font-sans);
+  font-weight: var(--wt-medium);
+  font-size: var(--size-18);
+  line-height: 1.5;
+  color: inherit;
+}
+.t-body-lg {
+  font-size: var(--size-23);
+  font-weight: var(--wt-regular);
+  line-height: var(--lh-normal);
+  color: var(--fg-2);
+}
+.t-body-sm { font-size: var(--size-16); color: var(--fg-2); }
+.t-caption { font-size: var(--size-13); color: var(--fg-3); }
+
+/* "Mono-style" label — still Poppins, just SemiBold + uppercase + tracked.
+   This is how MOI gets the chip / @handle look without a mono face. */
+.t-cap {
+  font-family: var(--font-sans);
+  font-weight: var(--wt-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-caps);
+  font-size: var(--size-13);
+  color: var(--moi-main);
+}
+
+/* Code blocks — Poppins Medium, tabular numbers via font-feature-settings. */
+code, kbd, samp, pre {
+  font-family: var(--font-sans);
+  font-weight: var(--wt-medium);
+  font-feature-settings: "tnum" 1;
+  font-size: var(--size-14);
+}
+
+/* Pull-quote — Poppins SemiBold at larger size. (No italic, no serif.) */
+.t-quote {
+  font-family: var(--font-sans);
+  font-weight: var(--wt-semibold);
+  font-size: var(--size-41);
+  line-height: var(--lh-snug);
+  color: var(--moi-dark);
+}
+
+/* Links — underline-on-hover, no shift */
+a {
+  color: var(--fg-link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+a:hover { border-bottom-color: currentColor; }
+
+/* CTA opt-out from global link styling — keeps Tailwind utilities (text-white,
+   bg-…) in charge of color, and suppresses the hover underline. */
+a.nav-cta,
+a.nav-cta:hover {
+  color: #FFFFFF;
+  border-bottom-color: transparent;
+}
+
+::selection { background: var(--moi-main); color: var(--moi-haze); }
+
+/* Navbar pill is solid dark indigo regardless of page bg;
+   text stays 82% white inactive / 100% white on hover + active. */
+
+/* The pill's inline style is dark translucent glass, tuned for the dark hero
+   and the dark /papers background. Light routes get the light counterpart:
+   frosted white rather than a dark slab. The hamburger icon is already
+   #0A051A and the logo wordmark sits inside the purple planet, so both were
+   drawn for a light pill — this restores that pairing. */
+.manifesto-page nav.fixed > div,
+.manifesto-page nav.fixed > div + div {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(10, 5, 26, 0.07) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 8px 28px rgba(10, 0, 38, 0.07) !important;
+}
+
+/* Link colours invert with the pill. The CTA keeps its own purple fill. */
+.manifesto-page nav.fixed a:not(.nav-cta) {
+  color: rgba(10, 5, 26, 0.66) !important;
+}
+.manifesto-page nav.fixed a:not(.nav-cta):hover {
+  color: #0A051A !important;
+}
+/* Active route — MOI Main on a soft lavender pill. */
+.manifesto-page nav.fixed a.bg-white\/10 {
+  color: var(--moi-main) !important;
+  background: rgba(75, 23, 229, 0.09) !important;
+}
+
+nav.fixed a,
+nav.fixed a:hover {
+  color: rgba(255, 255, 255, 0.82);
+  border-bottom-color: transparent;
+}
+nav.fixed a:hover:not(.nav-cta) { color: #FFFFFF; }
+nav.fixed a.nav-cta,
+nav.fixed a.nav-cta:hover { color: #FFFFFF; }

@@ -1,27 +1,560 @@
-/* ── How It Works page styles ── */
+/* ── /why-moi — unified light, indigo + coral only ── */
 
-:root {
-  --peach: #F7D1BA;
-  --blue: #B8D4E3;
-  --amber: #F0D9A0;
-  --lavender: #D5C7E8;
-  --alice: #8B6CC1;
-  --bob: #3A9F7E;
-  --charlie: #D4853A;
-  --diana: #3A7ED4;
-  --eve: #C44D5A;
-  --trust: #D45A6A;
-  --history: #7A8B5A;
-  --card-surface: rgba(255, 255, 255, 0.7);
-  --success: #27AE60;
-  --danger: #C0392B;
-  --serif: 'Instrument Serif', Georgia, serif;
-  --mono: 'DM Mono', ui-monospace, monospace;
+.how-it-works-page {
+  /* ───────── Light page tokens ───────── */
+  --shift-bg:        #F4F2FB;       /* light lavender (solution band) */
+  --shift-bg-dark:   #0A0526;       /* deep purple base (problem band) */
+  --shift-ink:       #1A1A1A;       /* body + headlines (light bg) */
+  --shift-ink-on-dark: #FFFFFF;     /* body + headlines (dark bg) */
+  --shift-muted:     #5F5A52;       /* secondary copy (light bg) */
+  --shift-muted-on-dark: rgba(255, 255, 255, 0.72);
+  --shift-dim:       #867E72;       /* footnotes / mono labels */
+  --shift-rule:      #E5E1D7;       /* hairline borders */
+  --shift-purple:    #5B47E0;       /* brand indigo (primary accent) */
+  --shift-purple-2:  #7B6CE8;       /* lighter indigo (hover/secondary) */
+  --shift-purple-d:  #4338C9;
+  --shift-lilac:     #C8BFEF;
+  --accent-decay:    #E07B5B;       /* warm coral (only "broken" states) */
+  --accent-decay-d:  #B85A3D;
+
+  --shift-card-bg:   #FFFFFF;
+  --shift-card-bg-2: #FAF8F3;
+  --shift-card-bd:   #E5E1D7;
+  --shift-card-shadow: none;
+
+  /* ───────── Legacy palette → folded into the 2-accent system ───────── */
+  --peach:        var(--accent-decay);
+  --blue:         var(--shift-purple);
+  --amber:        var(--accent-decay);
+  --lavender:     var(--shift-purple-2);
+  --alice:        var(--shift-purple);
+  --bob:          var(--shift-purple);          /* was green */
+  --charlie:      var(--accent-decay);          /* was orange */
+  --diana:        var(--shift-purple-2);
+  --eve:          var(--accent-decay);          /* was red */
+  --trust:        var(--accent-decay);
+  --history:      var(--shift-purple-2);
+  --card-surface: var(--shift-card-bg);
+  --success:      var(--shift-purple);          /* was green */
+  --danger:       var(--accent-decay);
+  --serif:        var(--font-sans);
+  --mono:         "Poppins", ui-monospace, monospace;
+
+  background: var(--shift-bg);
+  color: var(--shift-ink-on-dark);
 }
 
-/* ── PAGE ── */
+/* Force Poppins for every heading/prose element on this route so the
+   restyle doesn't have to track down every per-element serif rule. */
+.how-it-works-page .headline,
+.how-it-works-page .subline,
+.how-it-works-page .caption,
+.how-it-works-page .impact-line,
+.how-it-works-page .act2-hl,
+.how-it-works-page .cta-hl,
+.how-it-works-page h1,
+.how-it-works-page h2,
+.how-it-works-page h3,
+.how-it-works-page p {
+  font-family: var(--font-sans) !important;
+}
+
+/* Emphasized words inside headlines — italic indigo */
+.how-it-works-page .headline em,
+.how-it-works-page .act2-hl em,
+.how-it-works-page .cta-hl em,
+.how-it-works-page .impact-line em {
+  font-style: italic;
+  color: var(--shift-purple);
+  font-weight: 600;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   Section bands — alternate dark (PROBLEM + CLOSING) and light (SOLUTION)
+   like the homepage. The dark band reuses the homepage's deep-purple
+   radial gradient over #0A0526.
+   ────────────────────────────────────────────────────────────────────── */
+
+/* Seamless dark deck — one continuous deep-purple gradient on the
+   PAGE; every section is transparent and shares the same field, so
+   there is no visible seam where one slide ends and the next begins. */
 .how-it-works-page {
-  background: var(--cream);
+  background:
+    radial-gradient(60% 40% at 80% 8%,  rgba(75, 23, 229, 0.32), transparent 60%),
+    radial-gradient(50% 35% at 8% 40%,  rgba(111, 69, 234, 0.22), transparent 60%),
+    radial-gradient(50% 40% at 92% 60%, rgba(75, 23, 229, 0.22), transparent 60%),
+    radial-gradient(60% 40% at 12% 92%, rgba(111, 69, 234, 0.28), transparent 60%),
+    linear-gradient(180deg, #0A0526 0%, #1B1148 50%, #0A0526 100%) !important;
+  background-attachment: fixed !important;
+  color: var(--shift-ink-on-dark) !important;
+}
+.how-it-works-page section { background: transparent !important; }
+
+/* Solution-arc sections — text on dark (same field, no seam) */
+.how-it-works-page section.s-act2-reveal .headline,
+.how-it-works-page section.s-act2-reveal h1, .how-it-works-page section.s-act2-reveal h2,
+.how-it-works-page section.s-act2-reveal .act2-hl, .how-it-works-page section.s-act2-reveal .impact-line,
+.how-it-works-page section.s-act2-reveal p,
+.how-it-works-page section.s6 .headline, .how-it-works-page section.s6 h2, .how-it-works-page section.s6 p,
+.how-it-works-page section.s7 .headline, .how-it-works-page section.s7 h2, .how-it-works-page section.s7 p,
+.how-it-works-page section.s8 .headline, .how-it-works-page section.s8 h2, .how-it-works-page section.s8 p,
+.how-it-works-page section.s9 .headline, .how-it-works-page section.s9 h2, .how-it-works-page section.s9 p,
+.how-it-works-page section.s10 .headline, .how-it-works-page section.s10 h2, .how-it-works-page section.s10 p {
+  color: var(--shift-ink-on-dark) !important;
+}
+.how-it-works-page section.s-act2-reveal .subline,
+.how-it-works-page section.s-act2-reveal .caption,
+.how-it-works-page section.s6 .subline, .how-it-works-page section.s6 .caption,
+.how-it-works-page section.s7 .subline, .how-it-works-page section.s7 .caption,
+.how-it-works-page section.s8 .subline, .how-it-works-page section.s8 .caption,
+.how-it-works-page section.s9 .subline, .how-it-works-page section.s9 .caption,
+.how-it-works-page section.s10 .subline, .how-it-works-page section.s10 .caption {
+  color: var(--shift-muted-on-dark) !important;
+}
+/* Solution-arc cards — glass on dark, same treatment as Problem arc */
+.how-it-works-page section.s-act2-reveal .card-s,
+.how-it-works-page section.s6 .agent-card, .how-it-works-page section.s6 .card-s,
+.how-it-works-page section.s7 .agent-card, .how-it-works-page section.s7 .superstate-card,
+.how-it-works-page section.s8 .agent-card, .how-it-works-page section.s8 .custody-card,
+.how-it-works-page section.s8 .stat-center-card,
+.how-it-works-page section.s9 .perm-card, .how-it-works-page section.s9 .agent-card,
+.how-it-works-page section.s10 .arch-panel, .how-it-works-page section.s10 .mdag-panel,
+.how-it-works-page section.s10 .agent-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 14px 32px rgba(0, 0, 0, 0.28) !important;
+  color: var(--shift-ink-on-dark) !important;
+}
+/* Solution-arc eyebrows + italic-em → lilac like the rest */
+.how-it-works-page section.s-act2-reveal .pill,
+.how-it-works-page section.s6 .pill, .how-it-works-page section.s7 .pill,
+.how-it-works-page section.s8 .pill, .how-it-works-page section.s9 .pill,
+.how-it-works-page section.s10 .pill { color: var(--shift-lilac) !important; }
+.how-it-works-page section.s-act2-reveal .pill::before,
+.how-it-works-page section.s6 .pill::before, .how-it-works-page section.s7 .pill::before,
+.how-it-works-page section.s8 .pill::before, .how-it-works-page section.s9 .pill::before,
+.how-it-works-page section.s10 .pill::before {
+  background: var(--shift-lilac) !important;
+  box-shadow: 0 0 10px rgba(200, 191, 239, 0.6);
+}
+.how-it-works-page section.s-act2-reveal .headline em,
+.how-it-works-page section.s-act2-reveal .act2-hl em,
+.how-it-works-page section.s6 .headline em, .how-it-works-page section.s7 .headline em,
+.how-it-works-page section.s8 .headline em, .how-it-works-page section.s9 .headline em,
+.how-it-works-page section.s10 .headline em {
+  color: var(--shift-lilac) !important;
+}
+
+/* ── Dark bands (Problem arc + close) ── */
+.how-it-works-page section.s1 .headline,
+.how-it-works-page section.s1 h2, .how-it-works-page section.s1 p, .how-it-works-page section.s1 .impact-line,
+.how-it-works-page section.s2 .headline,
+.how-it-works-page section.s2 h2, .how-it-works-page section.s2 p, .how-it-works-page section.s2 .impact-line,
+.how-it-works-page section.s3 .headline,
+.how-it-works-page section.s3 h2, .how-it-works-page section.s3 p, .how-it-works-page section.s3 .impact-line,
+.how-it-works-page section.s-root-cause .headline,
+.how-it-works-page section.s-root-cause .act2-hl,
+.how-it-works-page section.s-root-cause h2,
+.how-it-works-page section.s-root-cause p,
+.how-it-works-page section.s-root-cause .impact-line,
+.how-it-works-page section.s11 .headline,
+.how-it-works-page section.s11 .cta-hl,
+.how-it-works-page section.s11 h2,
+.how-it-works-page section.s11 p {
+  color: var(--shift-ink-on-dark) !important;
+}
+.how-it-works-page section.s1 .subline, .how-it-works-page section.s1 .caption,
+.how-it-works-page section.s2 .subline, .how-it-works-page section.s2 .caption,
+.how-it-works-page section.s3 .subline, .how-it-works-page section.s3 .caption,
+.how-it-works-page section.s-root-cause .subline,
+.how-it-works-page section.s-root-cause .caption,
+.how-it-works-page section.s-root-cause-thesis,
+.how-it-works-page section.s11 .cta-sub {
+  color: var(--shift-muted-on-dark) !important;
+}
+
+/* Dark-band cards — glass */
+.how-it-works-page section.s1 .agent-card,
+.how-it-works-page section.s1 .card-s,
+.how-it-works-page section.s2 .chat-card,
+.how-it-works-page section.s2 .card-s,
+.how-it-works-page section.s3 .custody-card,
+.how-it-works-page section.s3 .card-s,
+.how-it-works-page section.s3 .stat-center-card,
+.how-it-works-page section.s-root-cause .act2-card,
+.how-it-works-page section.s-root-cause .card-s,
+.how-it-works-page section.s11 .card-s {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 14px 32px rgba(0, 0, 0, 0.28) !important;
+  color: var(--shift-ink-on-dark) !important;
+}
+
+/* Eyebrow pills on dark */
+.how-it-works-page section.s1 .pill,
+.how-it-works-page section.s2 .pill,
+.how-it-works-page section.s3 .pill,
+.how-it-works-page section.s-root-cause .pill,
+.how-it-works-page section.s11 .pill { color: var(--shift-lilac) !important; }
+.how-it-works-page section.s1 .pill::before,
+.how-it-works-page section.s2 .pill::before,
+.how-it-works-page section.s3 .pill::before,
+.how-it-works-page section.s-root-cause .pill::before,
+.how-it-works-page section.s11 .pill::before {
+  background: var(--shift-lilac) !important;
+  box-shadow: 0 0 10px rgba(200, 191, 239, 0.6);
+}
+
+/* Italic-emphasis lilac on dark */
+.how-it-works-page section.s1 .headline em, .how-it-works-page section.s1 .impact-line em,
+.how-it-works-page section.s2 .headline em, .how-it-works-page section.s2 .impact-line em,
+.how-it-works-page section.s3 .headline em, .how-it-works-page section.s3 .impact-line em,
+.how-it-works-page section.s-root-cause .act2-hl em,
+.how-it-works-page section.s-root-cause .impact-line em,
+.how-it-works-page section.s11 .cta-hl em {
+  color: var(--shift-lilac) !important;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   WHO toggle (s-root-cause .act2-dims) — lift on dark
+   ────────────────────────────────────────────────────────────────────── */
+.how-it-works-page section.s-root-cause .act2-dim {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 9px 18px;
+}
+.how-it-works-page section.s-root-cause .dim-check {
+  color: var(--shift-lilac) !important;
+  font-weight: 700;
+  margin-left: 6px;
+}
+.how-it-works-page section.s-root-cause .act2-dim-miss {
+  background: rgba(124, 108, 232, 0.16) !important;
+  border-color: rgba(124, 108, 232, 0.4) !important;
+  color: var(--shift-lilac) !important;
+  font-weight: 700;
+}
+.how-it-works-page section.s-root-cause .dim-miss-badge {
+  background: rgba(224, 123, 91, 0.18) !important;
+  border-color: rgba(224, 123, 91, 0.45) !important;
+  color: var(--accent-decay) !important;
+  font-weight: 700;
+  letter-spacing: .14em;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   s-root-cause — fix dark-on-dark text inside the headline + cards
+   ────────────────────────────────────────────────────────────────────── */
+.how-it-works-page section.s-root-cause .sec-inner {
+  text-align: center !important;
+}
+.how-it-works-page section.s-root-cause .act2-dims {
+  display: flex !important;
+  justify-content: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: none !important;
+  width: auto !important;
+}
+.how-it-works-page section.s-root-cause .act2-hl,
+.how-it-works-page section.s-root-cause .act2-hl-l1,
+.how-it-works-page section.s-root-cause .act2-hl-l2 {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: none !important;
+}
+.how-it-works-page section.s-root-cause .act2-hl {
+  width: 100% !important;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.how-it-works-page section.s-root-cause .act2-hl-l1 {
+  color: var(--shift-ink-on-dark) !important;
+  font-style: normal !important;
+  display: block !important;
+  width: 100% !important;
+}
+.how-it-works-page section.s-root-cause .act2-hl-l2 {
+  color: var(--shift-lilac) !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  display: block !important;
+  width: 100% !important;
+}
+.how-it-works-page section.s-root-cause .act2-card-label {
+  color: var(--shift-lilac) !important;
+  font-size: 11px;
+  font-weight: 600;
+}
+.how-it-works-page section.s-root-cause .act2-card-text {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.how-it-works-page section.s-root-cause .act2-card-text em {
+  color: var(--shift-lilac) !important;
+  font-weight: 600;
+}
+.how-it-works-page section.s-root-cause .act2-cards {
+  max-width: 720px;
+  gap: 16px;
+  margin: 2rem auto;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   s2 — Cold Start chat cards on the dark band: lift contrast
+   ────────────────────────────────────────────────────────────────────── */
+.how-it-works-page section.s2 .chat-chrome {
+  border-bottom-color: rgba(255, 255, 255, 0.10) !important;
+}
+.how-it-works-page section.s2 .chrome-dot {
+  background: rgba(255, 255, 255, 0.18) !important;
+}
+.how-it-works-page section.s2 .chrome-name {
+  color: rgba(255, 255, 255, 0.78) !important;
+  font-size: 12px;
+  font-weight: 600;
+}
+.how-it-works-page section.s2 .mem-badge {
+  color: var(--accent-decay) !important;
+  font-size: 10px;
+  font-weight: 600;
+}
+.how-it-works-page section.s2 .mem-dot {
+  background: var(--accent-decay) !important;
+  box-shadow: 0 0 6px rgba(224, 123, 91, 0.6);
+}
+/* Bot messages — clearly visible muted on dark */
+.how-it-works-page section.s2 .msg {
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.how-it-works-page section.s2 .msg-agent {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+/* User replies — lilac on a lifted indigo tint */
+.how-it-works-page section.s2 .msg-user {
+  background: rgba(124, 108, 232, 0.22) !important;
+  color: #E8E1FF !important;
+  font-weight: 500;
+}
+.how-it-works-page section.s2 .frust-row {
+  border-top-color: rgba(255, 255, 255, 0.10) !important;
+}
+.how-it-works-page section.s2 .frust-label {
+  color: rgba(255, 255, 255, 0.55) !important;
+  font-size: 9.5px;
+  font-weight: 600;
+}
+.how-it-works-page section.s2 .frust-bar {
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+.how-it-works-page section.s2 .frust-bar-fill {
+  background: var(--accent-decay) !important;
+  box-shadow: 0 0 8px rgba(224, 123, 91, 0.55);
+}
+/* Italic caption + impact */
+.how-it-works-page section.s2 .caption {
+  color: rgba(255, 255, 255, 0.65) !important;
+  font-size: 13px;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   B — Three slide rhythms (desktop only)
+   • STATEMENT slides (s-root-cause / s-act2-reveal / s11): 100vh,
+     centered, huge type, minimal chrome — these are billboards.
+   • DEMO slides (s1 / s7 / s8 / s9 / s10): natural height with
+     comfortable headroom; the visualization carries the slide.
+   • ARGUMENT slides (s2 / s3 / s6): readable column, ~80vh.
+   ────────────────────────────────────────────────────────────────────── */
+@media (min-width: 769px) and (min-height: 700px) {
+  /* Uniform slide rhythm — every section the same height,
+     content vertically centered, no visible seam between them. */
+  .how-it-works-page > section {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 3rem;
+  }
+  /* First slide clears the fixed pill nav */
+  .how-it-works-page > section.s1 { padding-top: 11rem; }
+
+  /* Statement slides keep their centered billboard treatment */
+  .how-it-works-page section.s-root-cause,
+  .how-it-works-page section.s-act2-reveal,
+  .how-it-works-page section.s11 {
+    align-items: center;
+    text-align: center;
+  }
+  .how-it-works-page section.s-root-cause .pill,
+  .how-it-works-page section.s11 .pill { display: none; }
+  .how-it-works-page section.s-root-cause .act2-hl,
+  .how-it-works-page section.s-act2-reveal .headline,
+  .how-it-works-page section.s11 .cta-hl {
+    font-size: clamp(3.5rem, 7vw, 6rem) !important;
+    line-height: 1.04 !important;
+    letter-spacing: -0.028em !important;
+    max-width: 22ch;
+    margin: 0 auto !important;
+  }
+  .how-it-works-page section.s-root-cause .impact-line,
+  .how-it-works-page section.s-act2-reveal .subline,
+  .how-it-works-page section.s11 .cta-sub {
+    font-size: clamp(1rem, 1.4vw, 1.25rem) !important;
+    max-width: 48ch;
+    margin: 1.5rem auto 0 !important;
+  }
+
+  /* s1 subline */
+  .how-it-works-page section.s1 .subline {
+    font-size: 14px;
+    line-height: 1.7;
+    margin-top: 1.25rem;
+    max-width: 64ch;
+  }
+
+  /* The sec-inner wrapper inside flex-column sections needs to
+     fill the width so grids inside stay full-bleed. */
+  .how-it-works-page > section > .sec-inner { width: 100%; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   E — Drop sub-eyebrows after the act-opener. Only the slide that
+   OPENS each act keeps the eyebrow; subsequent slides inherit it.
+   Openers: s1 ("Act 01"), s-act2-reveal ("Act 02"), s10 ("Act 03"),
+   s11 ("Live"). Hide the rest.
+   ────────────────────────────────────────────────────────────────────── */
+.how-it-works-page section.s2 .pill,
+.how-it-works-page section.s3 .pill,
+.how-it-works-page section.s-root-cause .pill,
+.how-it-works-page section.s6 .pill,
+.how-it-works-page section.s7 .pill,
+.how-it-works-page section.s8 .pill,
+.how-it-works-page section.s9 .pill {
+  display: none;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   Dark-band delegation card contrast (s1 specifically)
+   ────────────────────────────────────────────────────────────────────── */
+
+/* Agent headers (Your Agent / Flight / Payment / Bank) — bright */
+.how-it-works-page section.s1 .agent-name,
+.how-it-works-page section.s1 .agent-header {
+  color: #FFFFFF !important;
+}
+/* Section labels inside the card (IDENTITY / SCOPE / ...) */
+.how-it-works-page section.s1 .signal-label,
+.how-it-works-page section.s1 .field-label {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+/* Healthy values — bright lilac/white */
+.how-it-works-page section.s1 .field-ok {
+  background: rgba(124, 108, 232, 0.18) !important;
+}
+.how-it-works-page section.s1 .field-ok .field-val {
+  color: #E8E1FF !important;
+  font-weight: 600;
+}
+/* Degrading values — dim indigo (signal weaker, not a new hue) */
+.how-it-works-page section.s1 .field-deg {
+  background: rgba(124, 108, 232, 0.10) !important;
+}
+.how-it-works-page section.s1 .field-deg .field-val {
+  color: rgba(232, 225, 255, 0.55) !important;
+  font-style: italic;
+  font-weight: 500;
+}
+/* Live-altered / lost values — coral (the only "decay" hue) */
+.how-it-works-page section.s1 .field-lost {
+  background: rgba(224, 123, 91, 0.16) !important;
+}
+.how-it-works-page section.s1 .field-lost .field-val {
+  color: var(--accent-decay) !important;
+  font-weight: 600;
+}
+/* REDACTED / UNKNOWN — visible muted grey */
+.how-it-works-page section.s1 .field-redacted {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+.how-it-works-page section.s1 .field-redacted .field-val {
+  color: rgba(255, 255, 255, 0.55) !important;
+  font-weight: 600;
+}
+
+/* Signal bars — one indigo. Quantity reads from how many are lit,
+   not from hue. Dim bars to coral only on the BANK card (final). */
+.how-it-works-page section.s1 .signal-bar.on-g,
+.how-it-works-page section.s1 .signal-bar.on-a {
+  background: #C8BFEF !important;
+  box-shadow: 0 0 8px rgba(200, 191, 239, 0.55);
+}
+.how-it-works-page section.s1 .signal-bar.off {
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+/* Trust bar fill colored by .trust-bar-fill inline style — boost glow */
+.how-it-works-page section.s1 .trust-bar {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+/* Trust badges — collapse to indigo (live signal) + coral (broken) */
+.how-it-works-page section.s1 .trust-green {
+  background: rgba(200, 191, 239, 0.18) !important;
+  color: #E8E1FF !important;
+}
+.how-it-works-page section.s1 .trust-amber {
+  background: rgba(200, 191, 239, 0.10) !important;
+  color: rgba(232, 225, 255, 0.65) !important;
+}
+.how-it-works-page section.s1 .trust-red {
+  background: rgba(224, 123, 91, 0.16) !important;
+  color: var(--accent-decay) !important;
+}
+/* Italic agent caption ("Full context. Full trust." etc.) */
+.how-it-works-page section.s1 .agent-note {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+/* Chain connector arrows + "data lost" badges */
+.how-it-works-page section.s1 .chain-conn,
+.how-it-works-page section.s1 .conn-arrow {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* 73% stat — large + bright on dark */
+.how-it-works-page section.s1 .stat-center-num,
+.how-it-works-page section.s3 .stat-center-num {
+  color: #FFFFFF !important;
+  font-size: clamp(4.5rem, 10vw, 7rem) !important;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  text-shadow: 0 0 32px rgba(124, 108, 232, 0.35);
+}
+.how-it-works-page section.s1 .stat-center-desc,
+.how-it-works-page section.s1 .stat-center-source,
+.how-it-works-page section.s3 .stat-center-desc,
+.how-it-works-page section.s3 .stat-center-source {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
+/* Section divider — neutral hairline */
+.how-it-works-page .section-divider {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(232, 228, 245, 0.08) 20%,
+    rgba(232, 228, 245, 0.08) 80%,
+    transparent 100%
+  );
 }
 
 /* ── SECTIONS ── */
@@ -29,9 +562,11 @@
   padding: 5rem 1.5rem;
   position: relative;
 }
-/* First section = Act 1; tight to navbar, no tagline block above */
+/* First section = Act 1; clear the fixed nav pill (16px top + 56px nav
+   + breathing room). Site root font is 10px so rem values are 60% of
+   the standard scale — 11rem ≈ 110px. */
 .how-it-works-page > section:first-of-type {
-  padding-top: 5.5rem;
+  padding-top: 11rem;
 }
 /* Scoped delegation — sits right after Act 2; tighter seam than default section rhythm */
 .how-it-works-page section.s6 {
@@ -44,8 +579,8 @@
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(26, 26, 26, .08) 20%,
-    rgba(26, 26, 26, .08) 80%,
+    rgba(232, 228, 245, .08) 20%,
+    rgba(232, 228, 245, .08) 80%,
     transparent 100%
   );
 }
@@ -55,19 +590,42 @@
   margin: 0 auto;
 }
 
-/* ── PILL ── */
+/* ── EYEBROW PILL — redesign-aligned ── */
 .pill {
   display: inline-flex;
-  padding: 6px 16px;
-  border-radius: 9999px;
-  border: 1px solid rgba(123, 94, 167, .25);
-  background: rgba(123, 94, 167, .12);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: .2em;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--purple);
-  margin-bottom: 1.5rem;
+  color: var(--shift-purple);
+  margin-bottom: 1.25rem;
+}
+.pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--shift-purple);
+}
+/* Page-wide pill = brand indigo on every section now */
+.s-root-cause .pill,
+.s-act2-reveal .pill,
+.s10 .pill,
+.s11 .pill {
+  color: var(--shift-purple);
+}
+.s-root-cause .pill::before,
+.s-act2-reveal .pill::before,
+.s10 .pill::before,
+.s11 .pill::before {
+  background: var(--shift-purple);
+  box-shadow: none;
 }
 
 /* ── TYPOGRAPHY ── */
@@ -77,7 +635,7 @@
   font-weight: 400;
   line-height: 1.1;
   margin-bottom: 1rem;
-  color: var(--ink);
+  color: var(--shift-ink-on-dark);
   letter-spacing: -.03em;
 }
 .subline {
@@ -85,7 +643,7 @@
   font-size: 13px;
   font-weight: 400;
   line-height: 1.7;
-  color: rgba(26, 26, 26, .7);
+  color: rgba(232, 228, 245, .7);
   max-width: 620px;
   letter-spacing: .02em;
 }
@@ -94,17 +652,17 @@
   font-size: 12px;
   font-weight: 400;
   font-style: italic;
-  color: rgba(26, 26, 26, .55);
+  color: rgba(232, 228, 245, .55);
   line-height: 1.6;
   margin-top: 2rem;
 }
 
 /* ── CARD SURFACE ── */
 .card-s {
-  background: rgba(255, 255, 255, .7);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
   border-radius: 20px;
-  border: 1px solid rgba(26, 26, 26, .06);
+  border: 1px solid rgba(232, 228, 245, .06);
   box-shadow: 0 4px 24px rgba(0, 0, 0, .04);
 }
 
@@ -112,81 +670,106 @@
 /* S1 — TRUST                    */
 /* ══════════════════════════════ */
 .chain-grid {
-  display: flex;
-  gap: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
   align-items: stretch;
-  margin: 2.5rem 0;
-  overflow-x: auto;
-  padding-bottom: .5rem;
+  gap: 0;
+  margin: 4rem auto 2.5rem;
+  max-width: 130rem;
+  width: 100%;
 }
 .agent-card {
-  background: rgba(255, 255, 255, .7);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(26, 26, 26, .06);
-  border-radius: 16px;
-  padding: 1.25rem;
-  min-width: 210px;
-  flex: 1;
+  border: 1px solid rgba(232, 228, 245, .06);
+  border-radius: 20px;
+  padding: 1.75rem 1.5rem;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: .65rem;
+  gap: .9rem;
   box-shadow: 0 4px 24px rgba(0, 0, 0, .04);
+}
+/* Keep titles + value rows on a single line */
+.chain-grid .agent-name,
+.chain-grid .signal-row,
+.chain-grid .field-row,
+.chain-grid .field-val,
+.chain-grid .field-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* s1 spans full width for the 4-card row */
+.how-it-works-page section.s1 .sec-inner { max-width: 130rem; }
+/* Caption below the cards */
+.how-it-works-page section.s1 .caption {
+  margin-top: 2rem;
+  font-size: 13px;
+}
+/* Breathe between the cards block and the stat */
+.how-it-works-page section.s1 .stat-center { margin-top: 6rem; padding: 0; }
+/* Punchline below the stat */
+.how-it-works-page section.s1 .impact-line {
+  margin-top: 5rem;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
 }
 .agent-header {
   display: flex;
   align-items: center;
   gap: .5rem;
 }
-.agent-icon { font-size: 1.3rem }
+.agent-icon { font-size: 1.55rem }
 .agent-name {
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   flex: 1;
-  letter-spacing: .06em;
+  letter-spacing: .04em;
 }
 .trust-badge {
-  font-size: 9px;
-  font-weight: 500;
-  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 10px;
   border-radius: 9999px;
   letter-spacing: .06em;
 }
-.trust-green { background: rgba(58, 159, 126, .1); color: var(--bob) }
-.trust-amber { background: rgba(212, 133, 58, .1); color: var(--charlie) }
-.trust-red { background: rgba(196, 77, 90, .1); color: var(--eve) }
+.trust-green { background: rgba(91, 71, 224, .1); color: var(--bob) }
+.trust-amber { background: rgba(224, 123, 91, .1); color: var(--charlie) }
+.trust-red { background: rgba(224, 123, 91, .1); color: var(--eve) }
 
-.signal-row { display: flex; align-items: center; gap: .5rem }
+.signal-row { display: flex; align-items: center; gap: .6rem }
 .signal-label {
-  font-size: 8px;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: .15em;
-  color: rgba(26, 26, 26, .55);
-  font-weight: 500;
+  letter-spacing: .14em;
+  color: rgba(232, 228, 245, .55);
+  font-weight: 600;
 }
-.signal-bars { display: flex; gap: 2px; align-items: flex-end }
-.signal-bar { width: 4px; border-radius: 1px }
+.signal-bars { display: flex; gap: 3px; align-items: flex-end }
+.signal-bar { width: 5px; border-radius: 1.5px }
 .signal-bar.on-g { background: var(--bob) }
 .signal-bar.on-a { background: var(--charlie) }
-.signal-bar.off { background: rgba(26, 26, 26, .06) }
+.signal-bar.off { background: rgba(232, 228, 245, .06) }
 
 .field-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-size: 10px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 12px;
 }
-.field-label { color: rgba(26, 26, 26, .55); font-weight: 400 }
-.field-val { font-weight: 500; color: rgba(26, 26, 26, .75) }
-.field-ok { background: rgba(58, 159, 126, .05) }
+.field-label { color: rgba(232, 228, 245, .55); font-weight: 500 }
+.field-val { font-weight: 600; color: rgba(232, 228, 245, .75) }
+.field-ok { background: rgba(91, 71, 224, .05) }
 .field-ok .field-val { color: var(--bob) }
-.field-deg { background: rgba(212, 133, 58, .06) }
+.field-deg { background: rgba(224, 123, 91, .06) }
 .field-deg .field-val { color: var(--charlie); font-style: italic }
-.field-lost { background: rgba(196, 77, 90, .06) }
+.field-lost { background: rgba(224, 123, 91, .06) }
 .field-lost .field-val { color: var(--eve); text-transform: uppercase; font-size: 9px; letter-spacing: .1em }
-.field-redacted { background: rgba(196, 77, 90, .03) }
-.field-redacted .field-val { color: rgba(196, 77, 90, .3); text-transform: uppercase; font-size: 8px; letter-spacing: .12em }
+.field-redacted { background: rgba(224, 123, 91, .03) }
+.field-redacted .field-val { color: rgba(224, 123, 91, .3); text-transform: uppercase; font-size: 8px; letter-spacing: .12em }
 .blink { animation: blink 1.5s step-end infinite }
 @keyframes blink {
   0%, 100% { opacity: 1 }
@@ -196,14 +779,17 @@
 .agent-note {
   font-size: 10px;
   font-style: italic;
-  color: rgba(26, 26, 26, .6);
+  color: rgba(232, 228, 245, .6);
   line-height: 1.4;
+  /* Push the note + bar to the bottom of the card so progress bars
+     line up across all four cards even when notes are 1 vs 2 lines. */
+  margin-top: auto;
 }
 .trust-bar {
   height: 3px;
   border-radius: 2px;
-  background: rgba(26, 26, 26, .04);
-  margin-top: auto;
+  background: rgba(232, 228, 245, .04);
+  margin-top: 0;
 }
 .trust-bar-fill { height: 100%; border-radius: 2px }
 
@@ -212,12 +798,27 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: .25rem;
-  padding: 0 .1rem;
-  min-width: 32px;
+  gap: .4rem;
+  padding: 0 .75rem;
+  width: 64px;
   flex-shrink: 0;
+  align-self: center;
 }
-.conn-line { width: 1px; height: 14px; background: rgba(196, 77, 90, .15) }
+.chain-conn .conn-pill {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 6px;
+  font-size: 9.5px;
+  line-height: 1.1;
+  text-align: center;
+  white-space: normal;
+  width: 100%;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+.conn-line { width: 1px; height: 14px; background: rgba(224, 123, 91, .15) }
 .conn-chevron {
   font-size: 11px;
   color: var(--eve);
@@ -232,9 +833,9 @@
   font-size: 8px;
   padding: 2px 6px;
   border-radius: 9999px;
-  border: 1px solid rgba(196, 77, 90, .15);
+  border: 1px solid rgba(224, 123, 91, .15);
   color: var(--eve);
-  background: rgba(196, 77, 90, .04);
+  background: rgba(224, 123, 91, .04);
   white-space: nowrap;
   letter-spacing: .04em;
 }
@@ -249,9 +850,9 @@
   margin: 2.5rem 0;
 }
 .chat-card {
-  background: rgba(255, 255, 255, .7);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(26, 26, 26, .06);
+  border: 1px solid rgba(232, 228, 245, .06);
   border-radius: 16px;
   overflow: hidden;
   display: flex;
@@ -263,16 +864,16 @@
   align-items: center;
   gap: 5px;
   padding: 10px 14px;
-  border-bottom: 1px solid rgba(26, 26, 26, .04);
+  border-bottom: 1px solid rgba(232, 228, 245, .04);
 }
-.chrome-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(26, 26, 26, .08) }
+.chrome-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(232, 228, 245, .08) }
 .chrome-name {
   font-size: 11px;
   font-weight: 500;
   flex: 1;
   margin-left: 6px;
   letter-spacing: .04em;
-  color: rgba(26, 26, 26, .55);
+  color: rgba(232, 228, 245, .55);
 }
 .mem-badge { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--eve) }
 .mem-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--eve); animation: blink 1.5s ease infinite }
@@ -285,13 +886,13 @@
   max-width: 88%;
 }
 .msg-agent {
-  background: rgba(26, 26, 26, .04);
-  color: rgba(26, 26, 26, .7);
+  background: rgba(232, 228, 245, .04);
+  color: rgba(232, 228, 245, .7);
   align-self: flex-start;
   border-bottom-left-radius: 4px;
 }
 .msg-user {
-  background: rgba(123, 94, 167, .08);
+  background: rgba(91, 71, 224, .08);
   color: var(--purple);
   align-self: flex-end;
   border-bottom-right-radius: 4px;
@@ -301,16 +902,16 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  border-top: 1px solid rgba(26, 26, 26, .04);
+  border-top: 1px solid rgba(232, 228, 245, .04);
 }
 .frust-label {
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: .12em;
-  color: rgba(26, 26, 26, .55);
+  color: rgba(232, 228, 245, .55);
   font-weight: 500;
 }
-.frust-track { flex: 1; height: 4px; background: rgba(26, 26, 26, .04); border-radius: 2px; overflow: hidden }
+.frust-track { flex: 1; height: 4px; background: rgba(232, 228, 245, .04); border-radius: 2px; overflow: hidden }
 .frust-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--charlie), var(--eve)) }
 
 /* ══════════════════════════════ */
@@ -326,9 +927,9 @@
 }
 
 .custody-card {
-  background: rgba(255, 255, 255, .7);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(26, 26, 26, .06);
+  border: 1px solid rgba(232, 228, 245, .06);
   border-radius: 20px;
   padding: 2rem 1.75rem;
   box-shadow: 0 4px 24px rgba(0, 0, 0, .04);
@@ -336,21 +937,21 @@
   flex-direction: column;
 }
 .custody-card--safe {
-  border-top: 2px solid rgba(58, 159, 126, .3);
+  border-top: 2px solid rgba(91, 71, 224, .3);
   align-items: center;
   text-align: center;
   justify-content: center;
 }
 .custody-card--real {
-  border: 1px solid rgba(196, 77, 90, .15);
+  border: 1px solid rgba(224, 123, 91, .15);
 }
 
 .custody-card-label {
-  font-size: 9px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: .15em;
-  color: rgba(26, 26, 26, .6);
+  letter-spacing: .14em;
+  color: var(--shift-lilac);
   margin-bottom: 1.5rem;
   display: block;
 }
@@ -371,13 +972,13 @@
   border-radius: 12px;
 }
 .cm-node--you {
-  background: rgba(58, 159, 126, .1);
-  border: 1px solid rgba(58, 159, 126, .25);
+  background: rgba(91, 71, 224, .1);
+  border: 1px solid rgba(91, 71, 224, .25);
   color: var(--bob);
 }
 .cm-node--token {
-  background: rgba(58, 159, 126, .06);
-  border: 1px solid rgba(58, 159, 126, .15);
+  background: rgba(91, 71, 224, .06);
+  border: 1px solid rgba(91, 71, 224, .15);
   color: var(--bob);
 }
 .cm-arrow {
@@ -391,19 +992,19 @@
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: .15em;
-  color: rgba(58, 159, 126, .4);
+  color: rgba(91, 71, 224, .4);
   font-weight: 500;
 }
 
 .custody-card-caption {
   font-size: 10px;
-  color: rgba(26, 26, 26, .6);
+  color: rgba(232, 228, 245, .6);
   line-height: 1.5;
   font-style: italic;
   margin-top: auto;
 }
 .custody-card-caption--red {
-  color: rgba(196, 77, 90, .65);
+  color: rgba(224, 123, 91, .65);
 }
 
 /* Right card — contract ledger */
@@ -415,9 +1016,9 @@
   align-items: center;
   gap: 6px;
   padding: 8px 12px;
-  background: rgba(26, 26, 26, .02);
+  background: rgba(232, 228, 245, .02);
   border-radius: 10px 10px 0 0;
-  border-bottom: 1px solid rgba(26, 26, 26, .04);
+  border-bottom: 1px solid rgba(232, 228, 245, .04);
 }
 .custody-contract-dot {
   width: 7px;
@@ -429,14 +1030,14 @@
 .custody-contract-name {
   font-size: 10px;
   font-weight: 500;
-  color: rgba(26, 26, 26, .7);
+  color: rgba(232, 228, 245, .7);
   letter-spacing: .04em;
 }
 .custody-contract-owns {
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: .1em;
-  color: rgba(196, 77, 90, .4);
+  color: rgba(224, 123, 91, .4);
   margin-left: auto;
   font-weight: 500;
 }
@@ -453,16 +1054,16 @@
   font-size: 10px;
 }
 .custody-ledger-row:nth-child(odd) {
-  background: rgba(26, 26, 26, .015);
+  background: rgba(232, 228, 245, .015);
 }
 .custody-ledger-row--you {
-  background: rgba(196, 77, 90, .06) !important;
+  background: rgba(224, 123, 91, .06) !important;
   border-left: 2px solid var(--eve);
   padding-left: 10px;
 }
-.custody-addr { color: rgba(26, 26, 26, .6) }
-.custody-arrow { color: rgba(26, 26, 26, .2) }
-.custody-amt { color: rgba(26, 26, 26, .75) }
+.custody-addr { color: rgba(232, 228, 245, .6) }
+.custody-arrow { color: rgba(232, 228, 245, .2) }
+.custody-amt { color: rgba(232, 228, 245, .75) }
 .custody-ledger-row--you .custody-addr,
 .custody-ledger-row--you .custody-amt {
   color: var(--eve);
@@ -478,10 +1079,10 @@
 /* Vertical divider */
 .custody-divider {
   width: 1px;
-  background: rgba(26, 26, 26, .06);
+  background: rgba(232, 228, 245, .06);
   margin: 2rem 1.5rem;
   border: none;
-  border-left: 1px dashed rgba(26, 26, 26, .1);
+  border-left: 1px dashed rgba(232, 228, 245, .1);
 }
 
 /* Stats below */
@@ -495,7 +1096,7 @@
 .custody-stat {
   text-align: center;
   padding: 0 1.5rem;
-  border-right: 1px solid rgba(26, 26, 26, .06);
+  border-right: 1px solid rgba(232, 228, 245, .06);
 }
 .custody-stat:last-child { border-right: none }
 .custody-stat .val { font-size: 14px; font-weight: 500 }
@@ -503,7 +1104,7 @@
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: .12em;
-  color: rgba(26, 26, 26, .55);
+  color: rgba(232, 228, 245, .55);
   margin-top: 3px;
   font-weight: 500;
 }
@@ -518,21 +1119,23 @@
     height: 1px;
     margin: 1rem 2rem;
     border-left: none;
-    border-top: 1px dashed rgba(26, 26, 26, .1);
+    border-top: 1px dashed rgba(232, 228, 245, .1);
   }
 }
 
 /* ══════════════════════════════ */
-/* Act 1 closer — root cause      */
+/* Act 1 closer — root cause (light, no band) */
 /* ══════════════════════════════ */
 .s-root-cause {
-  background: var(--cream);
+  position: relative;
   padding: 5rem 1.5rem;
 }
-.s-root-cause .pill {
-  border-color: rgba(123, 94, 167, .2);
-  background: rgba(123, 94, 167, .06);
-}
+.s-root-cause .act2-hl,
+.s-root-cause .impact-line,
+.s-root-cause-thesis,
+.s-root-cause h2,
+.s-root-cause p { color: var(--shift-ink-on-dark); }
+.s-root-cause .pill { color: var(--shift-purple); }
 .s-root-cause .act2-hl {
   margin-bottom: 1.25rem;
 }
@@ -554,7 +1157,7 @@
 }
 .act2-card {
   background: rgba(255, 255, 255, .55);
-  border: 1px solid rgba(26, 26, 26, .04);
+  border: 1px solid rgba(232, 228, 245, .04);
   border-radius: 14px;
   padding: 20px 16px;
   text-align: center;
@@ -563,7 +1166,7 @@
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 500;
-  color: rgba(26, 26, 26, .55);
+  color: rgba(232, 228, 245, .55);
   text-transform: uppercase;
   letter-spacing: .12em;
   margin-bottom: 8px;
@@ -571,7 +1174,7 @@
 .act2-card-text {
   font-family: var(--mono);
   font-size: 13px;
-  color: rgba(26, 26, 26, .7);
+  color: rgba(232, 228, 245, .7);
   line-height: 1.7;
   letter-spacing: .02em;
 }
@@ -583,21 +1186,19 @@
 }
 
 /* ══════════════════════════════ */
-/* Act 2 — MOI reveal             */
+/* Act 2 — MOI reveal (light)     */
 /* ══════════════════════════════ */
 .s-act2-reveal {
-  background:
-    radial-gradient(ellipse at 50% 35%, rgba(213, 199, 232, .12), transparent 55%),
-    var(--cream);
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5rem 1.5rem 4rem;
+  padding: 5rem 1.5rem;
 }
-.s-act2-reveal .pill {
-  border-color: rgba(123, 94, 167, .2);
-  background: rgba(123, 94, 167, .06);
-}
+.s-act2-reveal h2,
+.s-act2-reveal p { color: var(--shift-ink-on-dark); }
+.s-act2-reveal .subline { color: var(--shift-muted); }
+.s-act2-reveal .pill { color: var(--shift-purple); }
 .act2-moi-word-wrap {
   width: 100%;
   display: flex;
@@ -616,20 +1217,20 @@
 .act2-dim {
   font-family: var(--mono);
   font-size: 11px;
-  color: rgba(26, 26, 26, .45);
+  color: rgba(232, 228, 245, .45);
   padding: 7px 16px;
-  border: 1px solid rgba(26, 26, 26, .05);
+  border: 1px solid rgba(232, 228, 245, .05);
   border-radius: 10px;
   background: rgba(255, 255, 255, .3);
 }
 .dim-check {
-  color: rgba(58, 159, 126, .5);
+  color: rgba(91, 71, 224, .5);
   margin-left: 3px;
 }
 .act2-dim-miss {
   color: var(--purple);
-  border-color: rgba(123, 94, 167, .2);
-  background: rgba(123, 94, 167, .06);
+  border-color: rgba(91, 71, 224, .2);
+  background: rgba(91, 71, 224, .06);
   font-weight: 500;
 }
 .dim-miss-badge {
@@ -640,8 +1241,8 @@
   margin-left: 6px;
   padding: 2px 8px;
   border-radius: 9999px;
-  border: 1px solid rgba(196, 77, 90, .15);
-  background: rgba(196, 77, 90, .04);
+  border: 1px solid rgba(224, 123, 91, .15);
+  background: rgba(224, 123, 91, .04);
   letter-spacing: .12em;
   text-transform: uppercase;
 }
@@ -656,7 +1257,7 @@
   font-size: clamp(2rem, 4.5vw, 3.5rem);
   font-weight: 400;
   line-height: 1.1;
-  color: var(--ink);
+  color: var(--shift-ink-on-dark);
   letter-spacing: -.03em;
   display: block;
 }
@@ -675,7 +1276,7 @@
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 400;
-  color: rgba(26, 26, 26, .4);
+  color: rgba(232, 228, 245, .4);
   letter-spacing: .14em;
   text-transform: uppercase;
   text-align: center;
@@ -690,7 +1291,7 @@
   font-family: var(--serif);
   font-size: clamp(8.75rem, 25vw, 16rem);
   font-weight: 400;
-  color: var(--ink);
+  color: var(--shift-ink-on-dark);
   letter-spacing: -0.04em;
   line-height: 0.82;
   text-align: center;
@@ -713,23 +1314,47 @@
   filter: blur(0);
 }
 .act2-moi-tag {
-  font-family: var(--serif);
-  font-size: clamp(1.3rem, 3vw, 1.8rem);
-  font-weight: 400;
-  color: #1A1A1A;
-  letter-spacing: -.01em;
-  line-height: 1.35;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   text-align: center;
-  max-width: 24rem;
-  margin: 0.25rem auto 0;
+  margin: 3.5rem auto 0;
+  max-width: 36rem;
+}
+.act2-moi-tag .act2-moi-eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
 }
 .act2-moi-tag .act2-moi-name {
-  color: var(--purple);
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #FFFFFF 0%, #BCA6FF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+}
+.act2-moi-tag .act2-moi-line {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  color: rgba(255, 255, 255, 0.78);
+  margin-top: 4px;
 }
 .act2-moi-sub {
   font-family: var(--mono);
   font-size: 13px;
-  color: rgba(26, 26, 26, .6);
+  color: rgba(232, 228, 245, .6);
   letter-spacing: .02em;
   line-height: 1.6;
   text-align: center;
@@ -772,19 +1397,54 @@
   .act2-cards { grid-template-columns: 1fr; max-width: 300px; }
 }
 
-.hub-wrap { position: relative; width: 100%; max-width: 480px; height: 400px; margin: 2.5rem auto }
+/* s6: clean centered composition — no frame, just space */
+.how-it-works-page section.s6 .s6-inner {
+  text-align: center;
+}
+.how-it-works-page section.s6 .s6-inner .pill,
+.how-it-works-page section.s6 .s6-inner .headline,
+.how-it-works-page section.s6 .s6-inner .subline {
+  margin-left: auto;
+  margin-right: auto;
+}
+.how-it-works-page section.s6 .s6-inner .pill {
+  justify-content: center;
+}
+.how-it-works-page section.s6 .s6-inner .subline {
+  max-width: 56ch;
+}
+.how-it-works-page section.s6 .s6-impact {
+  text-align: center;
+  margin-top: 3.5rem;
+}
+
+/* Diagram floats on the page — no card frame */
+.hub-stage {
+  margin: 4rem auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hub-wrap {
+  position: relative;
+  width: 540px;
+  height: 480px;
+  max-width: 100%;
+}
 .hub-center {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 220px;
+  left: 270px;
   transform: translate(-50%, -50%);
-  width: 150px;
-  height: 150px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .6);
-  backdrop-filter: blur(16px);
-  border: 2px solid rgba(123, 94, 167, .2);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, .04);
+  background: radial-gradient(circle at 50% 40%,
+    rgba(188, 166, 255, 0.22) 0%,
+    rgba(124, 108, 232, 0.10) 60%,
+    transparent 100%);
+  border: 1px solid rgba(200, 191, 239, 0.28);
+  box-shadow: 0 0 60px rgba(124, 108, 232, 0.28);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -792,28 +1452,28 @@
   z-index: 3;
 }
 .hub-center-label {
-  font-family: var(--mono);
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: .08em;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--purple);
-  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.45;
 }
 .hub-ring {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 170px;
-  height: 170px;
+  width: 200px;
+  height: 200px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  border: 1px solid rgba(123, 94, 167, .08);
+  border: 1px solid rgba(200, 191, 239, 0.18);
   animation: hubRingPulse 3s ease-in-out infinite;
 }
 @keyframes hubRingPulse {
-  0%, 100% { width: 170px; height: 170px; opacity: .3 }
-  50% { width: 195px; height: 195px; opacity: .15 }
+  0%, 100% { width: 200px; height: 200px; opacity: .45 }
+  50% { width: 230px; height: 230px; opacity: .22 }
 }
 .spoke-agent {
   position: absolute;
@@ -822,32 +1482,43 @@
   align-items: center;
   gap: 4px;
   z-index: 2;
+  width: 110px;
 }
 .spoke-circle {
-  width: 50px;
-  height: 50px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .8);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(26, 26, 26, .06);
+  background: radial-gradient(circle at 50% 40%,
+    rgba(188, 166, 255, 0.18) 0%,
+    rgba(124, 108, 232, 0.06) 65%,
+    transparent 100%);
+  border: 1px solid rgba(200, 191, 239, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, .04);
+  font-size: 1.35rem;
+  box-shadow: 0 0 24px rgba(124, 108, 232, 0.18);
 }
-.spoke-name { font-size: 9px; font-weight: 500; color: var(--ink); letter-spacing: .04em }
-.spoke-scope { font-size: 8px; color: rgba(26, 26, 26, .6) }
+.spoke-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: .01em;
+  margin-top: 8px;
+  text-align: center;
+}
+.spoke-scope { display: none; }
 .spoke-check {
-  font-size: 10px;
-  color: var(--success);
-  font-weight: 500;
+  font-size: 11px;
+  color: var(--shift-lilac);
+  font-weight: 600;
   opacity: 0;
   transform: scale(0);
   transition: all .5s cubic-bezier(.25, .1, .25, 1);
+  margin-top: 4px;
 }
 .spoke-check.show { opacity: 1; transform: scale(1) }
-.pulse-dot { fill: var(--purple); opacity: .7 }
+.pulse-dot { fill: #BCA6FF; opacity: .9 }
 
 /* ══════════════════════════════ */
 /* S7 — PREFERENCES              */
@@ -874,42 +1545,45 @@
 }
 .pref-circle,
 .pref-superstate-circle {
-  width: 80px;
-  height: 80px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .6);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(26, 26, 26, .08);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, .04);
+  background: radial-gradient(circle at 50% 40%,
+    rgba(188, 166, 255, 0.22) 0%,
+    rgba(124, 108, 232, 0.10) 60%,
+    transparent 100%);
+  border: 1px solid rgba(200, 191, 239, 0.32);
+  box-shadow: 0 0 60px rgba(124, 108, 232, 0.32);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--mono);
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: .08em;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--purple);
+  color: #FFFFFF;
   text-align: center;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 .pref-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
   justify-content: center;
-  margin-top: 1rem;
-  max-width: 220px;
+  margin-top: 1.5rem;
+  max-width: 280px;
 }
 .pref-tag {
-  font-size: 9px;
-  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
   border-radius: 9999px;
-  border: 1px solid rgba(123, 94, 167, .15);
-  color: var(--purple);
-  background: rgba(123, 94, 167, .05);
+  border: 1px solid rgba(200, 191, 239, 0.30);
+  color: #FFFFFF;
+  background: rgba(124, 108, 232, 0.18);
   white-space: nowrap;
-  letter-spacing: .04em;
+  letter-spacing: .02em;
 }
 .pref-agents,
 .pref-cards {
@@ -920,29 +1594,36 @@
   width: 100%;
 }
 .pref-agent-card {
-  background: rgba(255, 255, 255, .7);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(26, 26, 26, .06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
-  padding: 14px 18px;
+  padding: 18px 22px;
   min-width: 0;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, .04);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset,
+              0 14px 32px rgba(0, 0, 0, 0.20);
 }
 .pref-agent-card h4 {
-  font-size: 12px;
-  font-weight: 500;
-  margin-bottom: 6px;
-  letter-spacing: .04em;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: -.005em;
+  color: #FFFFFF;
 }
 .pref-field {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  color: rgba(26, 26, 26, .65);
-  padding: 2px 0;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  padding: 4px 0;
+  line-height: 1.4;
 }
-.pref-field .check { color: var(--success); font-weight: 500 }
+.pref-field .check {
+  color: var(--shift-lilac);
+  font-weight: 700;
+  font-size: 14px;
+}
 
 /* ══════════════════════════════ */
 /* S8 — ASSETS (split)           */
@@ -955,71 +1636,72 @@
   align-items: start;
 }
 .assets-side {
-  background: rgba(255, 255, 255, .6);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(26, 26, 26, .06);
+  border: 1px solid rgba(232, 228, 245, .06);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 4px 24px rgba(0, 0, 0, .04);
 }
-.assets-today { border-color: rgba(196, 77, 90, .12) }
-.assets-moi { border-color: rgba(58, 159, 126, .12) }
+.assets-today { border-color: rgba(224, 123, 91, .12) }
+.assets-moi { border-color: rgba(91, 71, 224, .12) }
 .assets-side-header {
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: rgba(26, 26, 26, .55);
+  color: rgba(232, 228, 245, .55);
   margin-bottom: 1.5rem;
 }
 .assets-divider {
   width: 1px;
   align-self: stretch;
   margin: 2rem 1.5rem;
-  background: linear-gradient(to bottom, transparent, rgba(26, 26, 26, .08), transparent);
+  background: linear-gradient(to bottom, transparent, rgba(232, 228, 245, .08), transparent);
 }
 .assets-scattered { display: flex; flex-direction: column; gap: .6rem }
 .assets-contract {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 14px;
-  background: rgba(26, 26, 26, .02);
-  border: 1px solid rgba(26, 26, 26, .04);
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 10px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12.5px;
 }
-.assets-contract-name { color: rgba(26, 26, 26, .65) }
-.assets-contract-val { color: rgba(26, 26, 26, .7); font-weight: 500 }
+.assets-contract-name { color: rgba(255, 255, 255, 0.92); font-weight: 500 }
+.assets-contract-val { color: var(--shift-lilac); font-weight: 700 }
 .assets-context-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: .08em;
-  color: var(--purple);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  color: var(--shift-lilac);
   text-transform: uppercase;
   margin-bottom: 1rem;
 }
-.assets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem }
+.assets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem }
 .assets-item {
-  padding: 10px 14px;
-  background: rgba(123, 94, 167, .04);
-  border: 1px solid rgba(123, 94, 167, .1);
-  border-radius: 10px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
   font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--purple);
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFFFFF;
   text-align: center;
+  letter-spacing: .01em;
 }
 .assets-side-caption {
-  font-size: 11px;
-  color: rgba(26, 26, 26, .55);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
   margin-top: 1.25rem;
   font-style: italic;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 /* ══════════════════════════════ */
@@ -1042,10 +1724,11 @@
 .perm-table th {
   padding: 10px 12px;
   text-align: center;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 11px;
-  letter-spacing: .06em;
-  color: rgba(26, 26, 26, .6);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--shift-ink-on-dark);
 }
 .perm-table th:first-child { text-align: left }
 .perm-table td {
@@ -1057,12 +1740,22 @@
 .perm-row-label {
   text-align: left !important;
   font-weight: 500;
-  font-size: 12px;
-  color: rgba(26, 26, 26, .75);
+  font-size: 13px;
+  color: var(--shift-ink-on-dark);
   background: transparent !important;
 }
-.perm-yes { background: rgba(58, 159, 126, .1); color: var(--bob); font-weight: 600; font-size: 15px }
-.perm-no { background: rgba(26, 26, 26, .03); color: rgba(26, 26, 26, .25); font-size: 15px }
+.perm-yes {
+  background: rgba(91, 71, 224, 0.16);
+  color: var(--shift-purple-2);
+  font-weight: 700;
+  font-size: 17px;
+}
+.perm-no {
+  background: rgba(224, 123, 91, 0.08);
+  color: var(--accent-decay);
+  font-weight: 700;
+  font-size: 17px;
+}
 .perm-table tr:hover td:not(.perm-row-label) { transform: scale(1.05) }
 
 /* ══════════════════════════════ */
@@ -1070,13 +1763,13 @@
 /* ══════════════════════════════ */
 .s-superstate {
   background:
-    radial-gradient(ellipse at 50% 35%, rgba(213, 199, 232, .12), transparent 55%),
-    var(--cream);
+    radial-gradient(ellipse at 50% 35%, rgba(188, 166, 255, .14), transparent 55%),
+    var(--shift-bg);
 }
 .superstate-card {
-  background: rgba(255, 255, 255, .6);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(26, 26, 26, .06);
+  border: 1px solid rgba(232, 228, 245, .06);
   border-radius: 24px;
   padding: 2.5rem;
   margin-top: 2.5rem;
@@ -1092,57 +1785,66 @@
   gap: 12px;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(26, 26, 26, .04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .ss-identity-icon {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(123, 94, 167, .08);
-  border: 1px solid rgba(123, 94, 167, .15);
+  background: rgba(124, 108, 232, 0.20);
+  border: 1px solid rgba(200, 191, 239, 0.40);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-size: 20px;
-  color: var(--purple);
+  color: var(--shift-lilac);
+  box-shadow: 0 0 24px rgba(124, 108, 232, 0.35);
 }
 .ss-identity-label {
   font-family: var(--mono);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--purple);
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
   letter-spacing: .04em;
 }
-.ss-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px }
+.ss-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px }
 .ss-ctx {
-  padding: 14px;
-  background: rgba(255, 255, 255, .5);
-  border: 1px solid rgba(26, 26, 26, .04);
+  padding: 18px 20px;
+  background: transparent;
+  border: 1px solid rgba(200, 191, 239, 0.18);
+  border-left: 2px solid var(--shift-lilac);
   border-radius: 12px;
   text-align: left;
 }
 .ss-ctx-wide { grid-column: span 3; text-align: center }
+.ss-ctx-wide { border-left: 1px solid rgba(200, 191, 239, 0.18); border-top: 2px solid var(--shift-lilac); }
 .ss-ctx-name {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--purple);
-  letter-spacing: .06em;
-  margin-bottom: 4px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--shift-lilac);
+  letter-spacing: -.005em;
+  margin-bottom: 6px;
 }
-.ss-ctx-desc { font-family: var(--mono); font-size: 10px; color: rgba(26, 26, 26, .65); line-height: 1.5 }
+.ss-ctx-desc {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.55;
+  letter-spacing: 0;
+}
 .ss-footer {
   display: flex;
   justify-content: center;
   gap: 8px;
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(26, 26, 26, .04);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-family: var(--mono);
-  font-size: 9px;
-  color: rgba(26, 26, 26, .5);
-  letter-spacing: .06em;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: .08em;
 }
 /* Classical (greyed) vs contextual (illuminated pill) */
 .formula-vs {
@@ -1155,29 +1857,29 @@
 }
 .formula-old {
   text-align: center;
-  opacity: .5;
+  opacity: .65;
 }
 .formula-old-label {
   font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: .12em;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  color: rgba(26, 26, 26, .5);
+  color: rgba(255, 255, 255, 0.55);
   margin-bottom: .75rem;
 }
 .formula-old-eq {
   font-family: var(--mono);
   font-size: 18px;
-  color: rgba(26, 26, 26, .6);
+  color: rgba(255, 255, 255, 0.55);
   letter-spacing: .02em;
   text-decoration: line-through;
-  text-decoration-color: rgba(26, 26, 26, .2);
+  text-decoration-color: rgba(255, 255, 255, 0.25);
 }
 .formula-old-note {
   font-family: var(--mono);
-  font-size: 10px;
-  color: rgba(26, 26, 26, .55);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
   margin-top: .5rem;
 }
 .formula-new {
@@ -1185,37 +1887,37 @@
 }
 .formula-new-label {
   font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: .12em;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--purple);
+  color: var(--shift-lilac);
   margin-bottom: .75rem;
 }
 .formula-pill {
   display: inline-block;
   font-family: var(--mono);
   font-size: 20px;
-  color: var(--ink);
+  color: #FFFFFF;
   letter-spacing: .04em;
   padding: 14px 32px;
-  background: rgba(255, 255, 255, .7);
+  background: rgba(124, 108, 232, 0.18);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(123, 94, 167, .15);
+  border: 1px solid rgba(124, 108, 232, 0.45);
   border-radius: 9999px;
   box-shadow:
-    0 0 20px rgba(123, 94, 167, .08),
-    0 0 60px rgba(123, 94, 167, .04);
+    0 0 24px rgba(91, 71, 224, 0.30),
+    0 0 60px rgba(91, 71, 224, 0.18);
 }
 .fp-highlight {
-  color: var(--purple);
-  font-weight: 500;
+  color: var(--shift-lilac);
+  font-weight: 600;
 }
 .formula-new-note {
   font-family: var(--mono);
-  font-size: 10px;
-  color: rgba(26, 26, 26, .55);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.65);
   margin-top: .75rem;
 }
 @media (max-width: 768px) {
@@ -1231,9 +1933,9 @@
 .s10 { padding-top: 1rem }
 .s-arch {
   background:
-    radial-gradient(ellipse at 35% 40%, rgba(184, 212, 227, 0.2), transparent 50%),
-    radial-gradient(ellipse at 65% 60%, rgba(213, 199, 232, 0.15), transparent 50%),
-    var(--cream);
+    radial-gradient(ellipse at 35% 40%, rgba(188, 166, 255, 0.18), transparent 50%),
+    radial-gradient(ellipse at 65% 60%, rgba(75, 23, 229, 0.10), transparent 50%),
+    var(--shift-bg);
 }
 .arch-split {
   display: grid;
@@ -1243,32 +1945,38 @@
   align-items: start;
 }
 .arch-side {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(26, 26, 26, 0.06);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset,
+              0 14px 32px rgba(0, 0, 0, 0.28);
 }
 .arch-today {
-  border-color: rgba(196, 77, 90, 0.12);
+  border-color: rgba(224, 123, 91, 0.28);
 }
 .arch-moi {
-  border-color: rgba(58, 159, 126, 0.12);
+  border-color: rgba(124, 108, 232, 0.30);
 }
 .arch-side-header {
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(26, 26, 26, 0.65);
+  color: var(--shift-lilac);
   margin-bottom: 1.5rem;
+}
+.arch-side-caption {
+  color: rgba(255, 255, 255, 0.78) !important;
+  font-style: italic;
+  font-size: 13px;
 }
 .arch-divider {
   width: 1px;
   align-self: stretch;
-  background: linear-gradient(to bottom, transparent, rgba(26, 26, 26, 0.08), transparent);
+  background: linear-gradient(to bottom, transparent, rgba(232, 228, 245, 0.08), transparent);
 }
 /* ─── Canvas wrappers inside arch cards ─── */
 .arch-canvas-wrap {
@@ -1285,7 +1993,7 @@
 
 .arch-side-caption {
   font-size: 11px;
-  color: rgba(26, 26, 26, 0.55);
+  color: rgba(232, 228, 245, 0.55);
   font-style: italic;
 }
 
@@ -1305,14 +2013,14 @@
   font-family: var(--serif);
   font-size: clamp(3.5rem, 8vw, 5rem);
   font-weight: 400;
-  color: var(--ink);
+  color: var(--shift-ink-on-dark);
   letter-spacing: -.04em;
   line-height: 1;
 }
 .stat-center-desc {
   font-family: var(--mono);
   font-size: 12px;
-  color: rgba(26, 26, 26, .55);
+  color: rgba(232, 228, 245, .55);
   line-height: 1.7;
   max-width: 380px;
   margin: .75rem auto 0;
@@ -1321,7 +2029,7 @@
 .stat-center-source {
   font-family: var(--mono);
   font-size: 11px;
-  color: rgba(26, 26, 26, .55);
+  color: rgba(232, 228, 245, .55);
   font-style: normal;
   font-weight: 500;
   margin: .75rem auto 0;
@@ -1340,7 +2048,7 @@
   font-family: var(--serif);
   font-size: clamp(1.2rem, 2.5vw, 1.6rem);
   font-weight: 400;
-  color: var(--ink);
+  color: var(--shift-ink-on-dark);
   line-height: 1.4;
   letter-spacing: -0.01em;
   margin-top: 2.5rem;
@@ -1369,46 +2077,89 @@
   border: none;
 }
 .closing-quote p {
-  font-family: var(--serif);
+  font-family: var(--font-sans);
   font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-  color: rgba(26, 26, 26, .7);
+  color: var(--shift-ink-on-dark) !important;
   font-weight: 400;
   line-height: 1.5;
-  font-style: italic;
+  font-style: normal;
 }
-.closing-em {
-  font-family: var(--serif);
-  font-size: clamp(1.4rem, 3vw, 2rem) !important;
-  color: var(--ink) !important;
-  font-style: italic;
+.how-it-works-page .closing-em {
+  font-family: var(--font-sans);
+  font-size: clamp(1.4rem, 3vw, 2.1rem) !important;
+  color: var(--shift-purple) !important;
+  font-style: normal;
+  font-weight: 700;
   margin-top: 1rem;
-  font-weight: 400;
 }
 .closing-tag {
-  font-family: var(--mono) !important;
-  font-size: 12px !important;
-  color: rgba(26, 26, 26, .5) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 13px !important;
+  color: var(--shift-muted) !important;
   font-style: normal !important;
   margin-top: 1rem;
-  letter-spacing: .04em;
+  letter-spacing: 0;
 }
 
 /* ══════════════════════════════ */
-/* S11 — CTA                     */
+/* S11 — CTA (inherits page gradient) */
 /* ══════════════════════════════ */
-.s11 { text-align: center }
+.s11 {
+  text-align: center;
+  position: relative;
+  padding: 6rem 1.5rem !important;
+}
+.s11 .cta-hl { color: var(--shift-ink-on-dark) !important; }
+.s11 .cta-sub { color: var(--shift-muted) !important; }
 .cta-hl {
-  font-family: var(--serif);
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  font-weight: 400;
+  font-family: var(--font-sans);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
   line-height: 1.05;
-  color: var(--ink);
-  letter-spacing: -.02em;
+  color: var(--shift-ink-on-dark);
+  letter-spacing: -.022em;
+}
+/* Stat anchor row that ties the close to homepage's stats */
+.shift-stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 840px;
+  margin: 2rem auto 0;
+}
+@media (max-width: 640px) {
+  .shift-stat-row { grid-template-columns: 1fr; }
+}
+.shift-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 1.5rem 1.25rem;
+  border-radius: 16px;
+  background: var(--shift-card-bg-2);
+  border: 1px solid var(--shift-rule);
+}
+.shift-stat-num {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  line-height: 1;
+  color: var(--shift-ink);
+  letter-spacing: -0.022em;
+  white-space: nowrap;
+}
+.shift-stat-label {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--shift-muted);
 }
 .cta-sub {
   font-family: var(--mono);
   font-size: 14px;
-  color: rgba(26, 26, 26, .7);
+  color: rgba(232, 228, 245, .7);
   line-height: 1.8;
   max-width: 480px;
   margin: 1rem auto 0;
@@ -1423,43 +2174,44 @@
 .btn-primary {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 14px 32px;
-  background: var(--purple);
-  color: #fff;
-  border: 1px solid transparent;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--shift-purple);
+  color: #FFFFFF;
+  border: 1px solid var(--shift-purple);
   border-radius: 9999px;
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: .06em;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
   text-decoration: none;
   cursor: pointer;
-  transition: all .2s;
+  box-shadow: 0 4px 14px rgba(91, 71, 224, 0.22);
+  transition: transform .2s, background .2s;
 }
 .btn-primary:hover {
-  background: #6b4e97;
+  background: var(--shift-purple-2);
   transform: translateY(-1px);
 }
 .btn-secondary {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 14px 32px;
+  gap: 8px;
+  padding: 14px 28px;
   background: transparent;
-  color: var(--purple);
-  border: 1px solid rgba(123, 94, 167, .25);
+  color: var(--shift-ink-on-dark);
+  border: 1px solid var(--shift-rule);
   border-radius: 9999px;
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: .06em;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
   text-decoration: none;
   cursor: pointer;
   transition: all .2s;
 }
 .btn-secondary:hover {
-  background: rgba(123, 94, 167, .06);
+  background: rgba(255, 255, 255, 0.08);
   transform: translateY(-1px);
 }
 
@@ -1482,9 +2234,9 @@
   }
   .pref-tags { margin-top: 0.75rem }
   .assets-split { grid-template-columns: 1fr }
-  .assets-divider { width: auto; height: 1px; margin: 1rem 2rem; background: linear-gradient(to right, transparent, rgba(26, 26, 26, .08), transparent) }
+  .assets-divider { width: auto; height: 1px; margin: 1rem 2rem; background: linear-gradient(to right, transparent, rgba(232, 228, 245, .08), transparent) }
   .custody-stats { gap: 1rem; flex-direction: column }
-  .custody-stat { border-right: none; border-bottom: 1px solid rgba(26, 26, 26, .06); padding-bottom: 10px }
+  .custody-stat { border-right: none; border-bottom: 1px solid rgba(232, 228, 245, .06); padding-bottom: 10px }
   .custody-stat:last-child { border-bottom: none }
   .ss-grid { grid-template-columns: repeat(2, 1fr) }
   .ss-ctx-wide { grid-column: span 2 }
@@ -1494,6 +2246,724 @@
   .arch-divider {
     width: 100%;
     height: 1px;
-    background: linear-gradient(to right, transparent, rgba(26, 26, 26, 0.08), transparent);
+    background: linear-gradient(to right, transparent, rgba(232, 228, 245, 0.08), transparent);
+  }
+}
+
+
+/* ──────────────────────────────────────────────────────────────────────
+   Sticky act-progress rail (desktop only)
+   ────────────────────────────────────────────────────────────────────── */
+.shift-rail {
+  position: fixed;
+  top: 50%;
+  left: 24px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 30;
+  font-family: var(--font-sans);
+  pointer-events: none;
+}
+.shift-rail-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+  text-decoration: none;
+  color: #5F5A52;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: color 200ms ease;
+}
+.shift-rail-num {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid #D6CFC0;
+  color: #867E72;
+  background: #FFFFFF;
+  font-size: 10px;
+  letter-spacing: 0;
+  transition: background 200ms ease, color 200ms ease,
+              border-color 200ms ease, box-shadow 200ms ease;
+}
+.shift-rail-item:hover { color: #1A1A1A; }
+.shift-rail-item:hover .shift-rail-num {
+  color: #5B47E0;
+  border-color: #5B47E0;
+}
+.shift-rail-item.is-active { color: #1A1A1A; }
+.shift-rail-item.is-active .shift-rail-num {
+  background: rgba(91, 71, 224, 0.10);
+  color: #5B47E0;
+  border-color: #5B47E0;
+}
+@media (max-width: 1100px) {
+  .shift-rail { display: none; }
+}
+
+
+/* (Slide rhythm now defined per-section above under
+   "B — Three slide rhythms" — Statement / Demo / Argument.) */
+
+/* ──────────────────────────────────────────────────────────────────────
+   Scroll-snap deck — desktop only.
+   Each act snaps to start but snap is "proximity", not "mandatory",
+   so dense slides (s1 chain, s9 matrix, s10 MDAG) that overflow the
+   viewport stay freely scrollable past the next snap point.
+   The .section-divider hairlines were removed in the JSX too — sections
+   flow into each other now.
+   ────────────────────────────────────────────────────────────────────── */
+@media (min-width: 769px) and (min-height: 700px) {
+  html:has(.how-it-works-page) {
+    scroll-snap-type: y proximity;
+    scroll-padding-top: 88px;
+    scroll-behavior: smooth;
+  }
+  .how-it-works-page > section {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   Generous-scale pass — match s1's wide layout across the page.
+   Applies on desktop only (≥1100px); under that, sections stay at
+   their natural width.
+   ────────────────────────────────────────────────────────────────────── */
+@media (min-width: 1100px) {
+  /* Wider canvas for every demo / argument slide */
+  .how-it-works-page section.s2  .sec-inner,
+  .how-it-works-page section.s3  .sec-inner,
+  .how-it-works-page section.s7  .sec-inner,
+  .how-it-works-page section.s8  .sec-inner,
+  .how-it-works-page section.s9  .sec-inner,
+  .how-it-works-page section.s10 .sec-inner {
+    max-width: 130rem;
+  }
+
+  /* Roomier vertical padding */
+  .how-it-works-page section.s2,
+  .how-it-works-page section.s3,
+  .how-it-works-page section.s7,
+  .how-it-works-page section.s8,
+  .how-it-works-page section.s9,
+  .how-it-works-page section.s10 {
+    padding: 9rem 3rem !important;
+  }
+
+  /* Headlines bump one step up to match s1's clamp */
+  .how-it-works-page section.s2  .headline,
+  .how-it-works-page section.s3  .headline,
+  .how-it-works-page section.s7  .headline,
+  .how-it-works-page section.s8  .headline,
+  .how-it-works-page section.s9  .headline,
+  .how-it-works-page section.s10 .headline {
+    font-size: clamp(2.5rem, 5.4vw, 4.5rem);
+    line-height: 1.06;
+    letter-spacing: -.028em;
+  }
+
+  /* Sublines: bigger, longer measure */
+  .how-it-works-page section.s2  .subline,
+  .how-it-works-page section.s3  .subline,
+  .how-it-works-page section.s7  .subline,
+  .how-it-works-page section.s8  .subline,
+  .how-it-works-page section.s9  .subline,
+  .how-it-works-page section.s10 .subline {
+    font-size: 15px;
+    line-height: 1.7;
+    margin-top: 1.25rem;
+    max-width: 64ch;
+  }
+
+  /* Impact lines: more presence */
+  .how-it-works-page section.s2  .impact-line,
+  .how-it-works-page section.s3  .impact-line,
+  .how-it-works-page section.s7  .impact-line,
+  .how-it-works-page section.s8  .impact-line,
+  .how-it-works-page section.s9  .impact-line,
+  .how-it-works-page section.s10 .impact-line {
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    margin-top: 4rem;
+  }
+
+  /* Captions a touch larger so they don't disappear in the new air */
+  .how-it-works-page section.s2  .caption,
+  .how-it-works-page section.s3  .caption,
+  .how-it-works-page section.s7  .caption,
+  .how-it-works-page section.s8  .caption,
+  .how-it-works-page section.s9  .caption,
+  .how-it-works-page section.s10 .caption {
+    font-size: 14px;
+    margin-top: 2rem;
+  }
+
+  /* Section-specific grid bumps so the actual visuals scale with the
+     extra room, not just the type around them. */
+  .how-it-works-page section.s2 .chat-cards-grid,
+  .how-it-works-page section.s2 .chat-grid,
+  .how-it-works-page section.s2 .cold-meter,
+  .how-it-works-page section.s7 .pref-split,
+  .how-it-works-page section.s8 .assets-split,
+  .how-it-works-page section.s9 .perm-table-wrap,
+  .how-it-works-page section.s10 .arch-split {
+    max-width: none;
+    margin-top: 4.5rem;
+  }
+
+  /* s3 custody comparison */
+  .how-it-works-page section.s3 .custody-compare { margin-top: 4.5rem; }
+
+  /* s8 / s10 split layouts a touch wider on huge screens */
+  .how-it-works-page section.s8 .assets-split,
+  .how-it-works-page section.s10 .arch-split {
+    gap: 3rem;
+  }
+
+  /* s8 stat-center "$2.8B" and surrounding rhythm — match s1's 73% scale */
+  .how-it-works-page section.s8 .stat-center { margin-top: 6rem; padding: 0; }
+  .how-it-works-page section.s8 .stat-center-num,
+  .how-it-works-page section.s3 .stat-center-num {
+    font-size: clamp(4rem, 9vw, 6.5rem);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   Match the homepage hero's typography across /why-moi.
+   Same Poppins, same weights, same letter-spacing, same clamps.
+   ────────────────────────────────────────────────────────────────────── */
+.how-it-works-page .pill {
+  font-family: var(--font-sans) !important;
+  font-weight: 700 !important;
+  font-size: clamp(14px, 1.1vw, 18px) !important;
+  letter-spacing: 0.12em !important;
+}
+
+.how-it-works-page .headline,
+.how-it-works-page .act2-hl,
+.how-it-works-page .cta-hl,
+.how-it-works-page .act2-hl-l1,
+.how-it-works-page .act2-hl-l2 {
+  font-family: var(--font-sans) !important;
+  font-weight: 700 !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.03em !important;
+}
+
+@media (min-width: 1100px) {
+  .how-it-works-page .headline,
+  .how-it-works-page .act2-hl,
+  .how-it-works-page .cta-hl,
+  .how-it-works-page .act2-hl-l1,
+  .how-it-works-page .act2-hl-l2 {
+    font-size: clamp(2.75rem, 6.5vw, 5.25rem) !important;
+    max-width: 16ch;
+  }
+  .how-it-works-page section.s-act2-reveal .headline,
+  .how-it-works-page section.s-act2-reveal .act2-hl,
+  .how-it-works-page section.s-root-cause .act2-hl,
+  .how-it-works-page section.s11 .cta-hl {
+    max-width: 22ch;
+  }
+
+  /* Center the constrained statement billboards (and their inner spans)
+     within their flex column. Without these the max-width on the block
+     leaves it stranded against the left edge. */
+  .how-it-works-page section.s-act2-reveal .headline,
+  .how-it-works-page section.s-act2-reveal .act2-hl,
+  .how-it-works-page section.s-root-cause .act2-hl,
+  .how-it-works-page section.s-superstate .headline,
+  .how-it-works-page section.s11 .cta-hl {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+  }
+  .how-it-works-page section.s-root-cause .act2-hl-l1,
+  .how-it-works-page section.s-root-cause .act2-hl-l2 {
+    text-align: center;
+  }
+
+  /* s-superstate billboard: inherit the statement type scale. */
+  .how-it-works-page section.s-superstate .headline {
+    font-size: clamp(2.75rem, 6.5vw, 5.25rem) !important;
+    max-width: 18ch;
+  }
+}
+
+/* Kill the Poppins italic on the s-superstate em (it reads as a
+   slanted slab). Lilac color stays. Applies at every viewport. */
+.how-it-works-page section.s-superstate .headline em {
+  font-style: normal !important;
+  color: var(--shift-lilac) !important;
+  font-weight: 700 !important;
+}
+
+.how-it-works-page .subline {
+  font-family: var(--font-sans) !important;
+  font-weight: 500 !important;
+  font-size: clamp(15px, 1.1vw, 17px) !important;
+  line-height: 1.6 !important;
+  max-width: 48ch !important;
+  letter-spacing: 0 !important;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   Fit-one-screen pass: scope the homepage hero's huge clamp to the
+   STATEMENT billboards only. Demo + argument slides use a smaller
+   confident clamp so the visualization fits inside 100vh.
+   ────────────────────────────────────────────────────────────────────── */
+@media (min-width: 1100px) {
+  /* Tighter clamp for demo + argument slides */
+  .how-it-works-page section.s1  .headline,
+  .how-it-works-page section.s2  .headline,
+  .how-it-works-page section.s3  .headline,
+  .how-it-works-page section.s6  .headline,
+  .how-it-works-page section.s7  .headline,
+  .how-it-works-page section.s8  .headline,
+  .how-it-works-page section.s9  .headline,
+  .how-it-works-page section.s10 .headline {
+    font-size: clamp(2rem, 3.4vw, 3.25rem) !important;
+    line-height: 1.05 !important;
+    max-width: 22ch;
+  }
+
+  /* Smaller sub + caption on demo slides */
+  .how-it-works-page section.s1  .subline,
+  .how-it-works-page section.s2  .subline,
+  .how-it-works-page section.s3  .subline,
+  .how-it-works-page section.s7  .subline,
+  .how-it-works-page section.s8  .subline,
+  .how-it-works-page section.s9  .subline,
+  .how-it-works-page section.s10 .subline {
+    font-size: clamp(13px, 0.95vw, 15px) !important;
+    margin-top: 1rem !important;
+    max-width: 60ch !important;
+  }
+
+  /* Pull section padding back so the slide actually fits 100vh */
+  .how-it-works-page section.s1 {
+    padding: 9rem 3rem 5rem !important;
+  }
+  .how-it-works-page section.s2,
+  .how-it-works-page section.s3,
+  .how-it-works-page section.s6,
+  .how-it-works-page section.s7,
+  .how-it-works-page section.s8,
+  .how-it-works-page section.s9,
+  .how-it-works-page section.s10 {
+    padding: 7rem 3rem !important;
+  }
+
+  /* Tighten the gap between headline group and the visualization */
+  .how-it-works-page section.s1 .chain-grid { margin: 2rem auto 1.25rem; }
+  .how-it-works-page section.s1 .caption { margin-top: 1rem; font-size: 12.5px; }
+  .how-it-works-page section.s1 .stat-center { margin-top: 2.5rem; }
+  .how-it-works-page section.s1 .impact-line { margin-top: 2rem; font-size: clamp(1.25rem, 1.8vw, 1.6rem); }
+  .how-it-works-page section.s1 .stat-center-num,
+  .how-it-works-page section.s3 .stat-center-num {
+    font-size: clamp(3rem, 6vw, 4.5rem) !important;
+  }
+
+  /* Demo grids tighter top margin */
+  .how-it-works-page section.s2 .chat-cards-grid,
+  .how-it-works-page section.s2 .chat-grid,
+  .how-it-works-page section.s7 .pref-split,
+  .how-it-works-page section.s8 .assets-split,
+  .how-it-works-page section.s9 .perm-table-wrap,
+  .how-it-works-page section.s10 .arch-split,
+  .how-it-works-page section.s3 .custody-compare {
+    margin-top: 2.5rem !important;
+  }
+  .how-it-works-page section.s6 .hub-stage { margin-top: 2rem; }
+  .how-it-works-page section.s6 .s6-impact { margin-top: 4rem; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   .s-superstate — split out of s-act2-reveal as its own slide
+   ────────────────────────────────────────────────────────────────────── */
+.how-it-works-page section.s-superstate {
+  background: transparent !important;
+}
+.how-it-works-page section.s-superstate .headline,
+.how-it-works-page section.s-superstate h2,
+.how-it-works-page section.s-superstate p {
+  color: var(--shift-ink-on-dark) !important;
+}
+.how-it-works-page section.s-superstate .subline {
+  color: var(--shift-muted-on-dark) !important;
+}
+.how-it-works-page section.s-superstate .pill { color: var(--shift-lilac) !important; }
+.how-it-works-page section.s-superstate .pill::before {
+  background: var(--shift-lilac) !important;
+  box-shadow: 0 0 10px rgba(200, 191, 239, 0.6);
+}
+
+@media (min-width: 769px) and (min-height: 700px) {
+  .how-it-works-page section.s-superstate {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 7rem 3rem;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+}
+@media (min-width: 1100px) {
+  .how-it-works-page section.s-superstate .sec-inner { max-width: 130rem; }
+  .how-it-works-page section.s-superstate .subline {
+    font-size: clamp(13px, 0.95vw, 15px) !important;
+    margin-top: 0.75rem !important;
+    max-width: 60ch !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   s-act2-reveal billboard deck: typographic statement under the H1
+   ────────────────────────────────────────────────────────────────────── */
+.how-it-works-page section.s-act2-reveal .act2-deck {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+  color: var(--shift-ink-on-dark);
+  max-width: 32ch;
+  margin: 1.75rem auto 0;
+  text-align: center;
+}
+.how-it-works-page section.s-act2-reveal .act2-deck em {
+  font-style: normal;
+  color: var(--shift-lilac);
+  font-weight: 700;
+}
+.how-it-works-page section.s-act2-reveal .act2-deck--lead {
+  font-weight: 500;
+  font-size: clamp(1.125rem, 1.6vw, 1.4rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 44ch;
+  margin-top: 1.5rem;
+}
+.how-it-works-page section.s-act2-reveal .act2-traits {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 14px;
+  padding: 0;
+  margin: 1.75rem auto 0;
+  max-width: 56rem;
+}
+.how-it-works-page section.s-act2-reveal .act2-traits li {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.72);
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   s-superstate composition: center every block within the flex column
+   so eyebrow / headline / subline / card stack neatly on the axis.
+   ────────────────────────────────────────────────────────────────────── */
+.how-it-works-page section.s-superstate .sec-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.how-it-works-page section.s-superstate .pill {
+  margin-left: auto;
+  margin-right: auto;
+}
+.how-it-works-page section.s-superstate .headline {
+  text-align: center;
+}
+.how-it-works-page section.s-superstate .subline {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center;
+}
+.how-it-works-page section.s-superstate .superstate-card {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   Problem keyword tag (s1 / s2 / s3 — above the headline)
+   ────────────────────────────────────────────────────────────────────── */
+.how-it-works-page .problem-tag {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 1rem 0 1.75rem !important;
+  padding: 8px 18px 8px 12px;
+  border-radius: 999px;
+  background: rgba(124, 108, 232, 0.12);
+  border: 1px solid rgba(200, 191, 239, 0.28);
+  font-family: var(--font-sans);
+  width: fit-content;
+}
+.how-it-works-page .problem-tag-num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--shift-lilac);
+  opacity: 0.85;
+}
+.how-it-works-page .problem-tag-word {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: #FFFFFF;
+}
+
+/* Root-cause: 4-card grid on the keyword expansion */
+.how-it-works-page .act2-cards--four {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 92rem !important;
+}
+@media (max-width: 1100px) {
+  .how-it-works-page .act2-cards--four { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .how-it-works-page .act2-cards--four { grid-template-columns: 1fr; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   .s-evidence — 4-stat grid grounding the four problem keywords
+   ────────────────────────────────────────────────────────────────────── */
+.how-it-works-page section.s-evidence {
+  background:
+    radial-gradient(60% 50% at 80% 18%, rgba(75, 23, 229, 0.38), transparent 60%),
+    radial-gradient(50% 55% at 8% 85%, rgba(111, 69, 234, 0.28), transparent 60%),
+    var(--shift-bg-dark) !important;
+  color: var(--shift-ink-on-dark);
+}
+.how-it-works-page section.s-evidence .pill,
+.how-it-works-page section.s-evidence .headline,
+.how-it-works-page section.s-evidence .impact-line {
+  text-align: center;
+}
+.how-it-works-page section.s-evidence .pill {
+  color: var(--shift-lilac) !important;
+  margin: 0 auto 1.25rem;
+}
+.how-it-works-page section.s-evidence .pill::before {
+  background: var(--shift-lilac) !important;
+  box-shadow: 0 0 10px rgba(200, 191, 239, 0.6);
+}
+.how-it-works-page section.s-evidence .headline {
+  color: var(--shift-ink-on-dark) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: 22ch;
+}
+
+.ev-grid {
+  list-style: none;
+  margin: 3.5rem auto 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  max-width: 92rem;
+}
+.ev-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 1.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset,
+              0 14px 32px rgba(0, 0, 0, 0.28);
+}
+.ev-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.ev-num {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.028em;
+  color: #FFFFFF;
+}
+.ev-date {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(200, 191, 239, 0.10);
+  border: 1px solid rgba(200, 191, 239, 0.28);
+  color: var(--shift-lilac);
+  white-space: nowrap;
+}
+.ev-label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.4;
+}
+.ev-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ev-bullets li {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.72);
+  padding-left: 18px;
+  position: relative;
+}
+.ev-bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--shift-lilac);
+  opacity: 0.7;
+}
+.ev-source {
+  margin: auto 0 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+.ev-thesis {
+  margin: 3rem auto 0 !important;
+  max-width: 56rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+.ev-thesis em {
+  color: var(--shift-lilac) !important;
+  font-style: italic;
+  font-weight: 600;
+}
+
+@media (max-width: 1100px) {
+  .ev-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .ev-grid { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 769px) and (min-height: 700px) {
+  .how-it-works-page section.s-evidence {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 7rem 3rem;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+}
+@media (min-width: 1100px) {
+  .how-it-works-page section.s-evidence .sec-inner { max-width: 130rem; }
+  .how-it-works-page section.s-evidence .headline {
+    font-size: clamp(2rem, 3.4vw, 3.25rem) !important;
+    line-height: 1.05 !important;
+  }
+}
+
+/* Cleaner 4-card layout for the Root-Cause keyword grid */
+.how-it-works-page section.s-root-cause .act2-cards--four {
+  gap: 24px;
+  margin: 3rem auto 0;
+  max-width: 92rem;
+}
+.how-it-works-page section.s-root-cause .act2-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 2rem 1.75rem;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(200, 191, 239, 0.20) !important;
+  border-radius: 22px !important;
+  text-align: left;
+  min-height: 280px;
+  transition: transform 200ms ease, border-color 200ms ease,
+              box-shadow 200ms ease;
+}
+.how-it-works-page section.s-root-cause .act2-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(200, 191, 239, 0.45) !important;
+  box-shadow: 0 14px 36px rgba(75, 23, 229, 0.28) !important;
+}
+.act2-card-num-glyph {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--shift-lilac);
+  opacity: 0.55;
+  margin-bottom: 4px;
+}
+.how-it-works-page section.s-root-cause .act2-card-label {
+  margin: 0 0 4px !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.012em !important;
+  text-transform: none !important;
+  text-align: left !important;
+  color: #FFFFFF !important;
+}
+.how-it-works-page section.s-root-cause .act2-card-text {
+  font-size: 14.5px !important;
+  line-height: 1.55 !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+  text-align: left !important;
+}
+.how-it-works-page section.s-root-cause .act2-card-text em {
+  font-style: italic;
+  color: var(--shift-lilac) !important;
+  font-weight: 600;
+}
+
+@media (max-width: 1100px) {
+  .how-it-works-page section.s-root-cause .act2-cards--four {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .how-it-works-page section.s-root-cause .act2-cards--four {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,0 +1,17 @@
+{
+  "rewrites": [
+    { "source": "/admin/(.*)", "destination": "/index.html" },
+    { "source": "/why-moi", "destination": "/index.html" },
+    { "source": "/how-it-works", "destination": "/index.html" },
+    { "source": "/manifesto", "destination": "/index.html" },
+    { "source": "/papers", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/papers/(.*).pdf",
+      "headers": [
+        { "key": "Content-Disposition", "value": "attachment" }
+      ]
+    }
+  ]
+}

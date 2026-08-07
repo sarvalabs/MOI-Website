@@ -4,19 +4,23 @@ export const WHITEPAPER_URL = "/MOILitePaper.pdf";
 export const WHITEPAPER_SITE_URL = "https://moi.technology/whitepaper";
 export const NAV_H = 72;
 
+/* Participants — all rendered in brand indigo on the dark page,
+   differentiated by saturation/lightness only. */
 export const PARTICIPANTS = [
-  { name: "Alice", color: "#7B5EA7" },
-  { name: "Bob", color: "#3A8F6E" },
-  { name: "Charlie", color: "#C47A2D" },
-  { name: "Diana", color: "#2D7EC4" },
-  { name: "Eve", color: "#C44D5A" },
+  { name: "Alice",   color: "#5B47E0" },
+  { name: "Bob",     color: "#7B6CE8" },
+  { name: "Charlie", color: "#9B8FF0" },
+  { name: "Diana",   color: "#6E59E4" },
+  { name: "Eve",     color: "#8B7AEB" },
 ];
 export const P_COUNT = PARTICIPANTS.length;
 
-export const ALICE_COLOR = "#8B6CC1";
-export const BOB_COLOR = "#3A9F7E";
+export const ALICE_COLOR = "#5B47E0";
+export const BOB_COLOR = "#7B6CE8";
 
-export const FIELD_COLORS = ["#3A9F7E","#8B6CC1","#D4853A","#3A7ED4","#D45A6A","#7A8B5A"];
+/* Field accent palette — collapsed to indigo + coral.
+   Last entry is the "decay/broken" accent. */
+export const FIELD_COLORS = ["#5B47E0","#7B6CE8","#9B8FF0","#6E59E4","#E07B5B","#8B7AEB"];
 export const FIELD_KEYS = ["assets","trust","auth","keys","creds","logic"];
 export const FIELD_BARS = [0.8, 0.94, 0.4, 0.85, 0.3, 0.5];
 export const ALICE_VALS = ["2,400 MOI","0.94","scoped","ed25519","3 active","4 bound"];

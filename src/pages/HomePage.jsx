@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import LandingFooter from "../components/LandingFooter";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
+import CommunityCalendar from "../components/CommunityCalendar";
 import { WHITEPAPER_URL } from "../phases/constants.js";
 import {
   stripMarkdown,
@@ -20,8 +21,8 @@ const API_URL = "";
 const SPACING = 85;
 const AMBIENT_HIGHLIGHT_MS = 2500;
 const AMBIENT_GLOW_MS = 2000;
-const PURPLE = { r: 123, g: 94, b: 167 };
-const DEFAULT_COLOR = { r: 26, g: 26, b: 26 };
+const PURPLE = { r: 75, g: 23, b: 229 };
+const DEFAULT_COLOR = { r: 10, g: 5, b: 26 };
 
 const ACTIVITY_LABELS = {
   programming: "Programming", trading: "Trading", cooking: "Cooking",
@@ -275,7 +276,7 @@ function ParticipantCanvas({ parentRef }) {
           const label = `${n.id} · ${n.context}`;
           ctx.save();
           ctx.globalAlpha = n.labelOpacity;
-          ctx.font = "300 9px 'DM Mono', monospace";
+          ctx.font = "600 9px 'Poppins', system-ui, sans-serif";
           const tw = ctx.measureText(label).width;
           const px = 20, rX = n.x + 16, lX = n.x - 16;
           const fitsR = rX + tw + px <= W;
@@ -467,36 +468,39 @@ function AskChat() {
     }
   };
 
+  const empty = messages.length === 0;
+
   return (
-    <div className="ask-container">
-      <div className="ask-msgs" ref={msgsRef}>
-        {messages.length === 0 && (
-          <div className="ask-welcome">
-            Ask me anything about MOI — Contextual Compute, KRAMA, the Context Superstate, or the
-            litepaper.
-          </div>
-        )}
-        {messages.map((msg, i) =>
-          msg.role === "user" ? (
-            <div key={i} className="ask-msg-user">
-              {msg.content}
-            </div>
-          ) : (
-            <div key={i} className="ask-msg-bot">
-              <span className="ask-msg-psi">ψ</span>
-              {msg.content ? (
-                <span style={{ whiteSpace: "pre-wrap" }}>{msg.content}</span>
-              ) : loading && i === messages.length - 1 ? (
-                <span className="ask-typing">
-                  <span />
-                  <span />
-                  <span />
-                </span>
-              ) : null}
-            </div>
-          )
-        )}
-      </div>
+    <div className={`ask-container${empty ? " ask-container--empty" : ""}`}>
+      {empty ? (
+        <div className="ask-welcome">
+          Ask me anything about MOI — Contextual Compute, KRAMA, the Context
+          Superstate, or the litepaper.
+        </div>
+      ) : (
+        <div className="ask-msgs" ref={msgsRef}>
+          {messages.map((msg, i) =>
+            msg.role === "user" ? (
+              <div key={i} className="ask-msg-user">
+                {msg.content}
+              </div>
+            ) : (
+              <div key={i} className="ask-msg-bot">
+                <span className="ask-msg-psi">ψ</span>
+                {msg.content ? (
+                  <span style={{ whiteSpace: "pre-wrap" }}>{msg.content}</span>
+                ) : loading && i === messages.length - 1 ? (
+                  <span className="ask-typing">
+                    <span />
+                    <span />
+                    <span />
+                  </span>
+                ) : null}
+              </div>
+            )
+          )}
+        </div>
+      )}
 
       <div className="ask-bar">
         <input
@@ -543,64 +547,290 @@ export default function HomePage() {
       <Navbar activePage="home" />
 
       <div className="home-page">
-        {/* Hero */}
+        {/* Hero — cosmic dark with Pip */}
         <section className="home-hero" ref={heroSectionRef}>
-          <ParticipantCanvas parentRef={heroSectionRef} />
-          <div ref={heroRef} className="home-hero-inner fade-slide-up">
-            <p className="home-hero-tag">Powered by Contextual Compute</p>
-            <h1 className="home-hero-hl">
-              The Participant Layer
-              <br />
-              of the Internet
-            </h1>
-            <p className="home-hero-sub">
-              MOI gives every participant — human or agent — persistent, portable
-              existence in computation.
-            </p>
-            <p className="home-hero-layer">The <span className="purple">context infrastructure</span> for the AI economy</p>
-            <div className="home-hero-ctas">
-              <a href={WHITEPAPER_URL} className="btn-primary">
-                Read the whitepaper →
-              </a>
-              <Link to="/why-moi" className="btn-ghost">
-                The Shift →
-              </Link>
+          <div className="hero-orb hero-orb-tl" aria-hidden="true" />
+          <div className="hero-orb hero-orb-br" aria-hidden="true" />
+
+          <div className="hero-grid">
+            <div ref={heroRef} className="hero-copy fade-slide-up">
+              <p className="hero-eyebrow">
+                <span className="hero-eyebrow-dot" />
+                <span className="hero-eyebrow-rest">
+                  Powered by Contextual Compute
+                </span>
+              </p>
+              <h1 className="hero-headline">
+                The Participant Layer
+                <br />
+                of the Internet
+              </h1>
+              <p className="hero-sub">
+                MOI gives every participant — human or agent — persistent,
+                portable existence in computation.
+              </p>
+              <p className="hero-tagline">
+                <em>Onchain authority</em> for the agentic economy.
+              </p>
+              <div className="hero-ctas">
+                <Link to="/manifesto" className="hero-btn hero-btn-primary">
+                  Read our manifesto <span aria-hidden="true">→</span>
+                </Link>
+                <Link to="/why-moi" className="hero-btn hero-btn-ghost">
+                  Read why we built MOI <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            </div>
+
+            <div className="hero-pip-wrap">
+              <img
+                className="hero-softstar hero-softstar-tr"
+                src="/brand/icons/soft-star.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <img
+                className="hero-softstar hero-softstar-br"
+                src="/brand/icons/soft-star.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <div className="hero-pip">
+                <img
+                  className="hero-pip-img"
+                  src="/brand/mascot/pip-smile.png"
+                  alt="Pip — the MOI participant"
+                />
+                <svg
+                  className="hero-pip-ring"
+                  viewBox="0 0 600 600"
+                  aria-hidden="true"
+                >
+                  <ellipse
+                    cx="300"
+                    cy="300"
+                    rx="280"
+                    ry="78"
+                    fill="none"
+                    stroke="rgba(217,204,255,0.55)"
+                    strokeWidth="1.5"
+                    transform="rotate(-22 300 300)"
+                  />
+                  <circle cx="50" cy="370" r="6" fill="#D9CCFF" />
+                  <circle cx="555" cy="240" r="9" fill="#FFFFFF" opacity="0.85" />
+                </svg>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Ask chatbot */}
-        <section className="s-ask">
-          <div ref={askRef} className="ask-center fade-slide-up">
-            <h2 className="ask-hl">What can MOI help with?</h2>
-            <p className="ask-sub">Ask the protocol.</p>
-            <AskChat />
+        {/* Four-way authority model */}
+        <section className="s-promise">
+          <div className="promise-inner">
+            <div className="promise-header">
+              <div className="promise-header-left">
+                <p className="promise-eyebrow">
+                  <span className="promise-eyebrow-dot" />
+                  The four-way authority model
+                </p>
+                <h2 className="promise-title">Your authority, four ways.</h2>
+              </div>
+            </div>
+
+            <div className="promise-grid">
+              <article className="promise-card">
+                <div className="promise-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="9" />
+                    <circle cx="12" cy="12" r="4" />
+                    <line x1="12" y1="2" x2="12" y2="5" />
+                    <line x1="12" y1="19" x2="12" y2="22" />
+                    <line x1="2" y1="12" x2="5" y2="12" />
+                    <line x1="19" y1="12" x2="22" y2="12" />
+                  </svg>
+                </div>
+                <p className="promise-num">01 · Exist on-chain</p>
+                <h3 className="promise-name">One coherent participant.</h3>
+                <p className="promise-body">
+                  Agents plug into you. You don't get cloned across credentials.
+                </p>
+              </article>
+
+              <article className="promise-card">
+                <div className="promise-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 12 7 12 10 4 14 20 17 12 21 12" />
+                  </svg>
+                </div>
+                <p className="promise-num">02 · Monitor</p>
+                <h3 className="promise-name">See every action in real time.</h3>
+                <p className="promise-body">
+                  Every call, every scope check — streamed to you, not after the fact.
+                </p>
+              </article>
+
+              <article className="promise-card">
+                <div className="promise-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="9" />
+                    <polyline points="12 7 12 12 15 14" />
+                  </svg>
+                </div>
+                <p className="promise-num">03 · Scope</p>
+                <h3 className="promise-name">Choose what they can touch.</h3>
+                <p className="promise-body">
+                  Per-agent, per-resource, per-call. Standing scope replaces borrowed keys.
+                </p>
+              </article>
+
+              <article className="promise-card">
+                <div className="promise-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 12a9 9 0 1 0 3-6.7" />
+                    <polyline points="3 4 3 9 8 9" />
+                  </svg>
+                </div>
+                <p className="promise-num">04 · Revoke</p>
+                <h3 className="promise-name">Cut access at machine speed.</h3>
+                <p className="promise-body">
+                  One call. Globally enforced. No long-lived token left holding the bag.
+                </p>
+              </article>
+            </div>
+
+            <p className="promise-closer">
+              Information about your authority{" "}
+              <em>is not your authority</em>. Anywhere. Ever. So we stopped
+              passing it around.
+            </p>
           </div>
         </section>
 
-        {/* Closing CTA */}
-        <section className="s-home-cta">
-          <div ref={ctaRef} className="home-cta-inner fade-slide-up">
-            <h2 className="home-cta-hl">Ready to build?</h2>
-            <p className="home-cta-sub">
-              Explore the docs, read the whitepaper, or join the community.
+        {/* Why it matters — cosmic story band */}
+        <section className="s-matters">
+          <div className="matters-orb" aria-hidden="true" />
+          <img
+            className="matters-softstar"
+            src="/brand/icons/soft-star.svg"
+            alt=""
+            aria-hidden="true"
+          />
+
+          <div className="matters-inner">
+            <div className="matters-copy">
+              <p className="matters-eyebrow">
+                <span className="matters-eyebrow-dot" />
+                Why it matters
+              </p>
+              <h2 className="matters-headline">
+                A month ago, a coding agent found an admin token in a file
+                system. Used it and deleted a production database in{" "}
+                <em>9 seconds</em>. Wrote an apology after.
+              </h2>
+              <p className="matters-sub">
+                It's not the agent's fault. Architecture broke the agent and
+                left it no other choice. MOI doesn't replace your AI stack. It
+                makes it trustworthy.
+              </p>
+            </div>
+
+            <div className="matters-callout">
+              <div className="matters-callout-head">
+                <span className="matters-callout-title">MOI · PARTICIPANT.REVOKE()</span>
+                <span className="matters-callout-status">
+                  <span className="matters-callout-status-dot" />
+                  OK · 9ms
+                </span>
+              </div>
+              <pre className="matters-code">
+{`const me = moi.participant("0x4b17e5…320f99");
+
+me.agent("claw-12")
+  .scope({ read: true, write: false })
+  .revoke();
+// → cut at machine speed`}
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        {/* Ask chatbot — temporarily hidden, backend not responding */}
+        {false && (
+          <section className="s-ask">
+            <div ref={askRef} className="ask-center fade-slide-up">
+              <h2 className="ask-hl">Ask the protocol.</h2>
+              <p className="ask-sub">MOI answers, in its own voice.</p>
+              <AskChat />
+            </div>
+          </section>
+        )}
+
+        {/* Community — calendar + socials, between chatbot and CTA */}
+        <section className="s-community">
+          <div className="community-inner">
+            <div className="community-header">
+              <p className="community-eyebrow">
+                <span className="community-eyebrow-dot" />
+                Community
+              </p>
+              <h2 className="community-title">Join the network.</h2>
+              <p className="community-sub">
+                Upcoming calls, AMAs, and the channels we live in.
+              </p>
+            </div>
+
+            <CommunityCalendar variant="compact" limit={3} />
+          </div>
+        </section>
+
+        {/* Closing CTA — "Not your Context, Not your KitKat." */}
+        <section className="s-kitcta">
+          <img
+            className="kitcta-softstar kitcta-softstar-tl"
+            src="/brand/icons/soft-star.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <img
+            className="kitcta-softstar kitcta-softstar-br"
+            src="/brand/icons/soft-star.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <div className="kitcta-orb kitcta-orb-l" aria-hidden="true" />
+          <div className="kitcta-orb kitcta-orb-r" aria-hidden="true" />
+
+          <div className="kitcta-inner">
+            <span className="kitcta-pill">
+              <span className="kitcta-pill-dot" />
+              Official statement
+            </span>
+            <h2 className="kitcta-hl">
+              Not your Context,
+              <br />
+              Not your Agent.
+            </h2>
+            <p className="kitcta-sub">
+              Authority, not intelligence, is the bottleneck. Anchor yours.
             </p>
-            <div className="home-cta-links">
+            <div className="kitcta-ctas">
               <a
-                href="https://docs.moi.technology"
+                href="https://voyage.moi.technology"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary"
+                className="kitcta-btn kitcta-btn-primary"
               >
-                Start Building →
+                Explore the network <span aria-hidden="true">→</span>
               </a>
+              <Link to="/manifesto" className="kitcta-btn kitcta-btn-ghost">
+                Read the manifesto
+              </Link>
               <a
-                href="https://discord.gg/QX3Y3zYWf8"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-ghost"
+                href="/papers/moi-white-paper.pdf"
+                download="MOI-White-Paper.pdf"
+                className="kitcta-btn kitcta-btn-ghost"
               >
-                Join the Community →
+                Download the white paper <span aria-hidden="true">↓</span>
               </a>
             </div>
           </div>

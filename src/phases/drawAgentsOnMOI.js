@@ -47,8 +47,8 @@ export function drawAgentsOnMOI(sctx, state, timeline, { cx, cy, W }) {
   if (moiAgentReadT > 0.7) {
     const emphAlpha = Math.min(1, (moiAgentReadT - 0.7) / 0.3) * (0.5 + 0.3 * Math.sin(state.time * 0.05));
     sctx.globalAlpha = moiAlpha * emphAlpha * 0.5;
-    sctx.fillStyle = "#7B5EA7";
-    sctx.font = 'bold 9px "DM Mono", monospace';
+    sctx.fillStyle = "#4B17E5";
+    sctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.fillText("one context \u00B7 all agents", cx, cy + contextFieldR + 50);
   }
@@ -73,13 +73,13 @@ function drawAgentNode(sctx, x, y, color, name, role, rad, alpha) {
   sctx.stroke();
 
   sctx.fillStyle = color;
-  sctx.font = 'bold 10px "DM Mono", monospace';
+  sctx.font = 'bold 10px "Poppins", system-ui, sans-serif';
   sctx.textAlign = "center";
   sctx.textBaseline = "middle";
   sctx.fillText(name, x, y - 2);
 
   sctx.globalAlpha = alpha * 0.55;
-  sctx.font = '8px "DM Mono", monospace';
+  sctx.font = '8px "Poppins", system-ui, sans-serif';
   sctx.fillText(role, x, y + 10);
   sctx.textBaseline = "alphabetic";
   sctx.restore();
@@ -105,7 +105,7 @@ function drawParticipantCore(sctx, x, y, color, rad, appearT, alpha) {
 
   sctx.globalAlpha = alpha * 0.9;
   sctx.fillStyle = color;
-  sctx.font = 'bold 10px "DM Mono", monospace';
+  sctx.font = 'bold 10px "Poppins", system-ui, sans-serif';
   sctx.textAlign = "center";
   sctx.textBaseline = "middle";
   sctx.fillText("You", x, y);
@@ -126,14 +126,14 @@ function drawContextField(sctx, state, x, y, r, t, alpha) {
     const w = 38;
     const h = 14;
     sctx.globalAlpha = fieldAlpha * 0.42;
-    sctx.fillStyle = "#7B5EA7";
+    sctx.fillStyle = "#4B17E5";
     sctx.beginPath();
     sctx.roundRect(px - w / 2, py - h / 2, w, h, 4);
     sctx.fill();
 
     sctx.globalAlpha = fieldAlpha * 0.9;
-    sctx.fillStyle = "#F5F3EE";
-    sctx.font = '7px "DM Mono", monospace';
+    sctx.fillStyle = "#FCFBFF";
+    sctx.font = '7px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.textBaseline = "middle";
     sctx.fillText(labels[i], px, py + 0.5);
@@ -143,7 +143,7 @@ function drawContextField(sctx, state, x, y, r, t, alpha) {
     const labelAlpha = Math.min(1, (t - 0.45) / 0.25);
     sctx.globalAlpha = alpha * labelAlpha * 0.55;
     sctx.fillStyle = ALICE_COLOR;
-    sctx.font = '8px "DM Mono", monospace';
+    sctx.font = '8px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.textBaseline = "alphabetic";
     sctx.fillText("shared context field", x, y + r + 20);
@@ -203,7 +203,7 @@ function drawReadLine(sctx, state, fromX, fromY, fromR, toX, toY, toR, fromColor
     const lblAlpha = Math.min(1, (progress - 0.4) / 0.3);
     sctx.globalAlpha = alpha * lblAlpha * 0.4;
     sctx.fillStyle = "rgba(26,26,26,0.45)";
-    sctx.font = '7px "DM Mono", monospace';
+    sctx.font = '7px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.fillText(label, midX, midY - 8);
   }

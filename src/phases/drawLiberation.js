@@ -93,7 +93,7 @@ export function drawLiberation(sctx, state, timeline, { cx, cy, H, libParticles 
       sctx.globalAlpha = libFade * miniFunnelT;
 
       sctx.fillStyle = color + "90";
-      sctx.font = '9px "DM Mono", monospace';
+      sctx.font = '9px "Poppins", system-ui, sans-serif';
       sctx.textAlign = "right";
       sctx.fillText(PARTICIPANTS[pi].name, originX - 14, mfY + 3);
       sctx.fillStyle = color + "70";
@@ -125,7 +125,7 @@ export function drawLiberation(sctx, state, timeline, { cx, cy, H, libParticles 
       const speeds = [1.0, 0.7, 1.3, 0.9, 1.1];
       const mfBlockNum = 1000 + pi * 137 + Math.floor(state.time * 0.012 * speeds[pi]) % 100;
       sctx.fillStyle = "rgba(26,26,26,0.2)";
-      sctx.font = '8px "DM Mono", monospace';
+      sctx.font = '8px "Poppins", system-ui, sans-serif';
       sctx.textAlign = "center";
       sctx.fillText("#" + mfBlockNum, mfBlockX + mfBlockW / 2, mfY - mfBlockH / 2 + 11);
       sctx.strokeStyle = "rgba(26,26,26,0.06)";
@@ -180,7 +180,7 @@ export function drawLiberation(sctx, state, timeline, { cx, cy, H, libParticles 
     if (miniFunnelT > 0.5) {
       sctx.globalAlpha = libFade * Math.min(1, (miniFunnelT - 0.5) * 3) * 0.35;
       sctx.fillStyle = "rgba(123,94,167,0.8)";
-      sctx.font = '11px "DM Mono", monospace';
+      sctx.font = '11px "Poppins", system-ui, sans-serif';
       sctx.textAlign = "center";
       sctx.fillText("no global ordering — each participant processes independently", cx, mfTop + P_COUNT * mfSpacing + 36);
     }

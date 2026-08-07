@@ -79,8 +79,8 @@ const SECTIONS = [
 
 function ChainVisual() {
   const nodes = [
-    { label: "Alice", color: "#7B5EA7", you: true },
-    { label: "Personal Agent", color: "#7B5EA7" },
+    { label: "Alice", color: "#4B17E5", you: true },
+    { label: "Personal Agent", color: "#4B17E5" },
     { label: "Flight Agent", color: "#3A9F7E" },
     { label: "Payment Agent", color: "#D4853A" },
     { label: "Bank Agent", color: "#C44D5A" },
@@ -96,12 +96,12 @@ function ChainVisual() {
             >
               {node.you ? "YOU" : ""}
             </div>
-            <span className="font-mono text-[7px] text-[#1A1A1A]/25 whitespace-nowrap">
+            <span className="font-mono text-[7px] text-[#0A051A]/25 whitespace-nowrap">
               {node.label}
             </span>
           </div>
           {i < nodes.length - 1 && (
-            <svg width="16" height="8" viewBox="0 0 16 8" className="text-[#1A1A1A]/10 shrink-0 mx-0.5">
+            <svg width="16" height="8" viewBox="0 0 16 8" className="text-[#0A051A]/10 shrink-0 mx-0.5">
               <line x1="0" y1="4" x2="10" y2="4" stroke="currentColor" strokeWidth="1" />
               <path d="M9 1l4 3-4 3" stroke="currentColor" strokeWidth="1" fill="none" />
             </svg>
@@ -137,12 +137,12 @@ function EvaporationVisual() {
         >
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 rounded-full" style={{ background: a.color }} />
-            <span className="font-mono text-[10px] text-[#1A1A1A]/50">{a.name}</span>
+            <span className="font-mono text-[10px] text-[#0A051A]/50">{a.name}</span>
           </div>
           <span className="font-mono text-[9px] italic text-[#C44D5A]/60">{a.status}</span>
         </div>
       ))}
-      <p className="font-mono text-[9px] text-[#1A1A1A]/20 text-center mt-2">
+      <p className="font-mono text-[9px] text-[#0A051A]/20 text-center mt-2">
         each agent re-discovers what Alice already knows
       </p>
     </div>
@@ -153,7 +153,7 @@ function EvaporationVisual() {
 
 function VaultVisual() {
   const entries = [
-    { key: "alice", val: "500", color: "#7B5EA7" },
+    { key: "alice", val: "500", color: "#4B17E5" },
     { key: "bob", val: "890", color: "#D4853A" },
     { key: "diana", val: "1,200", color: "#2D7EC4" },
   ];
@@ -161,7 +161,7 @@ function VaultVisual() {
     <div className="section-visual mt-10 max-w-[300px] w-full">
       <div className="card-surface px-6 py-5 text-left">
         <div className="flex items-center justify-between mb-4">
-          <span className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#1A1A1A]/35">
+          <span className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#0A051A]/35">
             DEX Contract
           </span>
           <span className="font-mono text-[7px] text-[#C44D5A]/50 tracking-wider">VULNERABLE</span>
@@ -169,17 +169,17 @@ function VaultVisual() {
         <div className="flex flex-col gap-2">
           {entries.map((e) => (
             <div key={e.key} className="visual-row flex items-center justify-between font-mono text-[10px]">
-              <span className="text-[#1A1A1A]/30">{e.key}</span>
+              <span className="text-[#0A051A]/30">{e.key}</span>
               <div className="flex items-center gap-2">
-                <div className="w-12 h-1 rounded-full bg-[#1A1A1A]/5 overflow-hidden">
+                <div className="w-12 h-1 rounded-full bg-[#0A051A]/5 overflow-hidden">
                   <div className="h-full rounded-full" style={{ background: e.color, width: "70%", opacity: 0.4 }} />
                 </div>
-                <span className="text-[#1A1A1A]/40 w-10 text-right">{e.val}</span>
+                <span className="text-[#0A051A]/40 w-10 text-right">{e.val}</span>
               </div>
             </div>
           ))}
         </div>
-        <div className="mt-4 pt-3 border-t border-[#1A1A1A]/5 flex items-center gap-2">
+        <div className="mt-4 pt-3 border-t border-[#0A051A]/5 flex items-center gap-2">
           <div className="w-1.5 h-1.5 rounded-full bg-[#C44D5A]/60" />
           <span className="font-mono text-[8px] text-[#C44D5A]/50">
             anyone with the contract controls your tokens
@@ -195,7 +195,7 @@ function VaultVisual() {
 function DelegationCardVisual() {
   return (
     <div className="section-visual mt-10 card-surface px-7 py-6 max-w-[340px] w-full text-left">
-      <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#7B5EA7] mb-5">
+      <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#4B17E5] mb-5">
         Scoped Authority
       </div>
       <div className="flex flex-col gap-3">
@@ -205,14 +205,14 @@ function DelegationCardVisual() {
           ["read:prefs", "all preferences", "granted", "#3A8F6E"],
           ["depth", "max 2 hops", "enforced", "#2D7EC4"],
           ["signed", "ed25519", "verified", "#3A8F6E"],
-          ["expires", "2024-10-15", "active", "#7B5EA7"],
+          ["expires", "2024-10-15", "active", "#4B17E5"],
         ].map(([key, detail, status, color]) => (
           <div
             key={key}
             className="visual-row flex items-baseline justify-between font-mono text-[10px] gap-3"
           >
-            <span className="text-[#1A1A1A]/30 shrink-0">{key}</span>
-            <span className="text-[#1A1A1A]/15 text-[9px] truncate flex-1 text-right mr-3">
+            <span className="text-[#0A051A]/30 shrink-0">{key}</span>
+            <span className="text-[#0A051A]/15 text-[9px] truncate flex-1 text-right mr-3">
               {detail}
             </span>
             <span className="shrink-0 font-medium" style={{ color }}>
@@ -230,7 +230,7 @@ function DelegationCardVisual() {
 function PreferencesCardVisual() {
   return (
     <div className="section-visual mt-10 card-surface px-7 py-6 max-w-[320px] w-full text-left">
-      <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#7B5EA7] mb-5">
+      <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#4B17E5] mb-5">
         Preferences
       </div>
       <div className="flex flex-col gap-3">
@@ -246,8 +246,8 @@ function PreferencesCardVisual() {
             key={pref}
             className="visual-row flex items-baseline justify-between font-mono text-[10px] gap-4"
           >
-            <span className="text-[#1A1A1A]/40">{pref}</span>
-            <span className="text-[#1A1A1A]/12 text-[8px] shrink-0">{source}</span>
+            <span className="text-[#0A051A]/40">{pref}</span>
+            <span className="text-[#0A051A]/12 text-[8px] shrink-0">{source}</span>
           </div>
         ))}
       </div>
@@ -259,7 +259,7 @@ function PreferencesCardVisual() {
 
 function AssetsGridVisual() {
   const tokens = [
-    ["kMOI", "12,450", "#7B5EA7"],
+    ["kMOI", "12,450", "#4B17E5"],
     ["BTC", "0.847", "#F7931A"],
     ["ETH", "4.20", "#627EEA"],
     ["SOL", "89.3", "#14F195"],
@@ -273,7 +273,7 @@ function AssetsGridVisual() {
           <div className="font-mono text-[11px] font-medium tracking-wider mb-1" style={{ color }}>
             {name}
           </div>
-          <div className="font-mono text-[9px] text-[#1A1A1A]/25">{amount}</div>
+          <div className="font-mono text-[9px] text-[#0A051A]/25">{amount}</div>
         </div>
       ))}
     </div>
@@ -291,13 +291,13 @@ function PermissionsCardVisual() {
   ];
   return (
     <div className="section-visual mt-10 card-surface px-7 py-6 max-w-[360px] w-full text-left">
-      <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#7B5EA7] mb-5">
+      <div className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#4B17E5] mb-5">
         Agent Permissions
       </div>
       <div className="flex flex-col gap-4">
         {agents.map(([name, granted, denied]) => (
           <div key={name} className="visual-row">
-            <div className="font-mono text-[10px] text-[#1A1A1A]/40 mb-1.5">{name}</div>
+            <div className="font-mono text-[10px] text-[#0A051A]/40 mb-1.5">{name}</div>
             <div className="flex gap-3 font-mono text-[8px]">
               {granted.map((p) => (
                 <span key={p} className="text-[#3A8F6E]">
@@ -321,7 +321,7 @@ function PermissionsCardVisual() {
 
 function ParallelVisual() {
   const participants = [
-    { name: "Alice", color: "#7B5EA7" },
+    { name: "Alice", color: "#4B17E5" },
     { name: "Bob", color: "#3A9F7E" },
     { name: "Charlie", color: "#D4853A" },
     { name: "Diana", color: "#2D7EC4" },
@@ -331,10 +331,10 @@ function ParallelVisual() {
     <div className="section-visual mt-10 flex flex-col gap-2.5 max-w-[400px] w-full">
       {participants.map((p) => (
         <div key={p.name} className="visual-row flex items-center gap-3">
-          <span className="font-mono text-[9px] text-[#1A1A1A]/30 w-14 text-right shrink-0">
+          <span className="font-mono text-[9px] text-[#0A051A]/30 w-14 text-right shrink-0">
             {p.name}
           </span>
-          <div className="flex-1 h-1.5 rounded-full bg-[#1A1A1A]/[0.03] overflow-hidden">
+          <div className="flex-1 h-1.5 rounded-full bg-[#0A051A]/[0.03] overflow-hidden">
             <div
               className="h-full rounded-full parallel-bar"
               style={{ background: p.color, opacity: 0.35, width: "0%" }}
@@ -345,7 +345,7 @@ function ParallelVisual() {
           </span>
         </div>
       ))}
-      <p className="font-mono text-[8px] text-[#1A1A1A]/15 text-center mt-3">
+      <p className="font-mono text-[8px] text-[#0A051A]/15 text-center mt-3">
         no global ordering — each participant processes independently
       </p>
     </div>
@@ -376,14 +376,14 @@ function Section({ id, gradient, label, title, subtitle, visual, italic }) {
     <section id={`section-${id}`} className={`snap-section ${gradient}`}>
       <div className="section-content max-w-[900px] mx-auto px-6 md:px-12 flex flex-col items-center text-center">
         {label && (
-          <span className="section-label font-mono text-[10px] tracking-[0.2em] uppercase text-[#7B5EA7] font-medium mb-5">
+          <span className="section-label font-mono text-[10px] tracking-[0.2em] uppercase text-[#4B17E5] font-medium mb-5">
             {label}
           </span>
         )}
         <h2
-          className={`section-title font-serif leading-[1.1] text-[#1A1A1A] max-w-[700px] ${
+          className={`section-title font-serif leading-[1.1] text-[#0A051A] max-w-[700px] ${
             italic
-              ? "italic text-[clamp(1.8rem,3.5vw,2.8rem)] text-[#1A1A1A]/60"
+              ? "italic text-[clamp(1.8rem,3.5vw,2.8rem)] text-[#0A051A]/60"
               : "text-[clamp(2.5rem,5vw,4.5rem)]"
           }`}
         >
@@ -395,7 +395,7 @@ function Section({ id, gradient, label, title, subtitle, visual, italic }) {
           ))}
         </h2>
         {subtitle && (
-          <p className="section-subtitle font-mono text-[13px] text-[#1A1A1A]/30 mt-5 max-w-[460px]">
+          <p className="section-subtitle font-mono text-[13px] text-[#0A051A]/30 mt-5 max-w-[460px]">
             {subtitle}
           </p>
         )}
@@ -409,10 +409,10 @@ function SectionWho() {
   return (
     <section id="section-who" className="snap-section gradient-who">
       <div className="flex flex-col items-center text-center">
-        <h2 className="section-title font-serif font-bold text-[clamp(6rem,15vw,14rem)] leading-[0.85] tracking-[-0.04em] text-[#1A1A1A]">
+        <h2 className="section-title font-serif font-bold text-[clamp(6rem,15vw,14rem)] leading-[0.85] tracking-[-0.04em] text-[#0A051A]">
           WHO
         </h2>
-        <p className="section-subtitle font-mono text-[13px] tracking-[0.1em] text-[#1A1A1A]/30 mt-6">
+        <p className="section-subtitle font-mono text-[13px] tracking-[0.1em] text-[#0A051A]/30 mt-6">
           is missing.
         </p>
       </div>
@@ -424,17 +424,17 @@ function SectionCTA() {
   return (
     <section id="section-cta" className="snap-section bg-hero-gradient">
       <div className="section-content flex flex-col items-center text-center px-6">
-        <h2 className="section-title font-serif text-[clamp(2.2rem,5vw,4rem)] leading-[1.1] text-[#1A1A1A] mb-5">
+        <h2 className="section-title font-serif text-[clamp(2.2rem,5vw,4rem)] leading-[1.1] text-[#0A051A] mb-5">
           Your context. Your assets.
           <br />
           Your rules.
         </h2>
-        <p className="section-subtitle font-mono text-[13px] text-[#1A1A1A]/30 mb-10 max-w-[460px] leading-relaxed">
+        <p className="section-subtitle font-mono text-[13px] text-[#0A051A]/30 mb-10 max-w-[460px] leading-relaxed">
           Read the whitepaper, explore the docs, or start building with Cocolang.
         </p>
         <a
           href={WHITEPAPER_URL}
-          className="section-visual inline-flex items-center gap-2 rounded-full bg-[#1A1A1A] text-[#F5F3EE] px-9 py-3.5 font-mono text-[11px] tracking-[0.15em] uppercase hover:bg-[#7B5EA7] transition-colors duration-300 no-underline"
+          className="section-visual inline-flex items-center gap-2 rounded-full bg-[#0A051A] text-[#FCFBFF] px-9 py-3.5 font-mono text-[11px] tracking-[0.15em] uppercase hover:bg-[#4B17E5] transition-colors duration-300 no-underline"
         >
           READ WHITEPAPER →
         </a>

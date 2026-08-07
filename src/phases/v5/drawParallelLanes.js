@@ -23,8 +23,8 @@ function drawMiniFunnel(ctx, x, y, spacing, color, name, pi, time, alpha) {
   ctx.beginPath();
   ctx.arc(x, y, 7, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = "#1A1A1A";
-  ctx.font = '8px "DM Mono", monospace';
+  ctx.fillStyle = "#0A051A";
+  ctx.font = '8px "Poppins", system-ui, sans-serif';
   ctx.textAlign = "left";
   ctx.fillText(name, x + 14, y + 3);
   ctx.fillStyle = "rgba(26,26,26,0.3)";
@@ -49,8 +49,8 @@ function drawMiniFunnel(ctx, x, y, spacing, color, name, pi, time, alpha) {
   ctx.stroke();
 
   const n = 1000 + pi * 137 + (Math.floor(time * 0.005 * SPEEDS[pi]) % 100);
-  ctx.fillStyle = "#1A1A1A";
-  ctx.font = '9px "DM Mono", monospace';
+  ctx.fillStyle = "#0A051A";
+  ctx.font = '9px "Poppins", system-ui, sans-serif';
   ctx.fillText(String(n), blockX + 11, y + 3);
 
   for (let d = 0; d < 6; d++) {
@@ -110,11 +110,11 @@ export function drawParallelLanes(ctx, state, tl, { W, H }) {
       ctx.beginPath();
       ctx.arc(x + 14, y, 5 + collapse * 2, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = "#1A1A1A";
-      ctx.font = '9px "DM Mono", monospace';
+      ctx.fillStyle = "#0A051A";
+      ctx.font = '9px "Poppins", system-ui, sans-serif';
       ctx.fillText(p.name, x + 24, y + 3);
       ctx.fillStyle = "rgba(26,26,26,0.28)";
-      ctx.font = '7px "DM Mono", monospace';
+      ctx.font = '7px "Poppins", system-ui, sans-serif';
       ctx.fillText("context superstate", x + 24, y + 14);
     }
   }
@@ -127,9 +127,9 @@ export function drawParallelLanes(ctx, state, tl, { W, H }) {
     }
     ctx.save();
     ctx.globalAlpha = phase5Alpha * subB * 0.35;
-    ctx.fillStyle = "#1A1A1A";
+    ctx.fillStyle = "#0A051A";
     ctx.textAlign = "center";
-    ctx.font = '10px "DM Mono", monospace';
+    ctx.font = '10px "Poppins", system-ui, sans-serif';
     ctx.fillText("no global ordering - each participant processes independently", W * 0.5, H - 44);
     ctx.restore();
   }
@@ -168,7 +168,7 @@ export function drawParallelLanes(ctx, state, tl, { W, H }) {
         ctx.fill();
       }
       ctx.fillStyle = "#27AE60";
-      ctx.font = '12px "DM Mono", monospace';
+      ctx.font = '12px "Poppins", system-ui, sans-serif';
       ctx.fillText("✓", laneRight + 8, y + 4);
       ctx.restore();
     }

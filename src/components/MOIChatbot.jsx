@@ -6,16 +6,16 @@ const API_URL = import.meta.env.VITE_CHATBOT_API || "http://localhost:3001";
 
 const COLORS = {
   bg: "#FFFFFF",
-  text: "#1A1A1A",
-  muted: "rgba(26,26,26,0.4)",
-  purple: "#7B5EA7",
-  purpleLight: "rgba(123,94,167,0.08)",
-  purpleMid: "rgba(123,94,167,0.15)",
-  border: "rgba(26,26,26,0.08)",
-  pageBg: "#F5F3EE",
+  text: "#0A051A",
+  muted: "rgba(10,5,26,0.45)",
+  purple: "#4B17E5",
+  purpleLight: "rgba(75,23,229,0.08)",
+  purpleMid: "rgba(75,23,229,0.18)",
+  border: "rgba(217,204,255,0.5)",
+  pageBg: "#FCFBFF",
 };
 
-const FONT = '"DM Mono", monospace';
+const FONT = '"Poppins", system-ui, sans-serif';
 const RENDER_INTERVAL_MS = 150;
 
 function TypingDots() {
@@ -82,7 +82,7 @@ function AssistantMessage({ content }) {
             style={{
               fontFamily: FONT,
               fontSize: "0.95em",
-              background: "rgba(26,26,26,0.06)",
+              background: "rgba(75,23,229,0.06)",
               padding: "0.08em 0.35em",
               borderRadius: 4,
             }}

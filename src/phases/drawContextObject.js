@@ -18,10 +18,10 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
   // Soft crossfade wipe
   const wipeX = cx;
   const wipeY = cy;
-  sctx.fillStyle = "#F5F3EE";
+  sctx.fillStyle = "#FCFBFF";
   if (circleR < maxR * 0.8) {
     const wipeGrad = sctx.createRadialGradient(wipeX, wipeY, circleR * 0.7, wipeX, wipeY, circleR);
-    wipeGrad.addColorStop(0, "#F5F3EE");
+    wipeGrad.addColorStop(0, "#FCFBFF");
     wipeGrad.addColorStop(1, "rgba(245,243,238,0)");
     sctx.fillStyle = wipeGrad;
   }
@@ -86,7 +86,7 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
     if (rad >= 14 && name) {
       sctx.fillStyle = "#fff";
       const fontSize = Math.max(8, Math.min(15, rad * 0.38));
-      sctx.font = 'bold ' + Math.round(fontSize) + 'px "DM Mono", monospace';
+      sctx.font = 'bold ' + Math.round(fontSize) + 'px "Poppins", system-ui, sans-serif';
       sctx.textAlign = "center";
       sctx.textBaseline = "middle";
       sctx.fillText(name, x, y + 1);
@@ -109,7 +109,7 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
     sctx.stroke();
     if (name) {
       sctx.fillStyle = color;
-      sctx.font = 'bold ' + Math.max(8, Math.round(rad * 0.55)) + 'px "DM Mono", monospace';
+      sctx.font = 'bold ' + Math.max(8, Math.round(rad * 0.55)) + 'px "Poppins", system-ui, sans-serif';
       sctx.textAlign = "center";
       sctx.textBaseline = "middle";
       sctx.fillText(name, x, y + 1);
@@ -148,11 +148,11 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
     sctx.arc(cx0 + 22, cy0 + 26, 7, 0, Math.PI * 2);
     sctx.fill();
     sctx.fillStyle = "#141414";
-    sctx.font = 'bold 16px "DM Mono", monospace';
+    sctx.font = 'bold 16px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "left";
     sctx.fillText(name, cx0 + 36, cy0 + 32);
     sctx.fillStyle = "rgba(20,20,20,0.42)";
-    sctx.font = '9px "DM Mono", monospace';
+    sctx.font = '9px "Poppins", system-ui, sans-serif';
     sctx.fillText(hash, cx0 + 22, cy0 + 50);
     sctx.strokeStyle = "rgba(26,26,26,0.10)";
     sctx.lineWidth = 1;
@@ -168,10 +168,10 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
       sctx.fillStyle = FIELD_COLORS[fi] + (isHi ? "ff" : "bb");
       sctx.beginPath(); sctx.arc(cx0 + 22, fy + 2, 4, 0, Math.PI * 2); sctx.fill();
       sctx.fillStyle = FIELD_COLORS[fi] + "aa";
-      sctx.font = 'bold 11px "DM Mono", monospace'; sctx.textAlign = "left";
+      sctx.font = 'bold 11px "Poppins", system-ui, sans-serif'; sctx.textAlign = "left";
       sctx.fillText(FIELD_KEYS[fi], cx0 + 32, fy + 6);
       sctx.fillStyle = isHi ? "rgba(16,16,16,0.85)" : "rgba(16,16,16,0.58)";
-      sctx.font = 'bold 11px "DM Mono", monospace'; sctx.textAlign = "right";
+      sctx.font = 'bold 11px "Poppins", system-ui, sans-serif'; sctx.textAlign = "right";
       sctx.fillText(values[fi], cx0 + cardW - 20, fy + 6);
       const bW = 36, bX = cx0 + cardW - 20 - bW;
       sctx.fillStyle = FIELD_COLORS[fi] + "20"; sctx.fillRect(bX, fy + 12, bW, 3);
@@ -271,7 +271,7 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
           const my = (startY + endY) / 2 - 10;
           sctx.globalAlpha = ctxIllusAlpha * ca * 0.7;
           sctx.fillStyle = ALICE_APPS[ai].color;
-          sctx.font = 'bold 8px "DM Mono", monospace';
+          sctx.font = 'bold 8px "Poppins", system-ui, sans-serif';
           sctx.textAlign = "center";
           sctx.fillText(ALICE_APPS[ai].name + " \u2192 " + ALICE_APPS[ai].field, mx, my);
         }
@@ -290,7 +290,7 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
     drawBlob(aliceX, aliceY, ALICE_COLOR, "Alice", blobR, ba, state.time, true);
     sctx.globalAlpha = ctxIllusAlpha * ba * 0.55;
     sctx.fillStyle = ALICE_COLOR;
-    sctx.font = '8px "DM Mono", monospace';
+    sctx.font = '8px "Poppins", system-ui, sans-serif';
     sctx.textAlign = "center";
     sctx.fillText("context superstate", aliceX, aliceY + blobR + 18);
 
@@ -322,7 +322,7 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
       if (bobEase > 0.6) {
         sctx.globalAlpha = ctxIllusAlpha * ba * bobEase * 0.55;
         sctx.fillStyle = BOB_COLOR;
-        sctx.font = '8px "DM Mono", monospace';
+        sctx.font = '8px "Poppins", system-ui, sans-serif';
         sctx.textAlign = "center";
         sctx.fillText("context superstate", bobX, bobY + bobRad + 18);
       }
@@ -376,13 +376,13 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
           const bx = (1 - dt) * (1 - dt) * aEdge + 2 * (1 - dt) * dt * arcMx + dt * dt * bEdge;
           const by = (1 - dt) * (1 - dt) * aliceY + 2 * (1 - dt) * dt * arcMy + dt * dt * bobY;
           sctx.globalAlpha = ctxIllusAlpha * ba * interAlpha2 * 0.7;
-          sctx.fillStyle = "#7B5EA7";
+          sctx.fillStyle = "#4B17E5";
           sctx.beginPath(); sctx.arc(bx, by, 3, 0, Math.PI * 2); sctx.fill();
         }
 
         sctx.globalAlpha = ctxIllusAlpha * ba * interAlpha2 * 0.65;
         sctx.fillStyle = "#5c3d7a";
-        sctx.font = 'bold 9px "DM Mono", monospace';
+        sctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
         sctx.textAlign = "center";
         sctx.fillText("transfer 50 MOI", arcMx, arcMy - 8);
       }
@@ -401,7 +401,7 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
       if (pairEase > 0.6) {
         sctx.globalAlpha = ctxIllusAlpha * pa * 0.55;
         sctx.fillStyle = MARK_COLOR;
-        sctx.font = '8px "DM Mono", monospace';
+        sctx.font = '8px "Poppins", system-ui, sans-serif';
         sctx.textAlign = "center";
         sctx.fillText("context superstate", markX, markY + markRad + 18);
       }
@@ -434,7 +434,7 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
       if (pairEase > 0.6) {
         sctx.globalAlpha = ctxIllusAlpha * pa * 0.55;
         sctx.fillStyle = SALLY_COLOR;
-        sctx.font = '8px "DM Mono", monospace';
+        sctx.font = '8px "Poppins", system-ui, sans-serif';
         sctx.textAlign = "center";
         sctx.fillText("context superstate", sallyX, sallyY + sallyRad + 18);
       }
@@ -517,7 +517,7 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
         // Label
         sctx.globalAlpha = ctxIllusAlpha * ba * dexAlpha * 0.5;
         sctx.fillStyle = dexColor;
-        sctx.font = 'bold 8px "DM Mono", monospace';
+        sctx.font = 'bold 8px "Poppins", system-ui, sans-serif';
         sctx.textAlign = "left";
         sctx.fillText("swap", dexX + dexR + 6, dexY + 3);
 
@@ -571,7 +571,7 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
         // Label
         sctx.globalAlpha = ctxIllusAlpha * ba * dexAlpha * 0.5;
         sctx.fillStyle = daoColor;
-        sctx.font = 'bold 8px "DM Mono", monospace';
+        sctx.font = 'bold 8px "Poppins", system-ui, sans-serif';
         sctx.textAlign = "right";
         sctx.fillText("vote", daoX - daoR - 6, daoY + 3);
       }
@@ -708,7 +708,7 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
 
       const grad = sctx.createLinearGradient(sa.x, sa.y, sb.x, sb.y);
       grad.addColorStop(0, sa.color + "18");
-      grad.addColorStop(0.5, "#7B5EA712");
+      grad.addColorStop(0.5, "#4B17E512");
       grad.addColorStop(1, sb.color + "18");
       sctx.globalAlpha = ctxIllusAlpha * lkAlpha * 0.14;
       sctx.strokeStyle = grad;
@@ -847,12 +847,12 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
         const bx = (1 - dt) * (1 - dt) * aEdge + 2 * (1 - dt) * dt * arcMx + dt * dt * bEdge;
         const by = (1 - dt) * (1 - dt) * aliceY + 2 * (1 - dt) * dt * arcMy + dt * dt * bobY;
         sctx.globalAlpha = ctxIllusAlpha * ze * interAlpha3 * 0.7;
-        sctx.fillStyle = "#7B5EA7";
+        sctx.fillStyle = "#4B17E5";
         sctx.beginPath(); sctx.arc(bx, by, 3, 0, Math.PI * 2); sctx.fill();
       }
       sctx.globalAlpha = ctxIllusAlpha * ze * interAlpha3 * 0.65;
       sctx.fillStyle = "#5c3d7a";
-      sctx.font = 'bold 9px "DM Mono", monospace';
+      sctx.font = 'bold 9px "Poppins", system-ui, sans-serif';
       sctx.textAlign = "center";
       sctx.fillText("transfer 50 MOI", arcMx, arcMy - 8);
     }
@@ -861,7 +861,7 @@ export function drawContextObject(sctx, state, timeline, { cx, cy, W, H, mapRef 
     if (counterFade > 0) {
       sctx.globalAlpha = ctxIllusAlpha * counterFade * 0.25;
       sctx.fillStyle = "#7B6B8A";
-      sctx.font = '8px "DM Mono", monospace';
+      sctx.font = '8px "Poppins", system-ui, sans-serif';
       sctx.textAlign = "center";
       sctx.letterSpacing = "4px";
       const interactionCount = links.length + centerLinks.length + 1;
