@@ -41,35 +41,40 @@ const jsonLd = [
 ].filter(Boolean);
 ---
 
-<Base title={`${title} — The MOI Blog`} description={summary} ogType="article" navTitle={title}>
+<Base title={`${title} — MOI Blog`} description={summary} ogType="article" navTitle={title}>
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
 
-  <article class="wrap article">
-    <header class="post-head" data-hero>
-      <div class="micro meta">
-        <a href={`${base}/`}>← All posts</a>
-        <span class="sep" aria-hidden="true">•</span>
-        <span>Article</span>
-        <span class="sep" aria-hidden="true">•</span>
-        <time datetime={date.toISOString()}>{fmt(date)}</time>
-        {updated && updated.valueOf() !== date.valueOf() && <span>(updated {fmt(updated)})</span>}
+  <header class="post-hero haze" data-hero>
+    <div class="wrap narrow hero-inner">
+      <p class="crumb"><a href={`${base}/`}>← All posts</a></p>
+      <div class="tag-row">
+        {tags.map((t) => (
+          <a class="badge-pill" href={`${base}/tags/${t}/`}>
+            {t}
+          </a>
+        ))}
       </div>
       <h1>{title}</h1>
       <p class="summary">{summary}</p>
-      {
-        author && (
-          <p class="micro byline">
-            {author.url ? <a href={author.url}>{author.name}</a> : author.name}
-            {author.role && <span> — {author.role}</span>}
-          </p>
-        )
-      }
-    </header>
+      <p class="byline">
+        {author && (
+          <>
+            <span class="who">{author.url ? <a href={author.url}>{author.name}</a> : author.name}</span>
+            {author.role && <span class="role"> · {author.role}</span>}
+            <span class="dot"> · </span>
+          </>
+        )}
+        <time datetime={date.toISOString()}>{fmt(date)}</time>
+        {updated && updated.valueOf() !== date.valueOf() && <span class="upd"> · Updated {fmt(updated)}</span>}
+      </p>
+    </div>
+  </header>
 
+  <article class="wrap narrow">
     {
       takeaways && (
-        <aside class="takeaways" aria-label="Key takeaways">
-          <p class="micro">Key takeaways</p>
+        <aside class="takeaways card-surface" aria-label="Key takeaways">
+          <span class="badge-pill">Key takeaways</span>
           <ul>
             {takeaways.map((t) => (
               <li>{t}</li>
@@ -86,208 +91,230 @@ const jsonLd = [
     {
       faq && (
         <section class="faq" aria-label="Frequently asked questions">
-          <p class="micro">FAQ</p>
-          {faq.map(({ q, a }) => (
-            <details>
-              <summary>{q}</summary>
-              <p>{a}</p>
-            </details>
-          ))}
+          <span class="badge-pill">FAQ</span>
+          <div class="faq-list">
+            {faq.map(({ q, a }) => (
+              <details class="card-surface">
+                <summary>{q}</summary>
+                <p>{a}</p>
+              </details>
+            ))}
+          </div>
         </section>
       )
     }
-
-    <footer class="post-foot">
-      <div class="tag-row left">
-        {tags.map((t) => (
-          <a class="tag-pill" href={`${base}/tags/${t}/`}>
-            {t}
-          </a>
-        ))}
-      </div>
-    </footer>
   </article>
 </Base>
 
 <style>
-  .article {
-    max-width: 700px;
+  .post-hero {
+    margin-top: -96px;
+    padding: 160px 0 56px;
   }
 
-  .post-head {
-    padding: 56px 0 10px;
-  }
-
-  .meta {
+  .hero-inner {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-direction: column;
+    gap: 16px;
   }
 
-  .meta a {
-    text-decoration: none;
+  .crumb {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .crumb a {
     color: var(--muted);
   }
 
-  .meta a:hover {
-    color: var(--ink);
-    text-decoration: underline;
+  .crumb a:hover {
+    color: var(--moi-main);
   }
 
-  .sep {
-    color: var(--line);
-  }
-
-  .post-head h1 {
-    font-family: var(--font-generic);
-    font-weight: 400;
-    font-size: clamp(36px, 6vw, 54px);
-    line-height: 1.08;
-    margin: 18px 0 14px;
+  .post-hero h1 {
+    font-weight: 600;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 0;
     text-wrap: balance;
   }
 
   .summary {
     color: var(--muted);
-    font-size: 17px;
-    line-height: 1.5;
-    max-width: 56ch;
-    margin: 0 0 16px;
-  }
-
-  .byline {
-    border-bottom: 1px solid var(--line-strong);
-    padding-bottom: 22px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 58ch;
     margin: 0;
   }
 
+  .byline {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .byline .who a {
+    font-weight: 600;
+  }
+
   .takeaways {
-    border: 1px solid var(--line-strong);
-    padding: 18px 22px;
-    margin: 32px 0;
+    padding: 24px 28px;
+    margin: 36px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
   }
 
   .takeaways ul {
-    margin: 10px 0 0;
+    margin: 0;
     padding-left: 18px;
     display: grid;
     gap: 8px;
-    font-size: 14.5px;
+    font-size: 14px;
   }
 
   .faq {
-    margin-top: 52px;
-    border-top: 1px solid var(--line-strong);
-    padding-top: 22px;
+    margin-top: 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .faq-list {
+    display: grid;
+    gap: 10px;
+    width: 100%;
   }
 
   .faq details {
-    border-bottom: 1px solid var(--line);
-    padding: 14px 2px;
+    padding: 16px 22px;
   }
 
   .faq summary {
     cursor: pointer;
-    font-size: 16px;
+    font-weight: 600;
+    font-size: 14.5px;
   }
 
   .faq p {
     color: var(--muted);
-    font-size: 14.5px;
+    font-size: 14px;
+    font-weight: 400;
     margin: 10px 0 2px;
     max-width: 60ch;
-  }
-
-  .post-foot {
-    margin-top: 44px;
-  }
-
-  .tag-row.left {
-    justify-content: flex-start;
   }
 </style>
 
 <style is:global>
-  /* Article body — rendered Markdown, follows the reader-selected font */
+  /* Article body — rendered Markdown in the site's Poppins system */
   .prose {
-    font-size: 16.5px;
-    line-height: 1.65;
+    font-size: 15.5px;
+    font-weight: 400;
+    line-height: 1.75;
   }
 
   .prose h2 {
-    font-family: var(--font-generic);
-    font-weight: 400;
-    font-size: 30px;
-    line-height: 1.15;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
     margin: 48px 0 12px;
     text-wrap: balance;
   }
 
   .prose h3 {
-    font-family: var(--font-generic);
-    font-weight: 400;
-    font-size: 22px;
+    font-weight: 600;
+    font-size: 20px;
     margin: 34px 0 10px;
   }
 
   .prose p {
-    max-width: 66ch;
+    max-width: 68ch;
+  }
+
+  .prose strong {
+    font-weight: 600;
   }
 
   .prose blockquote {
     margin: 28px 0;
-    padding: 2px 0 2px 22px;
-    border-left: 1px solid var(--line-strong);
+    padding: 14px 24px;
+    border-left: 3px solid var(--moi-main);
+    background: var(--surface);
+    border-radius: 0 16px 16px 0;
     color: var(--muted);
-    font-style: italic;
+  }
+
+  .prose blockquote p {
+    margin: 0;
   }
 
   .prose pre {
-    background: #fff !important;
-    border: 1px solid var(--line-strong);
-    padding: 16px 18px;
-    font-size: 13px;
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(10, 5, 26, 0.06);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    padding: 18px 20px;
+    font-size: 12.5px;
     line-height: 1.6;
     overflow-x: auto;
   }
 
   .prose code {
-    font-family: var(--font-mono);
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   }
 
   .prose :not(pre) > code {
-    border: 1px solid var(--line);
-    padding: 0 5px;
+    background: var(--surface);
+    border-radius: 6px;
+    padding: 1px 7px;
     font-size: 0.85em;
+    color: var(--moi-dark);
   }
 
   .prose table {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     width: 100%;
-    font-size: 14px;
-    margin: 26px 0;
+    font-size: 13.5px;
+    margin: 28px 0;
     display: block;
     overflow-x: auto;
+    border: 1px solid rgba(10, 5, 26, 0.08);
+    border-radius: 16px;
   }
 
   .prose th,
   .prose td {
-    border: 1px solid var(--line-strong);
-    padding: 9px 12px;
+    border-bottom: 1px solid rgba(10, 5, 26, 0.08);
+    padding: 10px 16px;
     text-align: left;
   }
 
+  .prose tr:last-child td {
+    border-bottom: 0;
+  }
+
   .prose th {
+    background: var(--surface);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    font-size: 11.5px;
-    letter-spacing: 0.1em;
-    font-weight: 400;
   }
 
   .prose img {
     max-width: 100%;
     height: auto;
-    border: 1px solid var(--line-strong);
+    border-radius: 16px;
+    border: 1px solid rgba(10, 5, 26, 0.06);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    background: #fff;
   }
 
   .prose ol,
@@ -297,5 +324,12 @@ const jsonLd = [
 
   .prose li {
     margin-bottom: 6px;
+  }
+
+  .prose a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgba(75, 23, 229, 0.3);
+    text-underline-offset: 3px;
   }
 </style>

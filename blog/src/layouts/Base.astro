@@ -1,7 +1,11 @@
 ---
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
 import '../styles/global.css';
 
-const { title, description, ogType = 'website', navTitle = 'The MOI Blog' } = Astro.props;
+const { title, description, ogType = 'website', navTitle = 'Blog' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const base = import.meta.env.BASE_URL;
 ---
@@ -24,28 +28,17 @@ const base = import.meta.env.BASE_URL;
       title="MOI Blog"
       href={`${base}/rss.xml`}
     />
-    <script is:inline>
-      // apply saved reader font before paint (LSD-style generic font switch)
-      (function () {
-        var f = localStorage.getItem('moi-blog-font');
-        if (f) document.documentElement.setAttribute('data-font', f);
-      })();
-    </script>
     <slot name="head" />
   </head>
   <body>
     <header class="site-header" id="site-header">
-      <div class="wrap">
-        <a class="brand" href={`${base}/`}>MOI &nbsp;/&nbsp; Blog</a>
+      <div class="nav-pill">
+        <a class="brand" href="https://moi.technology/">MOI<span>.</span></a>
         <span class="nav-title" id="nav-title">{navTitle}</span>
         <nav class="site-nav">
-          <a href="https://moi.technology/">moi.technology</a>
+          <a href="https://moi.technology/why-moi">The Shift</a>
+          <a href={`${base}/`}>Blog</a>
           <a href={`${base}/rss.xml`}>RSS</a>
-          <div class="font-switch" role="group" aria-label="Reading font">
-            <button class="f-serif" data-font="serif" aria-pressed="true" title="Serif">Aa</button>
-            <button class="f-sans" data-font="sans-serif" aria-pressed="false" title="Sans serif">Aa</button>
-            <button class="f-mono" data-font="monospace" aria-pressed="false" title="Monospace">Aa</button>
-          </div>
         </nav>
       </div>
     </header>
@@ -55,35 +48,14 @@ const base = import.meta.env.BASE_URL;
     </main>
 
     <footer class="site-footer">
-      <div class="wrap micro">
+      <div class="wrap">
         <span>© {new Date().getFullYear()} Sarva Labs — MOI</span>
         <span>Not your Context, Not your Agent.</span>
       </div>
     </footer>
 
     <script is:inline>
-      // font switcher
-      (function () {
-        var btns = document.querySelectorAll('.font-switch button');
-        function apply(f) {
-          if (f === 'serif') document.documentElement.removeAttribute('data-font');
-          else document.documentElement.setAttribute('data-font', f);
-          localStorage.setItem('moi-blog-font', f === 'serif' ? '' : f) ||
-            (f === 'serif' && localStorage.removeItem('moi-blog-font'));
-          btns.forEach(function (b) {
-            b.setAttribute('aria-pressed', String(b.dataset.font === f));
-          });
-        }
-        btns.forEach(function (b) {
-          b.addEventListener('click', function () {
-            apply(b.dataset.font);
-          });
-        });
-        var saved = localStorage.getItem('moi-blog-font');
-        if (saved) apply(saved);
-      })();
-
-      // condensing navbar: show the page title once the hero scrolls past
+      // navbar adopts the page title once the hero scrolls past
       (function () {
         var header = document.getElementById('site-header');
         var hero = document.querySelector('[data-hero]');
@@ -95,7 +67,7 @@ const base = import.meta.env.BASE_URL;
           function (entries) {
             header.classList.toggle('condensed', !entries[0].isIntersecting);
           },
-          { rootMargin: '-44px 0px 0px 0px' }
+          { rootMargin: '-96px 0px 0px 0px' }
         );
         io.observe(hero);
       })();

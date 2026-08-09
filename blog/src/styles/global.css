@@ -1,24 +1,16 @@
-/* Logos Press Engine treatment (LSD): pure black on white, hairline rules,
-   sharp corners, and one generic font family at a time — reader-switchable
-   between serif / sans-serif / monospace, exactly like press.logos.co. */
+/* Match the current moi.technology design system (src/index.css +
+   src/styles/moi-tokens.css on main): ONE typeface — Poppins; lavender-haze
+   gradients; frosted card surfaces; MOI Main purple #4B17E5. */
 :root {
-  --bg: #ffffff;
-  --ink: #000000;
-  --muted: rgba(0, 0, 0, 0.6);
-  --line: rgba(0, 0, 0, 0.18);
-  --line-strong: #000000;
-  --font-serif: Georgia, 'Times New Roman', Times, serif;
-  --font-sans: system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  --font-generic: var(--font-serif);
-}
-
-:root[data-font='sans-serif'] {
-  --font-generic: var(--font-sans);
-}
-
-:root[data-font='monospace'] {
-  --font-generic: var(--font-mono);
+  --moi-main: #4b17e5;
+  --moi-dark: #320f99;
+  --ink: #0a051a;
+  --bg: #fcfbff; /* Almost Lavender */
+  --surface: #f5f2ff; /* Certainly Lavender */
+  --pastel: #d9ccff;
+  --muted: rgba(10, 5, 26, 0.62);
+  --line: rgba(10, 5, 26, 0.08);
+  --font: 'Poppins', system-ui, -apple-system, sans-serif;
 }
 
 * {
@@ -33,76 +25,158 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-generic);
-  font-size: 16px;
-  line-height: 1.6;
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.7;
+  padding-top: 96px; /* room for the fixed pill navbar */
   -webkit-font-smoothing: antialiased;
 }
 
 .wrap {
-  max-width: 940px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 24px;
+}
+
+.narrow {
+  max-width: 760px;
 }
 
 a {
-  color: var(--ink);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+  color: var(--moi-main);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--moi-dark);
 }
 
 a:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--moi-main);
   outline-offset: 2px;
+  border-radius: 6px;
 }
 
-/* ---- micro label: the LSD uppercase meta ---- */
-.micro {
-  font-size: 11px;
-  letter-spacing: 0.12em;
+/* ── lavender haze (from .bg-hero-gradient) ── */
+.haze {
+  background:
+    radial-gradient(ellipse at 25% 15%, rgba(217, 204, 255, 0.55), transparent 55%),
+    radial-gradient(ellipse at 75% 70%, rgba(188, 166, 255, 0.4), transparent 55%),
+    radial-gradient(ellipse at 50% 40%, rgba(245, 242, 255, 0.6), transparent 60%),
+    var(--bg);
+}
+
+/* ── frosted card (from .card-surface) ── */
+.card-surface {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(10, 5, 26, 0.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+}
+
+/* ── BadgePill (from src/components/BadgePill.jsx) ── */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(75, 23, 229, 0.15);
+  background: rgba(75, 23, 229, 0.08);
+  font-size: 10px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--moi-main);
+  font-weight: 500;
 }
 
-/* ---- navbar: hairline, uppercase, condenses to the page title on scroll ---- */
+/* ── tag pills ── */
+.tag-pill {
+  display: inline-block;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(75, 23, 229, 0.15);
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--moi-main);
+}
+
+.tag-pill:hover {
+  background: rgba(75, 23, 229, 0.08);
+  color: var(--moi-dark);
+}
+
+.tag-pill.active {
+  background: var(--moi-main);
+  border-color: var(--moi-main);
+  color: #fff;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ── fixed pill navbar (from src/components/Navbar.jsx) ── */
 .site-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line-strong);
+  position: fixed;
+  top: 16px;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 0 24px;
 }
 
-.site-header .wrap {
+.nav-pill {
+  margin: 0 auto;
+  max-width: 1200px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border: 1px solid rgba(10, 5, 26, 0.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+  position: relative;
 }
 
 .brand {
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-decoration: none;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
   white-space: nowrap;
+}
+
+.brand span {
+  color: var(--moi-main);
 }
 
 .nav-title {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  max-width: 34%;
+  max-width: 38%;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
   white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
 }
 
 .site-header.condensed .nav-title {
@@ -112,94 +186,31 @@ a:focus-visible {
 .site-nav {
   display: flex;
   align-items: center;
-  gap: 18px;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  gap: 4px;
 }
 
 .site-nav a {
-  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  padding: 6px 14px;
+  border-radius: 999px;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .site-nav a:hover {
-  text-decoration: underline;
+  background: rgba(75, 23, 229, 0.08);
+  color: var(--moi-main);
 }
 
-/* the LSD font switcher */
-.font-switch {
-  display: flex;
-  border: 1px solid var(--line-strong);
-}
-
-.font-switch button {
-  appearance: none;
-  background: var(--bg);
-  color: var(--ink);
-  border: 0;
-  border-right: 1px solid var(--line-strong);
-  padding: 4px 9px;
-  font-size: 11px;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.font-switch button:last-child {
-  border-right: 0;
-}
-
-.font-switch button[aria-pressed='true'] {
-  background: var(--ink);
-  color: var(--bg);
-}
-
-.font-switch .f-serif {
-  font-family: var(--font-serif);
-}
-
-.font-switch .f-sans {
-  font-family: var(--font-sans);
-}
-
-.font-switch .f-mono {
-  font-family: var(--font-mono);
-}
-
-/* ---- tag chips: sharp, bordered, uppercase ---- */
-.tag-pill {
-  display: inline-block;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  border: 1px solid var(--line-strong);
-  padding: 5px 12px;
-  text-decoration: none;
-  background: var(--bg);
-  color: var(--ink);
-}
-
-.tag-pill:hover {
-  background: var(--ink);
-  color: var(--bg);
-}
-
-.tag-pill.active {
-  background: var(--ink);
-  color: var(--bg);
-}
-
-.tag-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-}
-
-/* ---- footer ---- */
+/* ── footer ── */
 .site-footer {
-  border-top: 1px solid var(--line-strong);
+  border-top: 1px solid var(--line);
   margin-top: 96px;
-  padding: 22px 0 64px;
+  padding: 28px 0 64px;
+  font-size: 12px;
+  color: var(--muted);
 }
 
 .site-footer .wrap {
@@ -207,4 +218,14 @@ a:focus-visible {
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+@media (max-width: 760px) {
+  body {
+    padding-top: 84px;
+  }
+
+  .wrap {
+    padding: 0 20px;
+  }
 }

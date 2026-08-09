@@ -8,27 +8,20 @@ const fmt = (d) =>
 <div class="post-list">
   {
     posts.map((post) => (
-      <article class="post-row">
-        <div class="micro meta">
-          <span>Article</span>
-          <span class="sep" aria-hidden="true">
-            •
-          </span>
+      <article class="post-card card-surface">
+        <div class="meta">
           <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
           {post.data.tags.map((t) => (
-            <>
-              <span class="sep" aria-hidden="true">
-                •
-              </span>
-              <a href={`${base}/tags/${t}/`}>{t}</a>
-            </>
+            <a class="mini-tag" href={`${base}/tags/${t}/`}>
+              {t}
+            </a>
           ))}
         </div>
         <h2>
           <a href={`${base}/posts/${post.id}/`}>{post.data.title}</a>
         </h2>
         <p class="sub">{post.data.summary}</p>
-        {post.data.author && <p class="micro authors">{post.data.author.name}</p>}
+        {post.data.author && <p class="authors">{post.data.author.name}</p>}
       </article>
     ))
   }
@@ -37,61 +30,69 @@ const fmt = (d) =>
 <style>
   .post-list {
     display: grid;
+    gap: 18px;
+    padding-top: 40px;
   }
 
-  .post-row {
-    border-top: 1px solid var(--line-strong);
-    padding: 18px 0 34px;
+  .post-card {
+    padding: 28px 32px 24px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  }
+
+  .post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(75, 23, 229, 0.08);
   }
 
   .meta {
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .meta a {
+    gap: 12px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
     color: var(--muted);
-    text-decoration: none;
   }
 
-  .meta a:hover {
-    color: var(--ink);
-    text-decoration: underline;
+  .mini-tag {
+    color: var(--moi-main);
   }
 
-  .sep {
-    color: var(--line);
+  .mini-tag:hover {
+    color: var(--moi-dark);
   }
 
   h2 {
-    font-family: var(--font-generic);
-    font-weight: 400;
-    font-size: clamp(28px, 4vw, 40px);
-    line-height: 1.12;
-    margin: 14px 0 10px;
+    font-weight: 600;
+    font-size: clamp(22px, 3vw, 30px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 10px 0 8px;
     text-wrap: balance;
-    max-width: 26ch;
   }
 
   h2 a {
-    text-decoration: none;
+    color: var(--ink);
   }
 
   h2 a:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
+    color: var(--moi-main);
   }
 
   .sub {
     margin: 0;
     color: var(--muted);
-    font-size: 15px;
-    max-width: 58ch;
+    font-size: 14px;
+    font-weight: 400;
+    max-width: 62ch;
   }
 
   .authors {
     margin: 14px 0 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--moi-main);
   }
 </style>
