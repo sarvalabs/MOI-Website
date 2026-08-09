@@ -1,16 +1,24 @@
-/* MOI design tokens — mirrors src/index.css on the main site */
+/* Logos Press Engine treatment (LSD): pure black on white, hairline rules,
+   sharp corners, and one generic font family at a time — reader-switchable
+   between serif / sans-serif / monospace, exactly like press.logos.co. */
 :root {
-  --cream: #f5f3ee;
-  --paper: #fcfbf8;
-  --wash: #edeae2;
-  --ink: #1a1a1a;
-  --ink-2: #57534b;
-  --line: rgba(26, 26, 26, 0.16);
-  --line-soft: rgba(26, 26, 26, 0.08);
-  --purple: #7b5ea7;
-  --purple-soft: rgba(123, 94, 167, 0.12);
-  --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
-  --mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --bg: #ffffff;
+  --ink: #000000;
+  --muted: rgba(0, 0, 0, 0.6);
+  --line: rgba(0, 0, 0, 0.18);
+  --line-strong: #000000;
+  --font-serif: Georgia, 'Times New Roman', Times, serif;
+  --font-sans: system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-generic: var(--font-serif);
+}
+
+:root[data-font='sans-serif'] {
+  --font-generic: var(--font-sans);
+}
+
+:root[data-font='monospace'] {
+  --font-generic: var(--font-mono);
 }
 
 * {
@@ -23,89 +31,175 @@ html {
 
 body {
   margin: 0;
-  background: var(--cream);
+  background: var(--bg);
   color: var(--ink);
-  font-family: var(--mono);
-  font-size: 15px;
-  line-height: 1.75;
+  font-family: var(--font-generic);
+  font-size: 16px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
 .wrap {
-  max-width: 720px;
+  max-width: 940px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 16px;
 }
 
 a {
-  color: inherit;
-  text-decoration-color: rgba(123, 94, 167, 0.5);
+  color: var(--ink);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
 
-a:hover {
-  color: var(--purple);
-}
-
 a:focus-visible {
-  outline: 2px solid var(--purple);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
-  border-radius: 2px;
 }
 
-/* ---- site chrome ---- */
+/* ---- micro label: the LSD uppercase meta ---- */
+.micro {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---- navbar: hairline, uppercase, condenses to the page title on scroll ---- */
 .site-header {
-  border-bottom: 1px solid var(--ink);
-  padding: 22px 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line-strong);
 }
 
 .site-header .wrap {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
+  height: 44px;
 }
 
-.wordmark {
-  font-family: var(--serif);
-  font-size: 24px;
-  text-decoration: none;
-  letter-spacing: 0.01em;
-}
-
-.wordmark span {
-  color: var(--ink-2);
-  font-family: var(--mono);
+.brand {
   font-size: 12px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  margin-left: 10px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 34%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.site-header.condensed .nav-title {
+  opacity: 1;
 }
 
 .site-nav {
   display: flex;
-  gap: 20px;
-  font-size: 12px;
-  letter-spacing: 0.08em;
+  align-items: center;
+  gap: 18px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .site-nav a {
   text-decoration: none;
-  color: var(--ink-2);
 }
 
 .site-nav a:hover {
-  color: var(--purple);
+  text-decoration: underline;
 }
 
+/* the LSD font switcher */
+.font-switch {
+  display: flex;
+  border: 1px solid var(--line-strong);
+}
+
+.font-switch button {
+  appearance: none;
+  background: var(--bg);
+  color: var(--ink);
+  border: 0;
+  border-right: 1px solid var(--line-strong);
+  padding: 4px 9px;
+  font-size: 11px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.font-switch button:last-child {
+  border-right: 0;
+}
+
+.font-switch button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.font-switch .f-serif {
+  font-family: var(--font-serif);
+}
+
+.font-switch .f-sans {
+  font-family: var(--font-sans);
+}
+
+.font-switch .f-mono {
+  font-family: var(--font-mono);
+}
+
+/* ---- tag chips: sharp, bordered, uppercase ---- */
+.tag-pill {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--line-strong);
+  padding: 5px 12px;
+  text-decoration: none;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.tag-pill:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.tag-pill.active {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* ---- footer ---- */
 .site-footer {
-  border-top: 1px solid var(--ink);
+  border-top: 1px solid var(--line-strong);
   margin-top: 96px;
-  padding: 26px 0 60px;
-  font-size: 12px;
-  color: var(--ink-2);
+  padding: 22px 0 64px;
 }
 
 .site-footer .wrap {
@@ -113,43 +207,4 @@ a:focus-visible {
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-}
-
-/* ---- shared bits ---- */
-.eyebrow {
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-  margin: 0 0 14px;
-}
-
-.tag-pill {
-  display: inline-block;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 3px 12px;
-  text-decoration: none;
-  background: var(--paper);
-}
-
-.tag-pill:hover {
-  border-color: var(--purple);
-  color: var(--purple);
-}
-
-.tag-pill.active {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--cream);
-}
-
-.tag-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
 }

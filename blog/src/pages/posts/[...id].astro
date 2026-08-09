@@ -41,34 +41,35 @@ const jsonLd = [
 ].filter(Boolean);
 ---
 
-<Base title={`${title} — MOI Blog`} description={summary} ogType="article">
+<Base title={`${title} — The MOI Blog`} description={summary} ogType="article" navTitle={title}>
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
 
-  <article class="wrap">
-    <header class="post-head">
-      <p class="eyebrow">
+  <article class="wrap article">
+    <header class="post-head" data-hero>
+      <div class="micro meta">
         <a href={`${base}/`}>← All posts</a>
-      </p>
+        <span class="sep" aria-hidden="true">•</span>
+        <span>Article</span>
+        <span class="sep" aria-hidden="true">•</span>
+        <time datetime={date.toISOString()}>{fmt(date)}</time>
+        {updated && updated.valueOf() !== date.valueOf() && <span>(updated {fmt(updated)})</span>}
+      </div>
       <h1>{title}</h1>
       <p class="summary">{summary}</p>
-      <div class="byline">
-        {author && (
-          <span>
+      {
+        author && (
+          <p class="micro byline">
             {author.url ? <a href={author.url}>{author.name}</a> : author.name}
-            {author.role && <em> — {author.role}</em>}
-          </span>
-        )}
-        <time datetime={date.toISOString()}>{fmt(date)}</time>
-        {updated && updated.valueOf() !== date.valueOf() && (
-          <span class="updated">Updated {fmt(updated)}</span>
-        )}
-      </div>
+            {author.role && <span> — {author.role}</span>}
+          </p>
+        )
+      }
     </header>
 
     {
       takeaways && (
         <aside class="takeaways" aria-label="Key takeaways">
-          <p class="eyebrow">Key takeaways</p>
+          <p class="micro">Key takeaways</p>
           <ul>
             {takeaways.map((t) => (
               <li>{t}</li>
@@ -85,7 +86,7 @@ const jsonLd = [
     {
       faq && (
         <section class="faq" aria-label="Frequently asked questions">
-          <h2>FAQ</h2>
+          <p class="micro">FAQ</p>
           {faq.map(({ q, a }) => (
             <details>
               <summary>{q}</summary>
@@ -97,7 +98,7 @@ const jsonLd = [
     }
 
     <footer class="post-foot">
-      <div class="tag-row">
+      <div class="tag-row left">
         {tags.map((t) => (
           <a class="tag-pill" href={`${base}/tags/${t}/`}>
             {t}
@@ -109,182 +110,184 @@ const jsonLd = [
 </Base>
 
 <style>
+  .article {
+    max-width: 700px;
+  }
+
   .post-head {
-    padding: 56px 0 8px;
+    padding: 56px 0 10px;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .meta a {
+    text-decoration: none;
+    color: var(--muted);
+  }
+
+  .meta a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+
+  .sep {
+    color: var(--line);
   }
 
   .post-head h1 {
-    font-family: var(--serif);
+    font-family: var(--font-generic);
     font-weight: 400;
-    font-size: clamp(34px, 6vw, 50px);
+    font-size: clamp(36px, 6vw, 54px);
     line-height: 1.08;
-    letter-spacing: -0.01em;
-    margin: 0 0 14px;
+    margin: 18px 0 14px;
     text-wrap: balance;
   }
 
-  .post-head .eyebrow a {
-    text-decoration: none;
-    color: var(--ink-2);
-  }
-
   .summary {
-    color: var(--ink-2);
-    font-size: 15.5px;
-    max-width: 58ch;
-    margin: 0 0 18px;
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.5;
+    max-width: 56ch;
+    margin: 0 0 16px;
   }
 
   .byline {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 18px;
-    font-size: 12px;
-    color: var(--ink-2);
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--line-strong);
     padding-bottom: 22px;
+    margin: 0;
   }
 
   .takeaways {
-    background: var(--purple-soft);
-    border-left: 3px solid var(--purple);
-    border-radius: 0 8px 8px 0;
+    border: 1px solid var(--line-strong);
     padding: 18px 22px;
-    margin: 30px 0;
+    margin: 32px 0;
   }
 
   .takeaways ul {
-    margin: 0;
+    margin: 10px 0 0;
     padding-left: 18px;
     display: grid;
     gap: 8px;
-    font-size: 13.5px;
+    font-size: 14.5px;
   }
 
   .faq {
-    margin-top: 48px;
-    border-top: 1px solid var(--line);
-    padding-top: 26px;
-  }
-
-  .faq h2 {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: 28px;
-    margin: 0 0 14px;
+    margin-top: 52px;
+    border-top: 1px solid var(--line-strong);
+    padding-top: 22px;
   }
 
   .faq details {
-    background: var(--paper);
-    border: 1px solid var(--line-soft);
-    border-radius: 8px;
-    padding: 12px 18px;
-    margin-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    padding: 14px 2px;
   }
 
   .faq summary {
     cursor: pointer;
-    font-weight: 500;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .faq p {
-    color: var(--ink-2);
-    font-size: 13.5px;
-    margin: 10px 0 4px;
+    color: var(--muted);
+    font-size: 14.5px;
+    margin: 10px 0 2px;
+    max-width: 60ch;
   }
 
   .post-foot {
-    margin-top: 40px;
+    margin-top: 44px;
+  }
+
+  .tag-row.left {
+    justify-content: flex-start;
   }
 </style>
 
 <style is:global>
-  /* Article body typography — global so it reaches rendered Markdown */
+  /* Article body — rendered Markdown, follows the reader-selected font */
   .prose {
-    font-size: 15px;
+    font-size: 16.5px;
+    line-height: 1.65;
   }
 
   .prose h2 {
-    font-family: var(--serif);
+    font-family: var(--font-generic);
     font-weight: 400;
     font-size: 30px;
     line-height: 1.15;
-    margin: 44px 0 12px;
+    margin: 48px 0 12px;
     text-wrap: balance;
   }
 
   .prose h3 {
-    font-family: var(--serif);
+    font-family: var(--font-generic);
     font-weight: 400;
-    font-size: 23px;
-    margin: 32px 0 10px;
+    font-size: 22px;
+    margin: 34px 0 10px;
   }
 
   .prose p {
     max-width: 66ch;
   }
 
-  .prose strong {
-    font-weight: 500;
-  }
-
   .prose blockquote {
-    margin: 26px 0;
-    padding: 4px 22px;
-    border-left: 3px solid var(--purple);
-    color: var(--ink-2);
+    margin: 28px 0;
+    padding: 2px 0 2px 22px;
+    border-left: 1px solid var(--line-strong);
+    color: var(--muted);
     font-style: italic;
   }
 
   .prose pre {
-    background: var(--paper) !important;
-    border: 1px solid var(--line-soft);
-    border-radius: 8px;
+    background: #fff !important;
+    border: 1px solid var(--line-strong);
     padding: 16px 18px;
-    font-size: 12.5px;
+    font-size: 13px;
     line-height: 1.6;
     overflow-x: auto;
   }
 
   .prose code {
-    font-family: var(--mono);
+    font-family: var(--font-mono);
   }
 
   .prose :not(pre) > code {
-    background: var(--wash);
-    border-radius: 4px;
-    padding: 1px 6px;
-    font-size: 0.9em;
+    border: 1px solid var(--line);
+    padding: 0 5px;
+    font-size: 0.85em;
   }
 
   .prose table {
     border-collapse: collapse;
     width: 100%;
-    font-size: 13px;
-    margin: 24px 0;
+    font-size: 14px;
+    margin: 26px 0;
     display: block;
     overflow-x: auto;
   }
 
   .prose th,
   .prose td {
-    border: 1px solid var(--line);
-    padding: 8px 12px;
+    border: 1px solid var(--line-strong);
+    padding: 9px 12px;
     text-align: left;
   }
 
   .prose th {
-    background: var(--wash);
-    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    font-weight: 400;
   }
 
   .prose img {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
-    border: 1px solid var(--line-soft);
-    background: var(--paper);
+    border: 1px solid var(--line-strong);
   }
 
   .prose ol,
