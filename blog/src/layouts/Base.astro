@@ -33,12 +33,17 @@ const base = import.meta.env.BASE_URL;
   <body>
     <header class="site-header" id="site-header">
       <div class="nav-pill">
-        <a class="brand" href="https://moi.technology/">MOI<span>.</span></a>
+        <a class="nav-logo" href="https://moi.technology/" aria-label="MOI — home">
+          <img src={`${base}/brand/logos/SVG/default-light.svg`} alt="MOI" />
+        </a>
         <span class="nav-title" id="nav-title">{navTitle}</span>
         <nav class="site-nav">
-          <a href="https://moi.technology/why-moi">The Shift</a>
-          <a href={`${base}/`}>Blog</a>
-          <a href={`${base}/rss.xml`}>RSS</a>
+          <a class="nav-link" href="https://moi.technology/why-moi">The Shift</a>
+          <a class="nav-link" href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer">Docs</a>
+          <a class="nav-link" href="https://moi.technology/manifesto">Manifesto</a>
+          <a class="nav-link" href="https://moi.technology/papers">Papers</a>
+          <a class="nav-link nav-active" href={`${base}/`}>Blog</a>
+          <a class="nav-cta" href="https://voyage.moi.technology" target="_blank" rel="noopener noreferrer">Explore the network</a>
         </nav>
       </div>
     </header>
