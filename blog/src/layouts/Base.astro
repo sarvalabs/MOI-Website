@@ -36,15 +36,15 @@ const base = import.meta.env.BASE_URL;
         <a class="nav-logo" href="https://moi.technology/" aria-label="MOI — home">
           <img src={`${base}/brand/logos/SVG/default-light.svg`} alt="MOI" />
         </a>
-        <span class="nav-title" id="nav-title">{navTitle}</span>
-        <nav class="site-nav">
-          <a class="nav-link" href="https://moi.technology/why-moi">The Shift</a>
-          <a class="nav-link" href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer">Docs</a>
-          <a class="nav-link" href="https://moi.technology/manifesto">Manifesto</a>
-          <a class="nav-link" href="https://moi.technology/papers">Papers</a>
-          <a class="nav-link nav-active" href={`${base}/`}>Blog</a>
-          <a class="nav-cta" href="https://voyage.moi.technology" target="_blank" rel="noopener noreferrer">Explore the network</a>
+        <nav class="nav-center">
+          <a href="https://moi.technology/why-moi">The Shift</a>
+          <a href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer">Docs</a>
+          <a href="https://moi.technology/manifesto">Manifesto</a>
+          <a href="https://moi.technology/papers">Papers</a>
+          <a class="nav-active" href={`${base}/`}>Blog</a>
         </nav>
+        <span class="nav-title" id="nav-title">{navTitle}</span>
+        <a class="nav-cta" href="https://voyage.moi.technology" target="_blank" rel="noopener noreferrer">Explore the network</a>
       </div>
     </header>
 
