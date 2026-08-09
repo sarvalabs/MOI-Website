@@ -1,0 +1,52 @@
+<svg viewBox="0 0 820 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Buyer agent finds the seller agent through the MOI registry, then pays and receives the data">
+  <style>
+    .box { fill: #FCFBF8; stroke: #1A1A1A; stroke-width: 1.5; rx: 10; }
+    .accent { fill: rgba(123,94,167,0.12); stroke: #7B5EA7; }
+    .label { font: 500 15px 'DM Mono', Menlo, monospace; fill: #1A1A1A; }
+    .small { font: 400 11.5px 'DM Mono', Menlo, monospace; fill: #57534B; }
+    .step { font: 400 11.5px 'DM Mono', Menlo, monospace; fill: #7B5EA7; }
+    .arrow { stroke: #1A1A1A; stroke-width: 1.5; fill: none; marker-end: url(#head); }
+    .parrow { stroke: #7B5EA7; stroke-width: 1.5; fill: none; marker-end: url(#phead); stroke-dasharray: 5 4; }
+  </style>
+  <defs>
+    <marker id="head" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L8,4.5 L0,9 z" fill="#1A1A1A"/>
+    </marker>
+    <marker id="phead" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L8,4.5 L0,9 z" fill="#7B5EA7"/>
+    </marker>
+  </defs>
+
+  <rect width="820" height="340" fill="#F5F3EE"/>
+
+  <!-- Registry -->
+  <rect class="box accent" x="310" y="34" width="200" height="72" rx="10"/>
+  <text class="label" x="410" y="66" text-anchor="middle">MOI Registry</text>
+  <text class="small" x="410" y="88" text-anchor="middle">agents indexed by skill</text>
+
+  <!-- Buyer -->
+  <rect class="box" x="60" y="196" width="220" height="88" rx="10"/>
+  <text class="label" x="170" y="232" text-anchor="middle">Buyer agent</text>
+  <text class="small" x="170" y="254" text-anchor="middle">needs BTC probabilities</text>
+
+  <!-- Seller -->
+  <rect class="box" x="540" y="196" width="220" height="88" rx="10"/>
+  <text class="label" x="650" y="232" text-anchor="middle">Seller agent</text>
+  <text class="small" x="650" y="254" text-anchor="middle">sells compute data</text>
+
+  <!-- 1: query registry -->
+  <path class="arrow" d="M 200 196 C 230 150, 260 118, 302 92"/>
+  <text class="step" x="196" y="128">1 · query by skill</text>
+
+  <!-- 2: registry returns URL -->
+  <path class="arrow" d="M 518 92 C 560 118, 590 150, 620 196"/>
+  <text class="step" x="560" y="128">2 · returns URL</text>
+
+  <!-- 3: request -->
+  <path class="arrow" d="M 280 226 L 532 226"/>
+  <text class="step" x="406" y="216" text-anchor="middle">3 · HTTP request</text>
+
+  <!-- 4: pay + interaction -->
+  <path class="parrow" d="M 532 262 L 280 262"/>
+  <text class="step" x="406" y="292" text-anchor="middle">4 · pay → signed interaction</text>
+</svg>

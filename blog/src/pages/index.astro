@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const tagCounts = new Map();
+for (const p of posts) for (const t of p.data.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
+const base = import.meta.env.BASE_URL;
+---
+
+<Base
+  title="MOI Blog — Contextual Compute, agents, and on-chain authority"
+  description="Writing from Sarva Labs on MOI: Contextual Compute, agent authority, protocol research, and product updates."
+>
+  <div class="wrap">
+    <section class="hero">
+      <p class="eyebrow">Sarva Labs · Journal</p>
+      <h1>Writing on the personal&nbsp;internet</h1>
+      <p class="lede">
+        Contextual Compute, agent authority, protocol research, and product updates — from
+        the team building MOI.
+      </p>
+      <nav class="tag-row" aria-label="Filter by tag">
+        <a class="tag-pill active" href={`${base}/`}>All</a>
+        {tags.map(([t, n]) => <a class="tag-pill" href={`${base}/tags/${t}/`}>{t} · {n}</a>)}
+      </nav>
+    </section>
+
+    <PostList posts={posts} />
+  </div>
+</Base>
+
+<style>
+  .hero {
+    padding: 64px 0 40px;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(40px, 7vw, 58px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 16px;
+    text-wrap: balance;
+  }
+
+  .lede {
+    color: var(--ink-2);
+    max-width: 52ch;
+    margin: 0 0 26px;
+  }
+</style>

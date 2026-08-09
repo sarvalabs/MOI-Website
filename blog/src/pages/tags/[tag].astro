@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+  return tags.map((tag) => ({
+    params: { tag },
+    props: {
+      posts: posts
+        .filter((p) => p.data.tags.includes(tag))
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+      allTags: tags,
+    },
+  }));
+}
+
+const { tag } = Astro.params;
+const { posts, allTags } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<Base
+  title={`${tag} — MOI Blog`}
+  description={`Posts tagged “${tag}” on the MOI blog.`}
+>
+  <div class="wrap">
+    <section class="hero">
+      <p class="eyebrow">Filtered by tag</p>
+      <h1>{tag}</h1>
+      <p class="lede">
+        {posts.length} {posts.length === 1 ? 'post' : 'posts'}
+      </p>
+      <nav class="tag-row" aria-label="Filter by tag">
+        <a class="tag-pill" href={`${base}/`}>All</a>
+        {
+          allTags.map((t) => (
+            <a class:list={['tag-pill', { active: t === tag }]} href={`${base}/tags/${t}/`}>
+              {t}
+            </a>
+          ))
+        }
+      </nav>
+    </section>
+
+    <PostList posts={posts} />
+  </div>
+</Base>
+
+<style>
+  .hero {
+    padding: 64px 0 40px;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(38px, 6vw, 52px);
+    line-height: 1.05;
+    margin: 0 0 8px;
+  }
+
+  .lede {
+    color: var(--ink-2);
+    margin: 0 0 26px;
+  }
+</style>

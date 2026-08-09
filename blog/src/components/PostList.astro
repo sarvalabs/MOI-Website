@@ -1,0 +1,88 @@
+---
+const { posts } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const fmt = (d) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<div class="post-list">
+  {
+    posts.map((post) => (
+      <article class="post-row">
+        <div class="post-meta">
+          <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
+          <span class="dot" aria-hidden="true">
+            ·
+          </span>
+          {post.data.tags.map((t) => (
+            <a class="mini-tag" href={`${base}/tags/${t}/`}>
+              {t}
+            </a>
+          ))}
+        </div>
+        <h2>
+          <a href={`${base}/posts/${post.id}/`}>{post.data.title}</a>
+        </h2>
+        <p>{post.data.summary}</p>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .post-list {
+    display: grid;
+    gap: 8px;
+  }
+
+  .post-row {
+    background: var(--paper);
+    border: 1px solid var(--line-soft);
+    border-radius: 8px;
+    padding: 22px 24px 18px;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  .dot {
+    color: var(--line);
+  }
+
+  .mini-tag {
+    text-decoration: none;
+    color: var(--purple);
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 27px;
+    line-height: 1.15;
+    margin: 10px 0 8px;
+    text-wrap: balance;
+  }
+
+  h2 a {
+    text-decoration: none;
+  }
+
+  h2 a:hover {
+    color: var(--purple);
+  }
+
+  p {
+    margin: 0;
+    color: var(--ink-2);
+    font-size: 13.5px;
+    max-width: 62ch;
+  }
+</style>
