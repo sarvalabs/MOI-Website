@@ -360,8 +360,7 @@ a.nav-cta:hover {
    and the dark /papers background. Light routes get the light counterpart:
    frosted white rather than a dark slab. The hamburger icon is already
    #0A051A and the logo wordmark sits inside the purple planet, so both were
-   drawn for a light pill — this restores that pairing.
-   /blog shares the /papers dark field, so it keeps the dark glass. */
+   drawn for a light pill — this restores that pairing. */
 .manifesto-page nav.fixed > div,
 .manifesto-page nav.fixed > div + div {
   background: rgba(255, 255, 255, 0.72) !important;
@@ -394,3 +393,70 @@ nav.fixed a:hover {
 nav.fixed a:hover:not(.nav-cta) { color: #FFFFFF; }
 nav.fixed a.nav-cta,
 nav.fixed a.nav-cta:hover { color: #FFFFFF; }
+
+/* Jelly navbar — ported from the blog demo (blog/src/styles/global.css).
+   Width + centering live here instead of mx-auto/max-w so the collapse can
+   anchor at the pill's left edge; expanded it is identical to the old
+   mx-auto max-w-[1200px] box. Desktop only — mobile keeps the hamburger. */
+.moi-nav-pill {
+  position: relative;
+  overflow: hidden;
+  transform-origin: left center;
+  width: min(100%, 1200px);
+  margin-inline: max(0px, calc((100% - 1200px) / 2));
+}
+
+@media (min-width: 768px) {
+  .moi-nav-pill {
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: width;
+  }
+
+  /* collapsed: the right edge sweeps left until only the MOI badge remains */
+  .moi-nav-pill.collapsed {
+    width: 76px;
+    cursor: pointer;
+  }
+
+  .moi-nav-pill.anim-ready.collapsed {
+    animation: moi-jelly-land 0.9s ease both;
+  }
+
+  .moi-nav-pill.anim-ready:not(.collapsed) {
+    animation: moi-jelly-open 0.9s ease both;
+  }
+
+  /* contents get out of the way before the sweep, and fade back in after it */
+  .moi-nav-center,
+  .moi-nav-cta-wrap {
+    transition: opacity 0.18s ease 0.3s;
+  }
+  .moi-nav-pill.collapsed .moi-nav-center,
+  .moi-nav-pill.collapsed .moi-nav-cta-wrap {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.14s ease;
+  }
+}
+
+/* squash & stretch as the width transition lands, anchored at the logo */
+@keyframes moi-jelly-land {
+  0%, 55% { transform: scale(1, 1); }
+  65% { transform: scale(1.1, 0.86); }
+  76% { transform: scale(0.95, 1.07); }
+  87% { transform: scale(1.03, 0.97); }
+  100% { transform: scale(1, 1); }
+}
+
+@keyframes moi-jelly-open {
+  0%, 55% { transform: scale(1, 1); }
+  65% { transform: scale(1.015, 0.93); }
+  78% { transform: scale(0.995, 1.04); }
+  90% { transform: scale(1.004, 0.985); }
+  100% { transform: scale(1, 1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moi-nav-pill { transition: none; }
+  .moi-nav-pill.anim-ready { animation: none !important; }
+}
