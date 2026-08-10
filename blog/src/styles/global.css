@@ -133,9 +133,13 @@ a:focus-visible {
   padding: 0 24px;
 }
 
-.nav-pill {
-  margin: 0 auto;
+.nav-shell {
   max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-pill {
+  width: 100%;
   height: 56px;
   display: flex;
   align-items: center;
@@ -153,6 +157,73 @@ a:focus-visible {
     inset 0 1px 0 rgba(255, 255, 255, 0.6),
     0 14px 36px rgba(10, 5, 38, 0.1);
   position: relative;
+  overflow: hidden;
+  transform-origin: left center;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: width;
+}
+
+/* collapsed: the right edge sweeps left until only the MOI badge remains */
+.site-header.collapsed .nav-pill {
+  width: 76px;
+  cursor: pointer;
+}
+
+.site-header.anim-ready.collapsed .nav-pill {
+  animation: jelly-land 0.9s ease both;
+}
+
+.site-header.anim-ready:not(.collapsed) .nav-pill {
+  animation: jelly-open 0.9s ease both;
+}
+
+/* squash & stretch as the width transition lands, anchored at the logo */
+@keyframes jelly-land {
+  0%,
+  55% {
+    transform: scale(1, 1);
+  }
+  65% {
+    transform: scale(1.1, 0.86);
+  }
+  76% {
+    transform: scale(0.95, 1.07);
+  }
+  87% {
+    transform: scale(1.03, 0.97);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes jelly-open {
+  0%,
+  55% {
+    transform: scale(1, 1);
+  }
+  65% {
+    transform: scale(1.015, 0.93);
+  }
+  78% {
+    transform: scale(0.995, 1.04);
+  }
+  90% {
+    transform: scale(1.004, 0.985);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-pill {
+    transition: none;
+  }
+
+  .site-header.anim-ready .nav-pill {
+    animation: none !important;
+  }
 }
 
 .nav-logo {
@@ -167,26 +238,6 @@ a:focus-visible {
   display: block;
 }
 
-.nav-title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 34%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(10, 5, 26, 0.72);
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  pointer-events: none;
-}
-
-.site-header.condensed .nav-title {
-  opacity: 1;
-}
-
 /* center links — absolutely centered between logo and CTA, like the landing */
 .nav-center {
   position: absolute;
@@ -195,7 +246,7 @@ a:focus-visible {
   display: flex;
   align-items: center;
   gap: 4px;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.18s ease 0.3s;
 }
 
 .nav-center a {
@@ -218,19 +269,12 @@ a:focus-visible {
   background: rgba(75, 23, 229, 0.08);
 }
 
-/* condensed: links give way to the article title; hovering the pill brings them back */
-.site-header.condensed .nav-center {
+/* contents get out of the way before the sweep, and fade back in after it */
+.site-header.collapsed .nav-center,
+.site-header.collapsed .nav-cta {
   opacity: 0;
   pointer-events: none;
-}
-
-.site-header.condensed .nav-pill:hover .nav-center {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.site-header.condensed .nav-pill:hover .nav-title {
-  opacity: 0;
+  transition: opacity 0.14s ease;
 }
 
 .nav-cta {
@@ -251,13 +295,13 @@ a:focus-visible {
   background: var(--moi-dark);
 }
 
+.nav-cta {
+  transition: background 0.2s ease, opacity 0.18s ease 0.3s;
+}
+
 @media (max-width: 900px) {
   .nav-center {
     display: none;
-  }
-
-  .nav-title {
-    max-width: 44%;
   }
 }
 

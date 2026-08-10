@@ -32,19 +32,20 @@ const base = import.meta.env.BASE_URL;
   </head>
   <body>
     <header class="site-header" id="site-header">
-      <div class="nav-pill">
-        <a class="nav-logo" href="https://moi.technology/" aria-label="MOI — home">
-          <img src={`${base}/brand/logos/SVG/default-light.svg`} alt="MOI" />
-        </a>
-        <nav class="nav-center">
-          <a href="https://moi.technology/why-moi">The Shift</a>
-          <a href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer">Docs</a>
-          <a href="https://moi.technology/manifesto">Manifesto</a>
-          <a href="https://moi.technology/papers">Papers</a>
-          <a class="nav-active" href={`${base}/`}>Blog</a>
-        </nav>
-        <span class="nav-title" id="nav-title">{navTitle}</span>
-        <a class="nav-cta" href="https://voyage.moi.technology" target="_blank" rel="noopener noreferrer">Explore the network</a>
+      <div class="nav-shell">
+        <div class="nav-pill" id="nav-pill" aria-expanded="true">
+          <a class="nav-logo" href="https://moi.technology/" aria-label="MOI — home">
+            <img src={`${base}/brand/logos/SVG/default-light.svg`} alt="MOI" />
+          </a>
+          <nav class="nav-center">
+            <a href="https://moi.technology/why-moi">The Shift</a>
+            <a href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer">Docs</a>
+            <a href="https://moi.technology/manifesto">Manifesto</a>
+            <a href="https://moi.technology/papers">Papers</a>
+            <a class="nav-active" href={`${base}/`}>Blog</a>
+          </nav>
+          <a class="nav-cta" href="https://voyage.moi.technology" target="_blank" rel="noopener noreferrer">Explore the network</a>
+        </div>
       </div>
     </header>
 
@@ -60,21 +61,65 @@ const base = import.meta.env.BASE_URL;
     </footer>
 
     <script is:inline>
-      // navbar adopts the page title once the hero scrolls past
+      // jelly navbar: scrolling past the hero collapses the pill from the
+      // right toward the MOI logo; clicking the collapsed pill re-expands it,
+      // scrolling again re-collapses.
       (function () {
         var header = document.getElementById('site-header');
+        var pill = document.getElementById('nav-pill');
         var hero = document.querySelector('[data-hero]');
-        if (!hero) {
-          header.classList.add('condensed');
-          return;
+        var pinnedOpen = false;
+        var pastHero = false;
+
+        function setCollapsed(v) {
+          header.classList.toggle('collapsed', v);
+          pill.setAttribute('aria-expanded', String(!v));
         }
-        var io = new IntersectionObserver(
-          function (entries) {
-            header.classList.toggle('condensed', !entries[0].isIntersecting);
+
+        if (hero) {
+          new IntersectionObserver(
+            function (entries) {
+              pastHero = !entries[0].isIntersecting;
+              if (!pastHero) pinnedOpen = false;
+              if (!pinnedOpen) setCollapsed(pastHero);
+              // enable animations only after the first observer tick, so the
+              // initial paint doesn't play a phantom jelly
+              requestAnimationFrame(function () {
+                header.classList.add('anim-ready');
+              });
+            },
+            { rootMargin: '-96px 0px 0px 0px' }
+          ).observe(hero);
+        } else {
+          pastHero = true;
+          setCollapsed(true);
+          requestAnimationFrame(function () {
+            header.classList.add('anim-ready');
+          });
+        }
+
+        pill.addEventListener('click', function (ev) {
+          if (header.classList.contains('collapsed')) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            pinnedOpen = true;
+            setCollapsed(false);
+          }
+        });
+
+        var lastY = window.scrollY;
+        window.addEventListener(
+          'scroll',
+          function () {
+            var dy = Math.abs(window.scrollY - lastY);
+            lastY = window.scrollY;
+            if (pinnedOpen && pastHero && dy > 8) {
+              pinnedOpen = false;
+              setCollapsed(true);
+            }
           },
-          { rootMargin: '-96px 0px 0px 0px' }
+          { passive: true }
         );
-        io.observe(hero);
       })();
     </script>
   </body>
