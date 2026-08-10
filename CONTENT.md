@@ -2,10 +2,14 @@
 
 ## Quick Start
 
-1. Create a new Markdown file in `content/posts/your-slug.md`
+1. Create a new Markdown file in `blog/src/content/posts/your-slug.md`
 2. Add frontmatter at the top with required fields (see schema below)
 3. Write your article in Markdown
-4. Merge to `main` → Vercel builds and deploys automatically
+4. Merge to `main` → CI builds the blog and ships it to the VM
+
+The frontmatter contract below is enforced at build time by
+`blog/src/content.config.ts`; a post that violates it fails the build rather
+than shipping broken.
 
 ## Frontmatter Schema
 
@@ -155,39 +159,68 @@ Fix the frontmatter and rebuild.
 
 ## Routing & URLs
 
-Posts are automatically routed:
+The blog is its own host, `blog.moi.technology` — the same split Logos uses.
+Posts are routed automatically:
 
-- **Blog index**: `/blog` (lists all posts)
-- **Individual post**: `/blog/[slug]` (e.g., `/blog/why-agents-need-onchain-authority`)
+- **Listing on the main site**: `https://moi.technology/blog` — generated from
+  your frontmatter at build time, so the apex domain carries every post's
+  metadata. You do not edit this by hand.
+- **Index**: `https://blog.moi.technology/` (lists all posts)
+- **Article**: `https://blog.moi.technology/article/[slug]`
+- **Tag page**: `https://blog.moi.technology/tags/[tag]/`
 
-The slug is derived from the filename: `content/posts/my-article.md` → `/blog/my-article`
+The slug comes from the filename: `blog/src/content/posts/my-article.md` →
+`/article/my-article/`.
+
+## Images
+
+**Inside a post** — put the file in `blog/src/assets/` and reference it
+relative to the post. Astro hashes it and rewrites the URL at build time:
+
+```markdown
+![Alt text describing the image](../../assets/agent-flow.svg)
+```
+
+**Listing thumbnail** — put the file in `blog/public/covers/` and set `cover`
+in frontmatter, root-relative, around 1200×780 or wider:
+
+```yaml
+cover: "/covers/my-post.png"
+```
+
+Skip `cover` and the listing generates a branded gradient tile from the slug.
 
 ## Metadata Files
 
-The build automatically generates:
+The build generates, all at the blog's own root:
 
-- `/blog/sitemap.xml` — links all posts for search engines
-- `/blog/feed.xml` — RSS feed with all posts
-- `/blog/llms.txt` — llmstxt.org format listing all posts (for LLM indexing)
-- `/robots.txt` (root) — Allow GPTBot, ClaudeBot, PerplexityBot, etc., and references the sitemap
+- `/sitemap-index.xml` — every post and tag page, for search engines
+- `/rss.xml` — RSS feed
+- `/llms.txt` — llmstxt.org format listing all posts (for LLM indexing)
+- `/robots.txt` — allows GPTBot, ClaudeBot, PerplexityBot, etc.
+
+The marketing site's own `public/robots.txt` cross-submits the blog sitemap so
+crawlers arriving at moi.technology can discover it.
 
 ## Testing Locally
 
 ```bash
-npm run build
-npm run preview
-# Visit http://localhost:4173/blog to see the index
-# Visit http://localhost:4173/blog/your-slug to see a post
+npm run dev --prefix blog
 ```
 
-Use `curl` to verify static HTML:
+Then open `http://localhost:4321` for the index, or
+`http://localhost:4321/article/your-slug/` for a post.
+
+To check the real static output rather than the dev server:
 
 ```bash
-curl -s http://localhost:4173/blog | grep "Essays on context"
-# Should return HTML with that text (not empty, not "<!DOCTYPE html><script>")
+npm run build --prefix blog && npm run preview --prefix blog
+```
 
-curl -s http://localhost:4173/blog/why-agents-need-onchain-authority | grep "on-chain authority"
-# Should return the article HTML
+Verify a post is genuinely static HTML (not a JS shell):
+
+```bash
+curl -s http://localhost:4321/article/why-agents-need-onchain-authority/ | grep "on-chain authority"
 ```
 
 ## Word Count & Reading Time
@@ -198,8 +231,8 @@ Example: "3,247 words · 12 min read"
 
 ## Styling
 
-Styles live in `src/styles/blog.css` and follow the MOI brand book, matching the
-manifesto page rather than inventing a separate look:
+Styles live in `blog/src/styles/global.css` and follow the MOI brand book,
+matching the manifesto page rather than inventing a separate look:
 
 - **Poppins only** — weights 400/500/600/700. The brand has one typeface; there is
   no serif and no italic. The only exception is code, where a system monospace
@@ -220,19 +253,18 @@ Both blog components add and remove this class on mount/unmount.
 
 ## Deployment
 
-The blog is built as part of the standard deploy pipeline:
+The blog builds independently of the marketing site:
 
 ```bash
-npm run build  # Runs Vite + build-blog.js
+npm run build --prefix blog   # → blog/dist/
 ```
 
-The build script:
-1. Processes all Markdown posts in `content/posts/*.md`
-2. Validates frontmatter
-3. Generates static HTML + metadata (sitemap, RSS, llms.txt)
-4. Writes JSON data + metadata into `public/`, which Vite copies to `dist/`
-   (generating into `public/` is what lets `npm run dev` serve the blog too —
-   these paths are gitignored)
-5. The deploy job ships `dist/` to the server
+Astro validates every post's frontmatter against `content.config.ts`, renders
+static HTML, and emits the sitemap, RSS, and llms.txt. CI then rsyncs
+`blog/dist/` to the VM, where nginx serves it as `blog.moi.technology`. See
+[DEPLOYMENT.md](DEPLOYMENT.md) for the DNS, TLS, and vhost setup.
 
-Posts go live immediately after merge to `main`.
+Posts with `draft: true` are excluded from the build, the index, RSS, the
+sitemap, and llms.txt — so an unfinished post can sit on `main` safely.
+
+Posts go live on merge to `main`.

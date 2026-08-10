@@ -108,11 +108,10 @@ npm start --prefix server
 
 ## Deployment
 
-Recommended deployment model:
-
-- frontend on Vercel
-- backend on Render or Railway
-- retrieval store on Supabase
+The site and the blog deploy as static builds to a VM behind nginx — see
+[DEPLOYMENT.md](DEPLOYMENT.md) for what gets built, where it is served, and how
+posts get published. Earlier revisions of this file recommended Vercel; that is
+no longer the model.
 
 ### Frontend
 
