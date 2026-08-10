@@ -27,3 +27,4 @@ jobs:
           script: |
             export BRANCH=${{ github.ref_name }}
             bash ~/scripts/deploy-moi-website.sh
+# Cloudflare Pages preview testing
