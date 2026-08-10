@@ -7,8 +7,8 @@
    `clip` is the modern form and is declared second so supporting browsers
    take it. It clips identically to `hidden` but does not turn html/body into
    a scroll container, which is what silently breaks `position: sticky`
-   further down the tree. Older browsers fall back to `hidden` and simply
-   lose stickiness. */
+   further down the tree (the blog's contents rail). Older browsers fall back
+   to `hidden` and simply lose stickiness. */
 html, body {
   overflow-x: hidden;
   overflow-x: clip;
