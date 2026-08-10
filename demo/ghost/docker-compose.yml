@@ -1,0 +1,36 @@
+# Option B of the blog platform decision: Ghost 6 + MySQL 8 on the existing CI VM.
+# $0 in licenses/hosting — the costs are ops (updates, backups, TLS) and theming.
+# Usage: create a .env next to this file with GHOST_DB_PASSWORD and MYSQL_ROOT_PASSWORD,
+# then: docker compose up -d
+services:
+  ghost:
+    image: ghost:6
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:2368:2368"
+    environment:
+      url: https://blog.moi.technology
+      database__client: mysql
+      database__connection__host: db
+      database__connection__user: ghost
+      database__connection__password: ${GHOST_DB_PASSWORD}
+      database__connection__database: ghost
+    volumes:
+      - ghost-content:/var/lib/ghost/content
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ghost
+      MYSQL_USER: ghost
+      MYSQL_PASSWORD: ${GHOST_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ghost-db:/var/lib/mysql
+
+volumes:
+  ghost-content:
+  ghost-db:

@@ -1,0 +1,79 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const tagCounts = new Map();
+for (const p of posts) for (const t of p.data.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
+const base = import.meta.env.BASE_URL;
+---
+
+<Base
+  title="Blog — MOI | Contextual Compute, agents, and on-chain authority"
+  description="Writing from Sarva Labs on MOI: Contextual Compute, agent authority, protocol research, and product updates."
+>
+  <section class="hero haze" data-hero>
+    <div class="wrap hero-inner">
+      <span class="badge-pill">Sarva Labs · Journal</span>
+      <h1>Writing on the<br />personal internet</h1>
+      <p class="lede">
+        Contextual Compute, agent authority, protocol research, and product updates — from
+        the team building MOI.
+      </p>
+      <nav class="tag-row center" aria-label="Filter by tag">
+        <a class="tag-pill active" href={`${base}/`}>All</a>
+        {tags.map(([t, n]) => <a class="tag-pill" href={`${base}/tags/${t}/`}>{t} · {n}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  <div class="wrap narrow">
+    <PostList posts={posts} />
+  </div>
+</Base>
+
+<style>
+  .hero {
+    margin-top: -96px;
+    padding: 180px 0 88px;
+  }
+
+  .hero-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    text-align: center;
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: clamp(38px, 6vw, 64px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .lede {
+    color: var(--muted);
+    max-width: 52ch;
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .tag-row.center {
+    justify-content: center;
+  }
+
+  @media (max-width: 760px) {
+    .hero {
+      margin-top: -84px;
+      padding: 150px 0 64px;
+    }
+  }
+</style>

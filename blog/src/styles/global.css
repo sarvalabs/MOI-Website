@@ -1,0 +1,332 @@
+/* Match the current moi.technology design system (src/index.css +
+   src/styles/moi-tokens.css on main): ONE typeface — Poppins; lavender-haze
+   gradients; frosted card surfaces; MOI Main purple #4B17E5. */
+:root {
+  --moi-main: #4b17e5;
+  --moi-dark: #320f99;
+  --ink: #0a051a;
+  --bg: #fcfbff; /* Almost Lavender */
+  --surface: #f5f2ff; /* Certainly Lavender */
+  --pastel: #d9ccff;
+  --muted: rgba(10, 5, 26, 0.62);
+  --line: rgba(10, 5, 26, 0.08);
+  --font: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.7;
+  padding-top: 96px; /* room for the fixed pill navbar */
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.narrow {
+  max-width: 760px;
+}
+
+a {
+  color: var(--moi-main);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--moi-dark);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--moi-main);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── lavender haze (from .bg-hero-gradient) ── */
+.haze {
+  background:
+    radial-gradient(ellipse at 25% 15%, rgba(217, 204, 255, 0.55), transparent 55%),
+    radial-gradient(ellipse at 75% 70%, rgba(188, 166, 255, 0.4), transparent 55%),
+    radial-gradient(ellipse at 50% 40%, rgba(245, 242, 255, 0.6), transparent 60%),
+    var(--bg);
+}
+
+/* ── frosted card (from .card-surface) ── */
+.card-surface {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(10, 5, 26, 0.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+}
+
+/* ── BadgePill (from src/components/BadgePill.jsx) ── */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(75, 23, 229, 0.15);
+  background: rgba(75, 23, 229, 0.08);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--moi-main);
+  font-weight: 500;
+}
+
+/* ── tag pills ── */
+.tag-pill {
+  display: inline-block;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(75, 23, 229, 0.15);
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--moi-main);
+}
+
+.tag-pill:hover {
+  background: rgba(75, 23, 229, 0.08);
+  color: var(--moi-dark);
+}
+
+.tag-pill.active {
+  background: var(--moi-main);
+  border-color: var(--moi-main);
+  color: #fff;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ── fixed pill navbar — faithful clone of src/components/Navbar.jsx ── */
+.site-header {
+  position: fixed;
+  top: 16px;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 0 24px;
+}
+
+.nav-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-pill {
+  width: 100%;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 20px;
+  border-radius: 999px;
+  /* light routes get the frosted light pill — the repo's own conclusion
+     (cfad08b: "frosted light pill on light routes, not a dark slab") */
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border: 1px solid rgba(10, 5, 26, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 14px 36px rgba(10, 5, 38, 0.1);
+  position: relative;
+  overflow: hidden;
+  transform-origin: left center;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: width;
+}
+
+/* collapsed: the right edge sweeps left until only the MOI badge remains */
+.site-header.collapsed .nav-pill {
+  width: 76px;
+  cursor: pointer;
+}
+
+.site-header.anim-ready.collapsed .nav-pill {
+  animation: jelly-land 0.9s ease both;
+}
+
+.site-header.anim-ready:not(.collapsed) .nav-pill {
+  animation: jelly-open 0.9s ease both;
+}
+
+/* squash & stretch as the width transition lands, anchored at the logo */
+@keyframes jelly-land {
+  0%,
+  55% {
+    transform: scale(1, 1);
+  }
+  65% {
+    transform: scale(1.1, 0.86);
+  }
+  76% {
+    transform: scale(0.95, 1.07);
+  }
+  87% {
+    transform: scale(1.03, 0.97);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes jelly-open {
+  0%,
+  55% {
+    transform: scale(1, 1);
+  }
+  65% {
+    transform: scale(1.015, 0.93);
+  }
+  78% {
+    transform: scale(0.995, 1.04);
+  }
+  90% {
+    transform: scale(1.004, 0.985);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-pill {
+    transition: none;
+  }
+
+  .site-header.anim-ready .nav-pill {
+    animation: none !important;
+  }
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nav-logo img {
+  height: 36px;
+  width: auto;
+  display: block;
+}
+
+/* center links — absolutely centered between logo and CTA, like the landing */
+.nav-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.18s ease 0.3s;
+}
+
+.nav-center a {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(10, 5, 26, 0.72);
+  padding: 6px 14px;
+  border-radius: 999px;
+  transition: color 0.3s ease, background 0.3s ease;
+  white-space: nowrap;
+}
+
+.nav-center a:hover {
+  color: var(--ink);
+}
+
+.nav-center a.nav-active {
+  color: var(--moi-main);
+  background: rgba(75, 23, 229, 0.08);
+}
+
+/* contents get out of the way before the sweep, and fade back in after it */
+.site-header.collapsed .nav-center,
+.site-header.collapsed .nav-cta {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.14s ease;
+}
+
+.nav-cta {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: #fff !important;
+  background: var(--moi-main);
+  border-radius: 999px;
+  padding: 9px 20px;
+  box-shadow: 0 4px 14px rgba(75, 23, 229, 0.28);
+  transition: background 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav-cta:hover {
+  background: var(--moi-dark);
+}
+
+.nav-cta {
+  transition: background 0.2s ease, opacity 0.18s ease 0.3s;
+}
+
+@media (max-width: 900px) {
+  .nav-center {
+    display: none;
+  }
+}
+
+/* ── footer ── */
+.site-footer {
+  border-top: 1px solid var(--line);
+  margin-top: 96px;
+  padding: 28px 0 64px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.site-footer .wrap {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 760px) {
+  body {
+    padding-top: 84px;
+  }
+
+  .wrap {
+    padding: 0 20px;
+  }
+}
