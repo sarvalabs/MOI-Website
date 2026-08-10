@@ -19,7 +19,6 @@ faq:
     a: "No. Actions execute wherever they already execute. What goes on chain is the authority itself, plus a tamper-evident record of what was done under it, so any party can verify the action was permitted when it happened."
   - q: "Does MOI replace my agent framework?"
     a: "No. MOI sits underneath the stack you already run. It does not replace your model provider or your orchestration layer. It makes what they do accountable."
-cover: "https://moi.technology/brand/og/blog-default.png"
 draft: false
 ---
 

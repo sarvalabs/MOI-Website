@@ -17,7 +17,7 @@ export async function GET(context) {
     '',
     ...posts.map(
       (p) =>
-        `- [${p.data.title}](${new URL(`/blog/posts/${p.id}/`, context.site).href}): ${p.data.summary}`
+        `- [${p.data.title}](${new URL(`/article/${p.id}/`, context.site).href}): ${p.data.summary}`
     ),
     '',
   ];

@@ -19,7 +19,6 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.params;
 const { posts, allTags } = Astro.props;
-const base = import.meta.env.BASE_URL;
 ---
 
 <Base title={`${tag} — MOI Blog`} description={`Posts tagged “${tag}” on the MOI blog.`} navTitle={`Tag: ${tag}`}>
@@ -28,10 +27,10 @@ const base = import.meta.env.BASE_URL;
       <span class="badge-pill">Filtered · {posts.length} {posts.length === 1 ? 'post' : 'posts'}</span>
       <h1>{tag}</h1>
       <nav class="tag-row center" aria-label="Filter by tag">
-        <a class="tag-pill" href={`${base}/`}>All</a>
+        <a class="tag-pill" href={`/`}>All</a>
         {
           allTags.map((t) => (
-            <a class:list={['tag-pill', { active: t === tag }]} href={`${base}/tags/${t}/`}>
+            <a class:list={['tag-pill', { active: t === tag }]} href={`/tags/${t}/`}>
               {t}
             </a>
           ))

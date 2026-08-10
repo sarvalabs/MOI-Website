@@ -10,7 +10,6 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
 const tagCounts = new Map();
 for (const p of posts) for (const t of p.data.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
 const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
-const base = import.meta.env.BASE_URL;
 ---
 
 <Base
@@ -26,8 +25,8 @@ const base = import.meta.env.BASE_URL;
         the team building MOI.
       </p>
       <nav class="tag-row center" aria-label="Filter by tag">
-        <a class="tag-pill active" href={`${base}/`}>All</a>
-        {tags.map(([t, n]) => <a class="tag-pill" href={`${base}/tags/${t}/`}>{t} · {n}</a>)}
+        <a class="tag-pill active" href={`/`}>All</a>
+        {tags.map(([t, n]) => <a class="tag-pill" href={`/tags/${t}/`}>{t} · {n}</a>)}
       </nav>
     </div>
   </section>
