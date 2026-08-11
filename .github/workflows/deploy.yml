@@ -8,10 +8,24 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
+      - name: Install Teleport CLI
+        uses: teleport-actions/setup@v1
+        with:
+          version: 16.2.1
+
+      - name: Authenticate via Machine ID
+        uses: teleport-actions/auth@v2
+        with:
+          proxy: ${{ secrets.TELEPORT_PROXY }}
+          token: ${{ secrets.TELEPORT_JOIN_TOKEN }}
+          certificate-ttl: 2h
+
       - name: Deploy to VM
-        uses: appleboy/ssh-action@v1.0.3
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -19,11 +33,14 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           VITE_CHATBOT_API: ${{ secrets.VITE_CHATBOT_API }}
           DATA_ROOM_CHAT_URL: ${{ secrets.DATA_ROOM_CHAT_URL }}
-        with:
-          host: ${{ secrets.VM_HOST }}
-          username: ${{ secrets.VM_USERNAME }}
-          key: ${{ secrets.VM_SSH_KEY }}
-          envs: ANTHROPIC_API_KEY,OPENAI_API_KEY,SUPABASE_URL,SUPABASE_KEY,VITE_CHATBOT_API,DATA_ROOM_CHAT_URL
-          script: |
+        run: |
+          tsh ssh ${{ secrets.VM_USERNAME }}@${{ secrets.TELEPORT_NODE }} "
             export BRANCH=${{ github.ref_name }}
+            export ANTHROPIC_API_KEY='${ANTHROPIC_API_KEY}'
+            export OPENAI_API_KEY='${OPENAI_API_KEY}'
+            export SUPABASE_URL='${SUPABASE_URL}'
+            export SUPABASE_KEY='${SUPABASE_KEY}'
+            export VITE_CHATBOT_API='${VITE_CHATBOT_API}'
+            export DATA_ROOM_CHAT_URL='${DATA_ROOM_CHAT_URL}'
             bash ~/scripts/deploy-moi-website.sh
+          "
