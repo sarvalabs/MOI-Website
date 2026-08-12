@@ -11,6 +11,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  id-token: write
 
 concurrency:
   group: moi-website-preview-pr-${{ github.event.pull_request.number }}
