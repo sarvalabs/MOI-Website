@@ -100,7 +100,7 @@ jobs:
       - name: Add preview URL to PR
         uses: actions/github-script@v7
         env:
-          PREVIEW_URL: http://pr-${{ github.event.pull_request.number }}.${{ env.PREVIEW_DOMAIN }}
+          PREVIEW_URL: https://pr-${{ github.event.pull_request.number }}.${{ env.PREVIEW_DOMAIN }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
