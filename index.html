@@ -12,6 +12,27 @@
   </head>
   <body>
     <div id="root"></div>
+    <!--
+      The app renders client-side, so without this block a reader (or crawler)
+      without JavaScript gets a blank page and no way to reach anything —
+      including the blog, which is a separate static site on its own host.
+    -->
+    <noscript>
+      <nav>
+        <a href="/why-moi">The Shift</a>
+        <a href="https://docs.moi.technology">Docs</a>
+        <a href="/manifesto">Manifesto</a>
+        <a href="/papers">Papers</a>
+        <a href="/blog">Blog</a>
+      </nav>
+      <h1>MOI — The participant layer for the internet</h1>
+      <p>
+        MOI gives every participant — human or agent — persistent, portable
+        existence in computation. On-chain authority for the agentic economy.
+      </p>
+      <p><a href="/blog">Read the MOI blog</a> for writing on Contextual
+        Compute, agent authority, protocol research, and product updates.</p>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

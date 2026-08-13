@@ -26,4 +26,10 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    // Build tooling and CLI scripts run in Node, not the browser — without
+    // this every use of `process` and friends reports as an undefined global.
+    files: ['scripts/**/*.js', 'lib/**/*.js', '*.config.js'],
+    languageOptions: { globals: globals.node },
+  },
 ])
