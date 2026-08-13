@@ -82,7 +82,7 @@ jobs:
           tsh ssh "${VM_USER}@${VM_HOST}" \
             "test -f '${PREVIEW_ROOT}/pr-${PR_NUMBER}/index.html'"
 
-          echo "Preview deployed successfully"
+          echo "Preview deployment successfully"
           echo "URL: http://pr-${PR_NUMBER}.${PREVIEW_DOMAIN}"
 
       - name: Cleanup stale previews
