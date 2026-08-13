@@ -31,6 +31,10 @@ const esc = (s) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 
+if (!fs.existsSync(POSTS_DIR)) {
+  console.error(`build-blog-index: no posts directory at ${POSTS_DIR}`);
+  process.exit(1);
+}
 
 // 200 wpm is the usual reading-speed convention; round up so a short post
 // reads "1 min" rather than "0 min".
@@ -58,10 +62,8 @@ const placeholderCover = (slug) => {
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 };
 
-// A missing directory means the same as an empty one: nothing published. Git
-// does not track empty directories, so a clone with no posts lands here — and
-// this runs inside `npm run build`, so bailing would fail the whole deploy.
-const posts = (fs.existsSync(POSTS_DIR) ? fs.readdirSync(POSTS_DIR) : [])
+const posts = fs
+  .readdirSync(POSTS_DIR)
   .filter((f) => f.endsWith('.md'))
   .map((file) => {
     const { data, content } = matter(
@@ -73,11 +75,9 @@ const posts = (fs.existsSync(POSTS_DIR) ? fs.readdirSync(POSTS_DIR) : [])
   .filter((p) => !p.draft)
   .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-// No posts is a legitimate state (nothing published yet), so render the empty
-// listing rather than failing — this runs inside `npm run build`, and exiting
-// non-zero here would take the whole production deploy down with it.
 if (posts.length === 0) {
-  console.warn('build-blog-index: no published posts — emitting an empty listing');
+  console.error('build-blog-index: no published posts found — refusing to emit an empty index');
+  process.exit(1);
 }
 
 // UTC, because a date-only frontmatter value parses as UTC midnight and would
@@ -107,9 +107,7 @@ const jsonLd = {
     'Writing from Sarva Labs on MOI: Contextual Compute, agent authority, protocol research, and product updates.',
   url: `${SITE_ORIGIN}/blog`,
   publisher: { '@type': 'Organization', name: 'Sarva Labs', url: SITE_ORIGIN },
-  // omitted entirely when nothing is published — an empty blogPost array is
-  // valid but tells crawlers nothing
-  ...(posts.length === 0 ? {} : { blogPost: posts.map((p) => ({
+  blogPost: posts.map((p) => ({
     '@type': 'BlogPosting',
     headline: p.title,
     description: p.summary,
@@ -118,7 +116,7 @@ const jsonLd = {
     ...(p.author?.name ? { author: { '@type': 'Organization', name: p.author.name } } : {}),
     keywords: (p.tags || []).join(', '),
     url: articleUrl(p.slug),
-  })) }),
+  })),
 };
 
 const cards = posts
@@ -174,8 +172,7 @@ ${JSON.stringify(jsonLd, null, 2)}
       * { box-sizing: border-box; }
       body {
         margin: 0;
-        /* top padding clears the fixed navbar (top: 16px + 50px tall) */
-        padding: 96px 24px 96px;
+        padding: 0 24px 96px;
         background: linear-gradient(180deg, #1a0b4d 0%, var(--moi-black) 60%);
         color: #fff;
         font-family: var(--font);
@@ -183,112 +180,21 @@ ${JSON.stringify(jsonLd, null, 2)}
         min-height: 100vh;
       }
       .wrap { max-width: 860px; margin: 0 auto; }
-
-      /* Navbar — hand-mirrored from src/components/Navbar.jsx. This page is
-         static HTML outside the React app, so the component cannot be reused;
-         keep the two in sync when either changes. */
-      .site-nav {
-        position: fixed;
-        top: 16px;
-        left: 0;
-        right: 0;
-        z-index: 50;
-        padding: 0 16px;
-      }
-      .nav-pill {
-        position: relative;
-        overflow: hidden;
-        transform-origin: left center;
-        height: 50px;
-        width: min(100%, 1200px);
-        margin-inline: auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 20px;
-        border-radius: 999px;
-        background: linear-gradient(180deg, rgba(60, 44, 130, 0.55) 0%, rgba(34, 22, 88, 0.55) 100%);
-        backdrop-filter: blur(28px) saturate(150%);
-        -webkit-backdrop-filter: blur(28px) saturate(150%);
-        border: 1px solid rgba(200, 191, 239, 0.28);
-        box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.18),
-          0 14px 36px rgba(10, 5, 38, 0.32);
-      }
-      .site-nav a { text-decoration: none; }
-      .nav-logo { display: flex; align-items: center; flex-shrink: 0; }
-      .nav-logo img { height: 36px; width: auto; display: block; }
-      .nav-center { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-      .nav-center a {
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.04em;
+      header.top { display: flex; align-items: center; justify-content: space-between; padding: 28px 0 0; }
+      header.top img { height: 34px; width: auto; display: block; }
+      nav a {
         color: rgba(255, 255, 255, 0.72);
-        padding: 6px 14px;
-        border-radius: 999px;
-        white-space: nowrap;
-        transition: color 0.3s ease, background 0.3s ease;
-      }
-      .nav-center a:hover { color: #fff; }
-      .nav-center a.active { color: #fff; background: rgba(255, 255, 255, 0.1); }
-      .nav-cta {
-        flex-shrink: 0;
-        font-size: 12px;
+        text-decoration: none;
+        font-size: 13px;
         font-weight: 600;
-        letter-spacing: -0.005em;
-        color: #fff;
-        background: var(--moi-main);
-        border-radius: 999px;
-        padding: 9px 20px;
-        white-space: nowrap;
-        box-shadow: 0 4px 14px rgba(75, 23, 229, 0.28);
-        transition: background 0.2s ease;
+        margin-left: 20px;
       }
-      .nav-cta:hover { background: #320f99; }
-
-      @media (min-width: 768px) {
-        .nav-pill {
-          transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-          will-change: width;
-        }
-        .nav-pill.collapsed { width: 76px; cursor: pointer; }
-        .nav-pill.anim-ready.collapsed { animation: jelly-land 0.9s ease both; }
-        .nav-pill.anim-ready:not(.collapsed) { animation: jelly-open 0.9s ease both; }
-        .nav-center, .nav-cta { transition: opacity 0.18s ease 0.3s; }
-        .nav-pill.collapsed .nav-center,
-        .nav-pill.collapsed .nav-cta {
-          opacity: 0;
-          pointer-events: none;
-          transition: opacity 0.14s ease;
-        }
-      }
-      @media (max-width: 767px) {
-        .nav-center { display: none; }
-      }
-
-      @keyframes jelly-land {
-        0%, 55% { transform: scale(1, 1); }
-        65% { transform: scale(1.1, 0.86); }
-        76% { transform: scale(0.95, 1.07); }
-        87% { transform: scale(1.03, 0.97); }
-        100% { transform: scale(1, 1); }
-      }
-      @keyframes jelly-open {
-        0%, 55% { transform: scale(1, 1); }
-        65% { transform: scale(1.015, 0.93); }
-        78% { transform: scale(0.995, 1.04); }
-        90% { transform: scale(1.004, 0.985); }
-        100% { transform: scale(1, 1); }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .nav-pill { transition: none; }
-        .nav-pill.anim-ready { animation: none !important; }
-      }
+      nav a:hover { color: #fff; }
       h1 {
         font-size: clamp(38px, 7vw, 62px);
         line-height: 1.05;
         letter-spacing: -0.02em;
-        margin: 40px 0 16px;
+        margin: 72px 0 16px;
         text-wrap: balance;
       }
       .lede { color: rgba(255, 255, 255, 0.7); font-size: 17px; line-height: 1.6; max-width: 60ch; margin: 0 0 8px; }
@@ -337,35 +243,22 @@ ${JSON.stringify(jsonLd, null, 2)}
       h2 a:hover { color: var(--moi-lavender); }
       .summary { color: rgba(255, 255, 255, 0.68); font-size: 15px; line-height: 1.65; margin: 0; max-width: 62ch; }
       .byline { color: var(--moi-lavender); font-size: 12px; font-weight: 600; margin: 14px 0 0; }
-      .empty {
-        border-top: 1px solid rgba(217, 204, 255, 0.16);
-        padding: 40px 0;
-        margin: 0;
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 15px;
-      }
       footer { border-top: 1px solid rgba(217, 204, 255, 0.16); margin-top: 56px; padding-top: 24px; color: rgba(255, 255, 255, 0.45); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
       footer a { color: var(--moi-lavender); }
     </style>
   </head>
   <body>
-    <nav class="site-nav">
-      <div class="nav-pill" id="nav-pill">
-        <a class="nav-logo" href="/" aria-label="MOI — home">
-          <img src="/brand/logos/SVG/default-light.svg" alt="MOI" />
-        </a>
-        <div class="nav-center">
+    <div class="wrap">
+      <header class="top">
+        <a href="/" aria-label="MOI — home"><img src="/brand/logos/SVG/default-light.svg" alt="MOI" /></a>
+        <nav>
           <a href="/why-moi">The Shift</a>
-          <a href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer">Docs</a>
           <a href="/manifesto">Manifesto</a>
           <a href="/papers">Papers</a>
-          <a class="active" href="/blog">Blog</a>
-        </div>
-        <a class="nav-cta" href="https://voyage.moi.technology" target="_blank" rel="noopener noreferrer">Explore the network</a>
-      </div>
-    </nav>
+          <a href="${BLOG_ORIGIN}">All posts</a>
+        </nav>
+      </header>
 
-    <div class="wrap">
       <h1>Writing on the personal internet</h1>
       <p class="lede">
         Contextual Compute, agent authority, protocol research, and product
@@ -377,7 +270,7 @@ ${JSON.stringify(jsonLd, null, 2)}
       </p>
 
       <main>
-${posts.length === 0 ? '        <p class="empty">No posts published yet — the first one is on its way.</p>' : cards}
+${cards}
       </main>
 
       <footer>
@@ -385,56 +278,6 @@ ${posts.length === 0 ? '        <p class="empty">No posts published yet — the 
         <span>Not your Context, Not your Agent.</span>
       </footer>
     </div>
-
-    <script>
-      // Mirrors the jelly collapse in src/components/Navbar.jsx: past ~360px
-      // the pill sweeps into the logo, clicking it re-opens, scrolling again
-      // re-collapses. anim-ready is armed on the first real transition only —
-      // arming it at load would play the open animation against the resting
-      // state and bounce the navbar on every page view.
-      (function () {
-        var pill = document.getElementById('nav-pill');
-        var COLLAPSE_AT = 360, EXPAND_AT = 280;
-        var collapsed = false, pinnedOpen = false, settled = false;
-        var lastY = window.scrollY;
-
-        function apply(next) {
-          if (collapsed === next) return;
-          collapsed = next;
-          if (settled) pill.classList.add('anim-ready');
-          pill.classList.toggle('collapsed', next);
-        }
-
-        function onScroll() {
-          var y = window.scrollY;
-          var dy = Math.abs(y - lastY);
-          lastY = y;
-          if (pinnedOpen) {
-            if (y < EXPAND_AT) pinnedOpen = false;
-            else if (dy > 8) { pinnedOpen = false; apply(true); }
-            return;
-          }
-          if (y > COLLAPSE_AT) apply(true);
-          else if (y < EXPAND_AT) apply(false);
-        }
-
-        onScroll();
-        settled = true;
-        window.addEventListener('scroll', onScroll, { passive: true });
-
-        pill.addEventListener(
-          'click',
-          function (ev) {
-            if (!collapsed) return;
-            ev.preventDefault();
-            ev.stopPropagation();
-            pinnedOpen = true;
-            apply(false);
-          },
-          true
-        );
-      })();
-    </script>
   </body>
 </html>
 `;

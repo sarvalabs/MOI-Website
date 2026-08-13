@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 export default function Navbar({ activePage = "home" }) {
@@ -6,26 +6,11 @@ export default function Navbar({ activePage = "home" }) {
   const [collapsed, setCollapsed] = useState(false);
   const [animReady, setAnimReady] = useState(false);
   const pinnedOpen = useRef(false);
-  const collapsedRef = useRef(false);
-  const settled = useRef(false);
   const location = useLocation();
 
   // Jelly collapse (ported from the blog demo): scrolling past the hero
   // sweeps the pill right-to-left into the logo; clicking the collapsed
   // pill re-expands it, scrolling again re-collapses. Desktop-only via CSS.
-  //
-  // `anim-ready` is what arms the animation, and the CSS applies
-  // `moi-jelly-open` to any pill carrying it while expanded. So it must go on
-  // at the first real transition, never at mount — arming it on mount played
-  // the open animation against the resting state and bounced the navbar on
-  // every page load.
-  const applyCollapsed = useCallback((next) => {
-    if (collapsedRef.current === next) return;
-    collapsedRef.current = next;
-    if (settled.current) setAnimReady(true);
-    setCollapsed(next);
-  }, []);
-
   useEffect(() => {
     const COLLAPSE_AT = 360;
     const EXPAND_AT = 280;
@@ -38,27 +23,35 @@ export default function Navbar({ activePage = "home" }) {
         if (y < EXPAND_AT) pinnedOpen.current = false;
         else if (dy > 8) {
           pinnedOpen.current = false;
-          applyCollapsed(true);
+          setCollapsed(true);
         }
         return;
       }
-      if (y > COLLAPSE_AT) applyCollapsed(true);
-      else if (y < EXPAND_AT) applyCollapsed(false);
+      if (y > COLLAPSE_AT) setCollapsed(true);
+      else if (y < EXPAND_AT) setCollapsed(false);
     };
-    // Match the current scroll position without animating: reloading partway
-    // down the page should start collapsed, not replay the collapse.
     onScroll();
-    settled.current = true;
+    // enable animations only after the initial state has painted, so a
+    // mid-page load doesn't play a phantom jelly
+    let cancelled = false;
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        if (!cancelled) setAnimReady(true);
+      })
+    );
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [applyCollapsed]);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   const handlePillClickCapture = (e) => {
     if (!collapsed) return;
     e.preventDefault();
     e.stopPropagation();
     pinnedOpen.current = true;
-    applyCollapsed(false);
+    setCollapsed(false);
   };
 
   // When the logo is clicked while already on "/", scroll to top
@@ -80,7 +73,7 @@ export default function Navbar({ activePage = "home" }) {
   return (
     <nav className="fixed top-4 left-0 right-0 z-50 px-4 md:px-6">
       <div
-        className={`moi-nav-pill flex items-center justify-between rounded-full px-5${
+        className={`moi-nav-pill flex items-center justify-between rounded-full px-5 h-[56px]${
           collapsed ? " collapsed" : ""
         }${animReady ? " anim-ready" : ""}`}
         onClickCapture={handlePillClickCapture}
