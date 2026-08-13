@@ -402,6 +402,10 @@ nav.fixed a.nav-cta:hover { color: #FFFFFF; }
   position: relative;
   overflow: hidden;
   transform-origin: left center;
+  /* Height lives here, not as a Tailwind h-[…] utility: the className is a
+     template literal, and a utility written immediately before `${` is not
+     extracted by the scanner, so the rule silently never gets generated. */
+  height: 50px;
   width: min(100%, 1200px);
   margin-inline: max(0px, calc((100% - 1200px) / 2));
 }
