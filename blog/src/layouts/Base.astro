@@ -17,6 +17,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <!-- The blog declared no icon at all, so browsers fell back to a generic
+         globe. default-light is the purple-planet mark and the only file under
+         brand/logos/SVG whose stylesheet is intact; the rest render black. -->
+    <link rel="icon" type="image/svg+xml" href="/brand/logos/SVG/default-light.svg" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={ogType} />
