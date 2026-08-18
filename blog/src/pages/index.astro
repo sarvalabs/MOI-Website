@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import Base from '../layouts/Base.astro';
+import Base, { NAV_TOPICS } from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
@@ -9,7 +9,6 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
 
 const tagCounts = new Map();
 for (const p of posts) for (const t of p.data.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
-const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
 ---
 
 <Base
@@ -18,15 +17,19 @@ const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
 >
   <section class="hero haze" data-hero>
     <div class="wrap hero-inner">
-      <span class="badge-pill">Sarva Labs · Journal</span>
-      <h1>Writing on the<br />personal internet</h1>
+      <h1>MOI Network Blog</h1>
       <p class="lede">
-        Contextual Compute, agent authority, protocol research, and product updates — from
-        the team building MOI.
+        Learn about agents bound by your authority, native assets, and the protocol underneath.
       </p>
+      <a class="home-btn" href="https://moi.technology/">moi.technology →</a>
       <nav class="tag-row center" aria-label="Filter by tag">
         <a class="tag-pill active" href={`/`}>All</a>
-        {tags.map(([t, n]) => <a class="tag-pill" href={`/tags/${t}/`}>{t} · {n}</a>)}
+        {NAV_TOPICS.map((t) => (
+          <a class="tag-pill" href={`/tags/${t.slug}/`}>
+            {t.label}
+            {tagCounts.has(t.slug) ? ` · ${tagCounts.get(t.slug)}` : ''}
+          </a>
+        ))}
       </nav>
     </div>
   </section>
@@ -63,6 +66,24 @@ const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
     max-width: 52ch;
     margin: 0;
     font-size: 16px;
+  }
+
+  .home-btn {
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--moi-main);
+    border-radius: 999px;
+    padding: 11px 20px;
+    box-shadow: 0 4px 14px rgba(75, 23, 229, 0.28);
+    transition: background 200ms ease;
+  }
+
+  .home-btn:hover {
+    background: var(--moi-dark);
+    color: #fff;
   }
 
   .tag-row.center {

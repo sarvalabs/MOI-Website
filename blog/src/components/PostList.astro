@@ -1,5 +1,9 @@
 ---
+import { NAV_TOPICS } from '../layouts/Base.astro';
+
 const { posts } = Astro.props;
+const topicBySlug = new Map(NAV_TOPICS.map((t) => [t.slug, t.label]));
+const visibleTags = (tags = []) => tags.filter((t) => topicBySlug.has(t));
 const fmt = (d) =>
   d.toLocaleDateString('en-US', {
     year: 'numeric',
@@ -15,9 +19,9 @@ const fmt = (d) =>
       <article class="post-card card-surface">
         <div class="meta">
           <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
-          {post.data.tags.map((t) => (
+          {visibleTags(post.data.tags).map((t) => (
             <a class="mini-tag" href={`/tags/${t}/`}>
-              {t}
+              {topicBySlug.get(t)}
             </a>
           ))}
         </div>

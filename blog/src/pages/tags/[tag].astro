@@ -20,20 +20,20 @@ export async function getStaticPaths() {
 }
 
 const { tag } = Astro.params;
-const { posts, allTags } = Astro.props;
+const { posts } = Astro.props;
+const topic = NAV_TOPICS.find((t) => t.slug === tag);
 ---
 
-<Base title={`${tag} — MOI Blog`} description={`Posts tagged “${tag}” on the MOI blog.`} navTitle={`Tag: ${tag}`}>
+<Base title={`${topic?.label ?? tag} — MOI Blog`} description={`Posts tagged “${topic?.label ?? tag}” on the MOI blog.`} navTitle={`Tag: ${topic?.label ?? tag}`}>
   <section class="hero haze" data-hero>
     <div class="wrap hero-inner">
-      <span class="badge-pill">Filtered · {posts.length} {posts.length === 1 ? 'post' : 'posts'}</span>
-      <h1>{tag}</h1>
+      <h1>{topic?.label ?? tag}</h1>
       <nav class="tag-row center" aria-label="Filter by tag">
         <a class="tag-pill" href={`/`}>All</a>
         {
-          allTags.map((t) => (
-            <a class:list={['tag-pill', { active: t === tag }]} href={`/tags/${t}/`}>
-              {t}
+          NAV_TOPICS.map((t) => (
+            <a class:list={['tag-pill', { active: t.slug === tag }]} href={`/tags/${t.slug}/`}>
+              {t.label}
             </a>
           ))
         }

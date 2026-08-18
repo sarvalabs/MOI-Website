@@ -12,9 +12,9 @@ const { title, description, ogType = 'website', navTitle = 'Blog' } = Astro.prop
 // Each is a tag slug with a display label; the tag pages are guaranteed to
 // exist by tags/[tag].astro, which unions these into its static paths.
 export const NAV_TOPICS = [
-  { slug: 'safe-agents', label: 'Safe agents' },
-  { slug: 'native-assets', label: 'Native assets' },
+  { slug: 'agents', label: 'Agents' },
   { slug: 'protocol', label: 'Protocol' },
+  { slug: 'native-assets', label: 'Native assets' },
 ];
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -56,6 +56,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
             <nav class="nav-topics" aria-label="Topics">
               {NAV_TOPICS.map((t) => <a href={`/tags/${t.slug}/`}>{t.label}</a>)}
             </nav>
+            <a class="nav-home" href="https://moi.technology/">moi.technology</a>
           </div>
         </div>
       </div>
