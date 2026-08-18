@@ -240,7 +240,7 @@ a:focus-visible {
   color: rgba(10, 5, 26, 0.68);
   padding: 6px 12px;
   border-radius: 999px;
-  text-transform: capitalize;
+  /* labels are set in NAV_TOPICS; no transform, so "Safe agents" stays sentence-case */
   white-space: nowrap;
   transition: color 0.3s ease, background 0.3s ease;
 }

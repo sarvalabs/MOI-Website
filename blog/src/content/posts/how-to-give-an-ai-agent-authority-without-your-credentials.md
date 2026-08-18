@@ -5,7 +5,7 @@ date: 2026-08-19
 author:
   name: "Sarva Labs"
   url: "https://sarvalabs.com"
-tags: ["authority", "agents", "security"]
+tags: ["authority", "agents", "security", "safe-agents"]
 takeaways:
   - "An API key handed to an agent is not delegated authority. It is a bearer credential, and anyone who reads it holds exactly what the agent holds."
   - "The reason is structural, not procedural: information can be copied, value cannot, and authority is value. A token containing your authority is information *about* your authority."

@@ -5,7 +5,7 @@ date: 2026-08-18
 author:
   name: "Sarva Labs"
   url: "https://sarvalabs.com"
-tags: ["protocol", "authority", "agents"]
+tags: ["protocol", "authority", "agents", "native-assets"]
 takeaways:
   - "MOI Network is the Participant Layer that provides on-chain authority. It is infrastructure where participants exist natively in computation, and where state, authority and context are anchored to the participant rather than to the application."
   - "MOI is currently live on DevNet. MOI Agent Launchpad, the reference application described here, runs on it."

@@ -4,20 +4,17 @@ import '@fontsource/poppins/500.css';
 import '@fontsource/poppins/600.css';
 import '@fontsource/poppins/700.css';
 import '../styles/global.css';
-import { getCollection } from 'astro:content';
 
 const { title, description, ogType = 'website', navTitle = 'Blog' } = Astro.props;
 
-// The masthead's topics are derived from what is actually published, so the nav
-// can never advertise a tag with nothing behind it. Top three by post count.
-const navCounts = new Map();
-for (const p of await getCollection('posts', ({ data }) => !data.draft)) {
-  for (const t of p.data.tags) navCounts.set(t, (navCounts.get(t) ?? 0) + 1);
-}
-const navTopics = [...navCounts.entries()]
-  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-  .slice(0, 3)
-  .map(([t]) => t);
+// The masthead's topics are a fixed editorial set — the blog's three beats.
+// Each is a tag slug with a display label; the tag pages are guaranteed to
+// exist by tags/[tag].astro, which unions these into its static paths.
+export const NAV_TOPICS = [
+  { slug: 'safe-agents', label: 'Safe agents' },
+  { slug: 'native-assets', label: 'Native assets' },
+  { slug: 'protocol', label: 'Protocol' },
+];
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -55,7 +52,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
           </a>
           <div class="nav-right">
             <nav class="nav-topics" aria-label="Topics">
-              {navTopics.map((t) => <a href={`/tags/${t}/`}>{t}</a>)}
+              {NAV_TOPICS.map((t) => <a href={`/tags/${t.slug}/`}>{t.label}</a>)}
             </nav>
             <span class="nav-rule" aria-hidden="true"></span>
             <a class="nav-rss" href="/rss.xml" aria-label="RSS feed" title="RSS">
