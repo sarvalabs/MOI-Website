@@ -402,6 +402,20 @@ nav.fixed a.nav-cta:hover { color: #FFFFFF; }
   position: relative;
   overflow: hidden;
   transform-origin: left center;
+  /* Moved out of the JSX inline style so the collapsed state can drop it —
+     an inline style cannot be overridden by a class. */
+  background: linear-gradient(180deg, rgba(60, 44, 130, 0.55) 0%, rgba(34, 22, 88, 0.55) 100%);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border: 1px solid rgba(200, 191, 239, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 14px 36px rgba(10, 5, 38, 0.32);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  /* Height lives here, not as a Tailwind h-[…] utility: the className is a
+     template literal, and a utility written immediately before `${` is not
+     extracted by the scanner, so the rule silently never gets generated. */
+  height: 50px;
   width: min(100%, 1200px);
   margin-inline: max(0px, calc((100% - 1200px) / 2));
 }
@@ -413,17 +427,20 @@ nav.fixed a.nav-cta:hover { color: #FFFFFF; }
   }
 
   /* collapsed: the right edge sweeps left until only the MOI badge remains */
+  /* Collapsed is the bare mark: no plate, no border, no shadow. Width is the
+     logo's own rendered width (26:20 viewBox at 36px tall ≈ 47px) and the
+     horizontal padding goes, so it sits centred rather than pinned left by
+     justify-content: space-between. */
   .moi-nav-pill.collapsed {
-    width: 76px;
+    width: 48px;
+    padding: 0;
+    justify-content: center;
     cursor: pointer;
-  }
-
-  .moi-nav-pill.anim-ready.collapsed {
-    animation: moi-jelly-land 0.9s ease both;
-  }
-
-  .moi-nav-pill.anim-ready:not(.collapsed) {
-    animation: moi-jelly-open 0.9s ease both;
+    background: none;
+    border-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   /* contents get out of the way before the sweep, and fade back in after it */
@@ -431,8 +448,14 @@ nav.fixed a.nav-cta:hover { color: #FFFFFF; }
   .moi-nav-cta-wrap {
     transition: opacity 0.18s ease 0.3s;
   }
+  /* Taken out of the flex flow, not merely faded: opacity alone still
+     occupies layout, so in a 48px pill the row overflowed and centring
+     pushed the logo outside the box, where overflow: hidden clipped it.
+     Absolute positioning keeps the fade while freeing the space. */
   .moi-nav-pill.collapsed .moi-nav-center,
   .moi-nav-pill.collapsed .moi-nav-cta-wrap {
+    position: absolute;
+    left: 50%;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.14s ease;
@@ -440,23 +463,8 @@ nav.fixed a.nav-cta:hover { color: #FFFFFF; }
 }
 
 /* squash & stretch as the width transition lands, anchored at the logo */
-@keyframes moi-jelly-land {
-  0%, 55% { transform: scale(1, 1); }
-  65% { transform: scale(1.1, 0.86); }
-  76% { transform: scale(0.95, 1.07); }
-  87% { transform: scale(1.03, 0.97); }
-  100% { transform: scale(1, 1); }
-}
 
-@keyframes moi-jelly-open {
-  0%, 55% { transform: scale(1, 1); }
-  65% { transform: scale(1.015, 0.93); }
-  78% { transform: scale(0.995, 1.04); }
-  90% { transform: scale(1.004, 0.985); }
-  100% { transform: scale(1, 1); }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .moi-nav-pill { transition: none; }
-  .moi-nav-pill.anim-ready { animation: none !important; }
 }
