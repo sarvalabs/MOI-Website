@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import Base from '../layouts/Base.astro';
+import Base, { NAV_TOPICS } from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
@@ -9,7 +9,6 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
 
 const tagCounts = new Map();
 for (const p of posts) for (const t of p.data.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
-const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
 ---
 
 <Base
@@ -18,14 +17,15 @@ const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
 >
   <section class="hero haze" data-hero>
     <div class="wrap hero-inner">
-      <span class="badge-pill">Journal</span>
-      <h1>Authority, on the<br />page.</h1>
-      <p class="lede">
-        How agents get to act. Native assets. The protocol underneath.
-      </p>
+      <h1>MOI network blog</h1>
       <nav class="tag-row center" aria-label="Filter by tag">
         <a class="tag-pill active" href={`/`}>All</a>
-        {tags.map(([t, n]) => <a class="tag-pill" href={`/tags/${t}/`}>{t} · {n}</a>)}
+        {NAV_TOPICS.map((t) => (
+          <a class="tag-pill" href={`/tags/${t.slug}/`}>
+            {t.label}
+            {tagCounts.has(t.slug) ? ` · ${tagCounts.get(t.slug)}` : ''}
+          </a>
+        ))}
       </nav>
     </div>
   </section>
@@ -55,13 +55,6 @@ const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
     line-height: 1.08;
     letter-spacing: -0.02em;
     margin: 0;
-  }
-
-  .lede {
-    color: var(--muted);
-    max-width: 52ch;
-    margin: 0;
-    font-size: 16px;
   }
 
   .tag-row.center {

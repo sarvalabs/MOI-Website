@@ -23,6 +23,11 @@ const POSTS_DIR = path.join(root, 'blog/src/content/posts');
 const OUT_DIR = path.join(root, 'public/blog');
 const BLOG_ORIGIN = 'https://blog.moi.technology';
 const SITE_ORIGIN = 'https://moi.technology';
+const TOPIC_TAGS = [
+  ['agents', 'Agents'],
+  ['protocol', 'Protocol'],
+  ['native-assets', 'Native assets'],
+];
 
 const esc = (s) =>
   String(s)
@@ -108,7 +113,11 @@ const cards = posts
 `
       : '';
     const tags = (p.tags || [])
-      .map((t) => `<span class="tag">${esc(t)}</span>`)
+      .filter((t) => TOPIC_TAGS.some(([slug]) => slug === t))
+      .map((t) => {
+        const label = TOPIC_TAGS.find(([slug]) => slug === t)?.[1] ?? t;
+        return `<span class="tag">${esc(label)}</span>`;
+      })
       .join('');
     return `        <article>
         <a class="card" href="${articleUrl(p.slug)}">
@@ -291,30 +300,15 @@ ${JSON.stringify(jsonLd, null, 2)}
       @media (max-width: 767px) {
         .nav-center { display: none; }
       }
-      .chip {
-        display: inline-flex;
-        align-items: center;
-        padding: 6px 16px;
-        border-radius: 999px;
-        border: 1px solid rgba(75, 23, 229, 0.15);
-        background: rgba(75, 23, 229, 0.08);
-        font-size: 10px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--moi-main);
-        font-weight: 600;
-        margin: 56px 0 20px;
-      }
       h1 {
         font-size: clamp(32px, 5.5vw, 48px);
         font-weight: 700;
         line-height: 1.1;
         letter-spacing: -0.02em;
-        margin: 0 0 12px;
+        margin: 56px 0 40px;
         text-wrap: balance;
         color: var(--ink);
       }
-      .lede { color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 52ch; margin: 0 0 40px; }
       main { display: flex; flex-direction: column; gap: 16px; }
       .card {
         display: block;
@@ -430,11 +424,7 @@ ${JSON.stringify(jsonLd, null, 2)}
     </nav>
 
     <div class="wrap">
-      <span class="chip">Journal</span>
-      <h1>Authority, on the page.</h1>
-      <p class="lede">
-        How agents get to act. Native assets. The protocol underneath.
-      </p>
+      <h1>MOI network blog</h1>
 
       <main>
 ${posts.length === 0 ? '        <p class="empty">No posts published yet — the first one is on its way.</p>' : cards}
