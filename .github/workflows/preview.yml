@@ -44,16 +44,26 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm ci --prefix blog
 
       - name: Build frontend
         run: npm run build
 
+      - name: Build blog
+        run: npm run build --prefix blog
+
       - name: Verify build
         run: |
           test -f dist/index.html
-          echo "Build completed successfully"
+          test -f blog/dist/index.html
+
+          echo "Main website build completed successfully"
           du -sh dist
+
+          echo "Blog build completed successfully"
+          du -sh blog/dist
 
       - name: Install Teleport CLI
         uses: teleport-actions/setup@v1
@@ -70,20 +80,26 @@ jobs:
       - name: Deploy preview
         run: |
           tsh ssh "${VM_USER}@${VM_HOST}" \
-            "mkdir -p '${PREVIEW_ROOT}/pr-${PR_NUMBER}' && \
+            "mkdir -p '${PREVIEW_ROOT}/pr-${PR_NUMBER}/blog' && \
              rm -rf '${PREVIEW_ROOT}/pr-${PR_NUMBER}'/*"
 
           tar -C dist -cf - . | \
             tsh ssh "${VM_USER}@${VM_HOST}" \
             "tar -C '${PREVIEW_ROOT}/pr-${PR_NUMBER}' -xf -"
 
+          tar -C blog/dist -cf - . | \
+            tsh ssh "${VM_USER}@${VM_HOST}" \
+            "tar -C '${PREVIEW_ROOT}/pr-${PR_NUMBER}/blog' -xf -"
+
       - name: Verify deployment
         run: |
           tsh ssh "${VM_USER}@${VM_HOST}" \
-            "test -f '${PREVIEW_ROOT}/pr-${PR_NUMBER}/index.html'"
+            "test -f '${PREVIEW_ROOT}/pr-${PR_NUMBER}/index.html' && \
+             test -f '${PREVIEW_ROOT}/pr-${PR_NUMBER}/blog/index.html'"
 
           echo "Preview deployment successfully"
-          echo "URL: http://pr-${PR_NUMBER}.${PREVIEW_DOMAIN}"
+          echo "Main URL: https://pr-${PR_NUMBER}.${PREVIEW_DOMAIN}"
+          echo "Blog URL: https://pr-${PR_NUMBER}.${PREVIEW_DOMAIN}/blog"
 
       - name: Cleanup stale previews
         run: |
@@ -97,19 +113,24 @@ jobs:
                  -exec rm -rf {} +
              fi"
 
-      - name: Add preview URL to PR
+      - name: Add preview URLs to PR
         uses: actions/github-script@v7
         env:
           PREVIEW_URL: https://pr-${{ github.event.pull_request.number }}.${{ env.PREVIEW_DOMAIN }}
+          BLOG_PREVIEW_URL: https://pr-${{ github.event.pull_request.number }}.${{ env.PREVIEW_DOMAIN }}/blog
+
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
           script: |
             const marker = '<!-- moi-website-pr-preview -->';
 
             const body = `${marker}
             ### MOI Website Preview
 
-            Preview URL: ${process.env.PREVIEW_URL}
+            **Main Website:** ${process.env.PREVIEW_URL}
+
+            **Blog:** ${process.env.BLOG_PREVIEW_URL}
             `;
 
             const { data: comments } =
