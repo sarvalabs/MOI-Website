@@ -4,6 +4,7 @@ import '@fontsource/poppins/500.css';
 import '@fontsource/poppins/600.css';
 import '@fontsource/poppins/700.css';
 import '../styles/global.css';
+import Analytics from '../components/Analytics.astro';
 
 const { title, description, ogType = 'website', navTitle = 'Blog' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -31,6 +32,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       title="MOI Blog"
       href={`/rss.xml`}
     />
+    {
+      import.meta.env.PUBLIC_GSC_VERIFICATION && (
+        <meta name="google-site-verification" content={import.meta.env.PUBLIC_GSC_VERIFICATION} />
+      )
+    }
+    <Analytics />
     <slot name="head" />
   </head>
   <body>

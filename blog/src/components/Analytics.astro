@@ -1,0 +1,32 @@
+---
+// Google Analytics 4.
+//
+// Loads only when PUBLIC_GA_ID is set AND the page is being served from a
+// production host. The hostname allowlist is the important half: PR previews
+// build from the same CI as production, so gating on the env var alone would
+// file preview traffic as real traffic.
+const gaId = import.meta.env.PUBLIC_GA_ID;
+const hosts = ['moi.technology', 'www.moi.technology', 'blog.moi.technology'];
+---
+
+{
+  gaId && (
+    <script is:inline define:vars={{ gaId, hosts }}>
+      if (hosts.indexOf(location.hostname) !== -1) {
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+        document.head.appendChild(s);
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () {
+          window.dataLayer.push(arguments);
+        };
+        window.gtag('js', new Date());
+        // cookie_domain lets one property stitch a session that starts on
+        // moi.technology and continues on blog.moi.technology.
+        window.gtag('config', gaId, { cookie_domain: '.moi.technology' });
+      }
+    </script>
+  )
+}
