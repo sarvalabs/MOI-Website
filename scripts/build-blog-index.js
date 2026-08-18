@@ -151,6 +151,21 @@ const html = `<!doctype html>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script>
+      (function () {
+        var id = 'G-NRC43H4SZF';
+        var hosts = ['moi.technology', 'www.moi.technology', 'blog.moi.technology'];
+        if (hosts.indexOf(location.hostname) === -1) return;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', id, { cookie_domain: '.moi.technology' });
+      })();
+    </script>
     <script type="application/ld+json">
 ${JSON.stringify(jsonLd, null, 2)}
     </script>
