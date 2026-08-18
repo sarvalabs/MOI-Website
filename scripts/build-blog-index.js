@@ -31,10 +31,6 @@ const esc = (s) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 
-if (!fs.existsSync(POSTS_DIR)) {
-  console.error(`build-blog-index: no posts directory at ${POSTS_DIR}`);
-  process.exit(1);
-}
 
 // 200 wpm is the usual reading-speed convention; round up so a short post
 // reads "1 min" rather than "0 min".
@@ -62,8 +58,9 @@ const placeholderCover = (slug) => {
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 };
 
-const posts = fs
-  .readdirSync(POSTS_DIR)
+// A missing directory means the same as an empty one: nothing published. Git
+// does not track empty directories, so a clone with no posts lands here.
+const posts = (fs.existsSync(POSTS_DIR) ? fs.readdirSync(POSTS_DIR) : [])
   .filter((f) => f.endsWith('.md'))
   .map((file) => {
     const { data, content } = matter(
@@ -75,9 +72,11 @@ const posts = fs
   .filter((p) => !p.draft)
   .sort((a, b) => new Date(b.date) - new Date(a.date));
 
+// Nothing published is a legitimate state, not a failure. This script runs
+// inside `npm run build`, so exiting non-zero here would fail the entire
+// production deploy — the marketing site included — over an empty blog.
 if (posts.length === 0) {
-  console.error('build-blog-index: no published posts found — refusing to emit an empty index');
-  process.exit(1);
+  console.warn('build-blog-index: no published posts — emitting an empty listing');
 }
 
 // UTC, because a date-only frontmatter value parses as UTC midnight and would
@@ -107,7 +106,9 @@ const jsonLd = {
     'Writing from Sarva Labs on MOI: Contextual Compute, agent authority, protocol research, and product updates.',
   url: `${SITE_ORIGIN}/blog`,
   publisher: { '@type': 'Organization', name: 'Sarva Labs', url: SITE_ORIGIN },
-  blogPost: posts.map((p) => ({
+  // omitted when nothing is published — an empty array is valid but tells
+  // crawlers nothing
+  ...(posts.length === 0 ? {} : { blogPost: posts.map((p) => ({
     '@type': 'BlogPosting',
     headline: p.title,
     description: p.summary,
@@ -116,7 +117,7 @@ const jsonLd = {
     ...(p.author?.name ? { author: { '@type': 'Organization', name: p.author.name } } : {}),
     keywords: (p.tags || []).join(', '),
     url: articleUrl(p.slug),
-  })),
+  })) }),
 };
 
 const cards = posts
@@ -243,6 +244,13 @@ ${JSON.stringify(jsonLd, null, 2)}
       h2 a:hover { color: var(--moi-lavender); }
       .summary { color: rgba(255, 255, 255, 0.68); font-size: 15px; line-height: 1.65; margin: 0; max-width: 62ch; }
       .byline { color: var(--moi-lavender); font-size: 12px; font-weight: 600; margin: 14px 0 0; }
+      .empty {
+        border-top: 1px solid rgba(217, 204, 255, 0.16);
+        padding: 40px 0;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 15px;
+      }
       footer { border-top: 1px solid rgba(217, 204, 255, 0.16); margin-top: 56px; padding-top: 24px; color: rgba(255, 255, 255, 0.45); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
       footer a { color: var(--moi-lavender); }
     </style>
@@ -270,7 +278,7 @@ ${JSON.stringify(jsonLd, null, 2)}
       </p>
 
       <main>
-${cards}
+${posts.length === 0 ? '        <p class="empty">No posts published yet — the first one is on its way.</p>' : cards}
       </main>
 
       <footer>
