@@ -116,7 +116,6 @@ Roughly 1200×780 (3:2) or wider. The path is root-relative to the blog host;
 the generator rewrites it to an absolute URL so it also resolves on the apex
 listing. Absolute URLs are passed through untouched.
 
-Without a `cover`, the listing generates a branded gradient tile from the
-post's slug — stable across builds, distinct per post. No post sets one today,
-so every card is currently a gradient.
+Without a `cover`, the listing is text only — title, summary, date, and tags,
+with no placeholder tile. Set `cover` when a post has a real thumbnail.
 

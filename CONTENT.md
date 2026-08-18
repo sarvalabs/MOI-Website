@@ -188,7 +188,7 @@ in frontmatter, root-relative, around 1200×780 or wider:
 cover: "/covers/my-post.png"
 ```
 
-Skip `cover` and the listing generates a branded gradient tile from the slug.
+Skip `cover` and the listing is text only — title, summary, date, tags. No placeholder image.
 
 ## Metadata Files
 
