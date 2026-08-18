@@ -12,8 +12,19 @@
       name="description"
       content="You exist once, on chain. Monitor, scope, and revoke your AI agents in real time."
     />
+    <!-- Google Tag Manager. GA4 lives as a tag inside the container, so
+         tracking can change without a code change and a deploy. The hostname
+         guard is a trigger condition in GTM, not here — the noscript iframe
+         below cannot be gated in code. -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-M4BR46Z2');</script>
   </head>
   <body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M4BR46Z2"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="root"></div>
     <!--
       The app renders client-side, so without this block a reader (or crawler)

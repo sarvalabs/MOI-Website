@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { initAnalytics, trackPageView } from "./lib/analytics";
+import { trackPageView } from "./lib/analytics";
 import HomePage from "./pages/HomePage";
 import HowItWorksPage from "./pages/HowItWorksPageV5";
 import AdminCalendarPage from "./pages/AdminCalendarPage";
@@ -14,7 +14,6 @@ export default function App() {
   // whichever URL the reader entered on, and every navigation after it is
   // invisible.
   useEffect(() => {
-    initAnalytics();
     trackPageView(pathname);
   }, [pathname]);
 
