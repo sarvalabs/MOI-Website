@@ -37,27 +37,6 @@ const esc = (s) =>
 const readMinutes = (body) =>
   Math.max(1, Math.round(body.trim().split(/\s+/).filter(Boolean).length / 200));
 
-// Posts without a cover get a branded gradient tile rather than a broken or
-// borrowed image — hue is derived from the slug so each post is visually
-// distinct and stable across builds. Replace by setting `cover:` in the
-// post's frontmatter.
-const placeholderCover = (slug) => {
-  let n = 0;
-  for (const ch of slug) n = (n * 31 + ch.charCodeAt(0)) % 1000;
-  // Constrained to indigo→violet around MOI Main (#4B17E5, hue ~258) so tiles
-  // vary between posts without drifting off-brand.
-  const h = 240 + (n % 42);
-  const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260">` +
-    `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
-    `<stop offset="0" stop-color="hsl(${h} 78% 52%)"/>` +
-    `<stop offset="1" stop-color="hsl(${h + 14} 72% 22%)"/>` +
-    `</linearGradient></defs>` +
-    `<rect width="400" height="260" fill="url(#g)"/>` +
-    `</svg>`;
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
-};
-
 // A missing directory means the same as an empty one: nothing published. Git
 // does not track empty directories, so a clone with no posts lands here.
 const posts = (fs.existsSync(POSTS_DIR) ? fs.readdirSync(POSTS_DIR) : [])
@@ -120,13 +99,18 @@ const jsonLd = {
   })) }),
 };
 
+// Thumbnail only when the post set `cover`. No cover means no tile — the
+// card is the title, summary, date, and tags, and the title is the link.
 const cards = posts
-  .map(
-    (p) => `        <article class="card">
-          <a class="thumb" href="${articleUrl(p.slug)}" tabindex="-1" aria-hidden="true">
-            <img src="${esc(p.cover ? coverUrl(p.cover) : placeholderCover(p.slug))}" alt="" loading="lazy" />
+  .map((p) => {
+    const thumb = p.cover
+      ? `          <a class="thumb" href="${articleUrl(p.slug)}" tabindex="-1" aria-hidden="true">
+            <img src="${esc(coverUrl(p.cover))}" alt="" loading="lazy" />
           </a>
-          <div class="card-body">
+`
+      : '';
+    return `        <article class="card">
+${thumb}          <div class="card-body">
             <p class="meta">
               <time datetime="${new Date(p.date).toISOString()}">${esc(fmtDate(p.date))}</time>
               ${(p.tags || []).map((t) => `<span class="tag">${esc(t)}</span>`).join('\n              ')}
@@ -136,8 +120,8 @@ const cards = posts
             <p class="summary">${esc(p.summary)}</p>
             ${p.author?.name ? `<p class="byline">${esc(p.author.name)}</p>` : ''}
           </div>
-        </article>`
-  )
+        </article>`;
+  })
   .join('\n');
 
 const html = `<!doctype html>
@@ -290,6 +274,8 @@ ${JSON.stringify(jsonLd, null, 2)}
       .card {
         border-top: 1px solid rgba(217, 204, 255, 0.16);
         padding: 32px 0;
+      }
+      .card:has(.thumb) {
         display: grid;
         grid-template-columns: 210px 1fr;
         gap: 28px;
