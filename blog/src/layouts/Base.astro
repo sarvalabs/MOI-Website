@@ -81,20 +81,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
               pastHero = !entries[0].isIntersecting;
               if (!pastHero) pinnedOpen = false;
               if (!pinnedOpen) setCollapsed(pastHero);
-              // enable animations only after the first observer tick, so the
-              // initial paint doesn't play a phantom jelly
-              requestAnimationFrame(function () {
-                header.classList.add('anim-ready');
-              });
             },
             { rootMargin: '-96px 0px 0px 0px' }
           ).observe(hero);
         } else {
           pastHero = true;
           setCollapsed(true);
-          requestAnimationFrame(function () {
-            header.classList.add('anim-ready');
-          });
         }
 
         pill.addEventListener('click', function (ev) {
