@@ -441,7 +441,7 @@ ${JSON.stringify(jsonLd, null, 2)}
     </nav>
 
     <div class="wrap">
-      <h1>MOI network blog</h1>
+      <h1>MOI Network Blog</h1>
       <p class="lede">
         How agents get to act. Native assets. The protocol underneath.
       </p>
