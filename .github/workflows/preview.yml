@@ -19,6 +19,7 @@ concurrency:
 
 env:
   PREVIEW_ROOT: /var/www/moi-previews
+  BLOG_PREVIEW_ROOT: /var/www/blog-previews
   PREVIEW_DOMAIN: preview.moi.technology
 
 jobs:
@@ -44,16 +45,26 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm ci --prefix blog
 
       - name: Build frontend
         run: npm run build
 
+      - name: Build blog
+        run: npm run build --prefix blog
+
       - name: Verify build
         run: |
           test -f dist/index.html
-          echo "Build completed successfully"
+          test -f blog/dist/index.html
+
+          echo "Main website build completed successfully"
           du -sh dist
+
+          echo "Blog build completed successfully"
+          du -sh blog/dist
 
       - name: Install Teleport CLI
         uses: teleport-actions/setup@v1
@@ -67,7 +78,7 @@ jobs:
           token: ${{ secrets.TELEPORT_JOIN_TOKEN }}
           certificate-ttl: 2h
 
-      - name: Deploy preview
+      - name: Deploy main website preview
         run: |
           tsh ssh "${VM_USER}@${VM_HOST}" \
             "mkdir -p '${PREVIEW_ROOT}/pr-${PR_NUMBER}' && \
@@ -77,13 +88,25 @@ jobs:
             tsh ssh "${VM_USER}@${VM_HOST}" \
             "tar -C '${PREVIEW_ROOT}/pr-${PR_NUMBER}' -xf -"
 
+      - name: Deploy blog preview
+        run: |
+          tsh ssh "${VM_USER}@${VM_HOST}" \
+            "mkdir -p '${BLOG_PREVIEW_ROOT}/pr-${PR_NUMBER}' && \
+             rm -rf '${BLOG_PREVIEW_ROOT}/pr-${PR_NUMBER}'/*"
+
+          tar -C blog/dist -cf - . | \
+            tsh ssh "${VM_USER}@${VM_HOST}" \
+            "tar -C '${BLOG_PREVIEW_ROOT}/pr-${PR_NUMBER}' -xf -"
+
       - name: Verify deployment
         run: |
           tsh ssh "${VM_USER}@${VM_HOST}" \
-            "test -f '${PREVIEW_ROOT}/pr-${PR_NUMBER}/index.html'"
+            "test -f '${PREVIEW_ROOT}/pr-${PR_NUMBER}/index.html' && \
+             test -f '${BLOG_PREVIEW_ROOT}/pr-${PR_NUMBER}/index.html'"
 
-          echo "Preview deployment successfully"
-          echo "URL: http://pr-${PR_NUMBER}.${PREVIEW_DOMAIN}"
+          echo "Preview deployment successful"
+          echo "Main URL: https://pr-${PR_NUMBER}.${PREVIEW_DOMAIN}"
+          echo "Blog URL: https://pr-${PR_NUMBER}-blog.${PREVIEW_DOMAIN}"
 
       - name: Cleanup stale previews
         run: |
@@ -97,19 +120,34 @@ jobs:
                  -exec rm -rf {} +
              fi"
 
-      - name: Add preview URL to PR
+          tsh ssh "${VM_USER}@${VM_HOST}" \
+            "if [ -d '${BLOG_PREVIEW_ROOT}' ]; then
+               find '${BLOG_PREVIEW_ROOT}' \
+                 -mindepth 1 \
+                 -maxdepth 1 \
+                 -type d \
+                 -mtime +7 \
+                 -exec rm -rf {} +
+             fi"
+
+      - name: Add preview URLs to PR
         uses: actions/github-script@v7
         env:
           PREVIEW_URL: https://pr-${{ github.event.pull_request.number }}.${{ env.PREVIEW_DOMAIN }}
+          BLOG_PREVIEW_URL: https://pr-${{ github.event.pull_request.number }}-blog.${{ env.PREVIEW_DOMAIN }}
+
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
           script: |
             const marker = '<!-- moi-website-pr-preview -->';
 
             const body = `${marker}
             ### MOI Website Preview
 
-            Preview URL: ${process.env.PREVIEW_URL}
+            **Main Website:** ${process.env.PREVIEW_URL}
+
+            **Blog:** ${process.env.BLOG_PREVIEW_URL}
             `;
 
             const { data: comments } =
@@ -163,9 +201,9 @@ jobs:
           token: ${{ secrets.TELEPORT_JOIN_TOKEN }}
           certificate-ttl: 2h
 
-      - name: Remove preview
+      - name: Remove previews
         run: |
           tsh ssh "${VM_USER}@${VM_HOST}" \
-            "rm -rf '${PREVIEW_ROOT}/pr-${PR_NUMBER}'"
+            "rm -rf '${PREVIEW_ROOT}/pr-${PR_NUMBER}' '${BLOG_PREVIEW_ROOT}/pr-${PR_NUMBER}'"
 
-          echo "Preview for PR #${PR_NUMBER} removed"
+          echo "Main and blog previews for PR #${PR_NUMBER} removed"
