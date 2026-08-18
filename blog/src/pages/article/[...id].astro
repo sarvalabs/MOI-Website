@@ -312,9 +312,18 @@ const jsonLd = [
     text-transform: uppercase;
   }
 
+  /* Diagrams come out of the source documents at wildly different aspect
+     ratios. Width alone is not enough: a tall portrait diagram scaled to the
+     column width runs several screens long. Capping height as well lets the
+     browser fit whichever dimension binds first, and `width: auto` keeps a
+     narrow image from being stretched to fill the column. */
   .prose img {
+    display: block;
     max-width: 100%;
+    max-height: 78vh;
+    width: auto;
     height: auto;
+    margin: 32px auto;
     border-radius: 16px;
     border: 1px solid rgba(10, 5, 26, 0.06);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
