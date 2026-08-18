@@ -375,7 +375,6 @@ ${posts.length === 0 ? '        <p class="empty">No posts published yet — the 
 
       <footer>
         <span>© ${new Date().getFullYear()} Sarva Labs — MOI</span>
-        <span>Not your Context, Not your Agent.</span>
       </footer>
     </div>
 
