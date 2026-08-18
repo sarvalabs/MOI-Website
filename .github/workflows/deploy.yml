@@ -33,6 +33,10 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           VITE_CHATBOT_API: ${{ secrets.VITE_CHATBOT_API }}
           DATA_ROOM_CHAT_URL: ${{ secrets.DATA_ROOM_CHAT_URL }}
+          # Analytics. Same GA4 measurement ID for both builds; absent is fine
+          # — the snippet no-ops without it.
+          VITE_GA_ID: ${{ secrets.VITE_GA_ID }}
+          PUBLIC_GA_ID: ${{ secrets.PUBLIC_GA_ID }}
         run: |
           tsh ssh ${{ secrets.VM_USERNAME }}@${{ secrets.TELEPORT_NODE }} "
             export BRANCH=${{ github.ref_name }}
@@ -42,5 +46,7 @@ jobs:
             export SUPABASE_KEY='${SUPABASE_KEY}'
             export VITE_CHATBOT_API='${VITE_CHATBOT_API}'
             export DATA_ROOM_CHAT_URL='${DATA_ROOM_CHAT_URL}'
+            export VITE_GA_ID='${VITE_GA_ID}'
+            export PUBLIC_GA_ID='${PUBLIC_GA_ID}'
             bash ~/scripts/deploy-moi-website.sh
           "

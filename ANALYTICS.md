@@ -36,10 +36,14 @@ one session rather than two.
 2. Add a **Web** data stream for `https://moi.technology`. One stream covers the
    subdomain too — do not create a second stream for the blog.
 3. Copy the **Measurement ID** (`G-XXXXXXXXXX`).
-4. Set it in the deploy environment for both builds:
-   - `VITE_GA_ID` for the marketing site build
-   - `PUBLIC_GA_ID` for the blog build
-5. Deploy, open both hosts, and confirm traffic appears under **Reports →
+4. Add it as **two GitHub repository secrets**, `VITE_GA_ID` and
+   `PUBLIC_GA_ID`, both set to the same value (Settings → Secrets and
+   variables → Actions). `deploy.yml` already passes both through to the VM.
+5. **Devops step:** `~/scripts/deploy-moi-website.sh` lives on the VM, not in
+   this repo, so someone with VM access has to forward the two variables into
+   the build commands there. Until that happens the IDs reach the VM and stop.
+   Nothing breaks — the snippet simply no-ops — but no data is collected.
+6. Deploy, open both hosts, and confirm traffic appears under **Reports →
    Realtime**. Navigate between two pages on the marketing site and check that
    *both* show up — that is the SPA page-view path working.
 
