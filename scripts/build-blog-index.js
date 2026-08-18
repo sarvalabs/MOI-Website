@@ -366,7 +366,6 @@ ${JSON.stringify(jsonLd, null, 2)}
       </p>
       <p class="note">
         Full articles are published on <a href="${BLOG_ORIGIN}">blog.moi.technology</a>.
-        <a href="${BLOG_ORIGIN}/rss.xml">RSS</a>
       </p>
 
       <main>
