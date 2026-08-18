@@ -189,55 +189,95 @@ a:focus-visible {
   }
 }
 
-.nav-logo {
+/* ── masthead contents: a publication nav, not a copy of the site's ── */
+.nav-brand {
   display: flex;
   align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.nav-brand img {
+  height: 30px;
+  width: auto;
+  display: block;
   flex-shrink: 0;
 }
 
-.nav-logo img {
-  height: 36px;
-  width: auto;
-  display: block;
-}
-
-/* center links — absolutely centered between logo and CTA, like the landing */
-.nav-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.nav-wordmark {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  white-space: nowrap;
   transition: opacity 0.18s ease 0.3s;
 }
 
-.nav-center a {
+.nav-wordmark span {
+  font-weight: 400;
+  color: rgba(10, 5, 26, 0.55);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  transition: opacity 0.18s ease 0.3s;
+}
+
+.nav-topics {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.nav-topics a {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: rgba(10, 5, 26, 0.72);
-  padding: 6px 14px;
+  color: rgba(10, 5, 26, 0.68);
+  padding: 6px 12px;
   border-radius: 999px;
-  transition: color 0.3s ease, background 0.3s ease;
+  text-transform: capitalize;
   white-space: nowrap;
+  transition: color 0.3s ease, background 0.3s ease;
 }
 
-.nav-center a:hover {
-  color: var(--ink);
-}
-
-.nav-center a.nav-active {
+.nav-topics a:hover {
   color: var(--moi-main);
   background: rgba(75, 23, 229, 0.08);
 }
 
-/* contents get out of the way before the sweep, and fade back in after it */
-/* The CTA has to leave the flow, not merely fade: opacity alone still
-   occupies layout, and in a 48px pill that pushes the mark out of the box.
-   .nav-center is already absolutely positioned. */
-.site-header.collapsed .nav-center,
-.site-header.collapsed .nav-cta {
+.nav-rule {
+  width: 1px;
+  height: 18px;
+  background: rgba(10, 5, 26, 0.12);
+  margin: 0 8px;
+}
+
+.nav-rss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  color: rgba(10, 5, 26, 0.6);
+  transition: color 0.3s ease, background 0.3s ease;
+}
+
+.nav-rss:hover {
+  color: var(--moi-main);
+  background: rgba(75, 23, 229, 0.08);
+}
+
+/* Collapsed leaves the bare mark. The wordmark and the right-hand group leave
+   the flow rather than merely fading: opacity alone still occupies layout, and
+   in a 48px pill that pushes the mark out of the box. */
+.site-header.collapsed .nav-wordmark,
+.site-header.collapsed .nav-right {
   position: absolute;
   left: 50%;
   opacity: 0;
@@ -245,30 +285,11 @@ a:focus-visible {
   transition: opacity 0.14s ease;
 }
 
-.nav-cta {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  color: #fff !important;
-  background: var(--moi-main);
-  border-radius: 999px;
-  padding: 9px 20px;
-  box-shadow: 0 4px 14px rgba(75, 23, 229, 0.28);
-  transition: background 0.2s ease;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.nav-cta:hover {
-  background: var(--moi-dark);
-}
-
-.nav-cta {
-  transition: background 0.2s ease, opacity 0.18s ease 0.3s;
-}
-
-@media (max-width: 900px) {
-  .nav-center {
+/* Narrow screens keep the identity and the feed; topics live in the page's own
+   tag row, which is one scroll away. */
+@media (max-width: 760px) {
+  .nav-topics,
+  .nav-rule {
     display: none;
   }
 }

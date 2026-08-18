@@ -4,8 +4,20 @@ import '@fontsource/poppins/500.css';
 import '@fontsource/poppins/600.css';
 import '@fontsource/poppins/700.css';
 import '../styles/global.css';
+import { getCollection } from 'astro:content';
 
 const { title, description, ogType = 'website', navTitle = 'Blog' } = Astro.props;
+
+// The masthead's topics are derived from what is actually published, so the nav
+// can never advertise a tag with nothing behind it. Top three by post count.
+const navCounts = new Map();
+for (const p of await getCollection('posts', ({ data }) => !data.draft)) {
+  for (const t of p.data.tags) navCounts.set(t, (navCounts.get(t) ?? 0) + 1);
+}
+const navTopics = [...navCounts.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .slice(0, 3)
+  .map(([t]) => t);
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -37,17 +49,23 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <header class="site-header" id="site-header">
       <div class="nav-shell">
         <div class="nav-pill" id="nav-pill" aria-expanded="true">
-          <a class="nav-logo" href="https://moi.technology/" aria-label="MOI — home">
-            <img src={`/brand/logos/SVG/default-light.svg`} alt="MOI" />
+          <a class="nav-brand" href="https://moi.technology/" aria-label="MOI — moi.technology">
+            <img src="/brand/logos/SVG/default-light.svg" alt="MOI" />
+            <span class="nav-wordmark">MOI <span>Blog</span></span>
           </a>
-          <nav class="nav-center">
-            <a href="https://moi.technology/why-moi">The Shift</a>
-            <a href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer">Docs</a>
-            <a href="https://moi.technology/manifesto">Manifesto</a>
-            <a href="https://moi.technology/papers">Papers</a>
-            <a class="nav-active" href={`/`}>Blog</a>
-          </nav>
-          <a class="nav-cta" href="https://voyage.moi.technology" target="_blank" rel="noopener noreferrer">Explore the network</a>
+          <div class="nav-right">
+            <nav class="nav-topics" aria-label="Topics">
+              {navTopics.map((t) => <a href={`/tags/${t}/`}>{t}</a>)}
+            </nav>
+            <span class="nav-rule" aria-hidden="true"></span>
+            <a class="nav-rss" href="/rss.xml" aria-label="RSS feed" title="RSS">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <circle cx="6.2" cy="17.8" r="2.2"></circle>
+                <path d="M4 10.6v3a6.4 6.4 0 0 1 6.4 6.4h3A9.4 9.4 0 0 0 4 10.6z"></path>
+                <path d="M4 4v3a13 13 0 0 1 13 13h3A16 16 0 0 0 4 4z"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </header>
