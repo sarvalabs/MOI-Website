@@ -4,7 +4,8 @@
     { "source": "/why-moi", "destination": "/index.html" },
     { "source": "/how-it-works", "destination": "/index.html" },
     { "source": "/manifesto", "destination": "/index.html" },
-    { "source": "/papers", "destination": "/index.html" }
+    { "source": "/papers", "destination": "/index.html" },
+    { "source": "/blog", "destination": "/blog/index.html" }
   ],
   "headers": [
     {

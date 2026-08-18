@@ -58,10 +58,8 @@ jobs:
         run: |
           test -f dist/index.html
           test -f blog/dist/index.html
-
           echo "Main website build completed successfully"
           du -sh dist
-
           echo "Blog build completed successfully"
           du -sh blog/dist
 
@@ -118,10 +116,8 @@ jobs:
         env:
           PREVIEW_URL: https://pr-${{ github.event.pull_request.number }}.${{ env.PREVIEW_DOMAIN }}
           BLOG_PREVIEW_URL: https://pr-${{ github.event.pull_request.number }}.${{ env.PREVIEW_DOMAIN }}/blog
-
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
           script: |
             const marker = '<!-- moi-website-pr-preview -->';
 
@@ -129,7 +125,6 @@ jobs:
             ### MOI Website Preview
 
             **Main Website:** ${process.env.PREVIEW_URL}
-
             **Blog:** ${process.env.BLOG_PREVIEW_URL}
             `;
 

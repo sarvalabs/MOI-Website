@@ -1,0 +1,348 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { title, summary, date, updated, author, tags, takeaways, faq } = post.data;
+
+const fmt = (d) =>
+  d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description: summary,
+    datePublished: date.toISOString(),
+    dateModified: (updated ?? date).toISOString(),
+    author: author
+      ? { '@type': 'Organization', name: author.name, url: author.url }
+      : undefined,
+    keywords: tags.join(', '),
+    mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href,
+  },
+  faq && {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  },
+].filter(Boolean);
+---
+
+<Base title={`${title} — MOI Blog`} description={summary} ogType="article" navTitle={title}>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+
+  <header class="post-hero haze" data-hero>
+    <div class="wrap narrow hero-inner">
+      <p class="crumb"><a href={`/`}>← All posts</a></p>
+      <div class="tag-row">
+        {tags.map((t) => (
+          <a class="badge-pill" href={`/tags/${t}/`}>
+            {t}
+          </a>
+        ))}
+      </div>
+      <h1>{title}</h1>
+      <p class="summary">{summary}</p>
+      <p class="byline">
+        {author && (
+          <>
+            <span class="who">{author.url ? <a href={author.url}>{author.name}</a> : author.name}</span>
+            {author.role && <span class="role"> · {author.role}</span>}
+            <span class="dot"> · </span>
+          </>
+        )}
+        <time datetime={date.toISOString()}>{fmt(date)}</time>
+        {updated && updated.valueOf() !== date.valueOf() && <span class="upd"> · Updated {fmt(updated)}</span>}
+      </p>
+    </div>
+  </header>
+
+  <article class="wrap narrow">
+    {
+      takeaways && (
+        <aside class="takeaways card-surface" aria-label="Key takeaways">
+          <span class="badge-pill">Key takeaways</span>
+          <ul>
+            {takeaways.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {
+      faq && (
+        <section class="faq" aria-label="Frequently asked questions">
+          <span class="badge-pill">FAQ</span>
+          <div class="faq-list">
+            {faq.map(({ q, a }) => (
+              <details class="card-surface">
+                <summary>{q}</summary>
+                <p>{a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  .post-hero {
+    margin-top: -96px;
+    padding: 160px 0 56px;
+  }
+
+  .hero-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .crumb {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .crumb a {
+    color: var(--muted);
+  }
+
+  .crumb a:hover {
+    color: var(--moi-main);
+  }
+
+  .post-hero h1 {
+    font-weight: 600;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .summary {
+    color: var(--muted);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 58ch;
+    margin: 0;
+  }
+
+  .byline {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .byline .who a {
+    font-weight: 600;
+  }
+
+  .takeaways {
+    padding: 24px 28px;
+    margin: 36px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .takeaways ul {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .faq {
+    margin-top: 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .faq-list {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .faq details {
+    padding: 16px 22px;
+  }
+
+  .faq summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14.5px;
+  }
+
+  .faq p {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 400;
+    margin: 10px 0 2px;
+    max-width: 60ch;
+  }
+</style>
+
+<style is:global>
+  /* Article body — rendered Markdown in the site's Poppins system */
+  .prose {
+    font-size: 15.5px;
+    font-weight: 400;
+    line-height: 1.75;
+  }
+
+  .prose h2 {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 48px 0 12px;
+    text-wrap: balance;
+  }
+
+  .prose h3 {
+    font-weight: 600;
+    font-size: 20px;
+    margin: 34px 0 10px;
+  }
+
+  .prose p {
+    max-width: 68ch;
+  }
+
+  .prose strong {
+    font-weight: 600;
+  }
+
+  .prose blockquote {
+    margin: 28px 0;
+    padding: 14px 24px;
+    border-left: 3px solid var(--moi-main);
+    background: var(--surface);
+    border-radius: 0 16px 16px 0;
+    color: var(--muted);
+  }
+
+  .prose blockquote p {
+    margin: 0;
+  }
+
+  .prose pre {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(10, 5, 26, 0.06);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    padding: 18px 20px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+
+  .prose code {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  }
+
+  .prose :not(pre) > code {
+    background: var(--surface);
+    border-radius: 6px;
+    padding: 1px 7px;
+    font-size: 0.85em;
+    color: var(--moi-dark);
+  }
+
+  .prose table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    font-size: 13.5px;
+    margin: 28px 0;
+    display: block;
+    overflow-x: auto;
+    border: 1px solid rgba(10, 5, 26, 0.08);
+    border-radius: 16px;
+  }
+
+  .prose th,
+  .prose td {
+    border-bottom: 1px solid rgba(10, 5, 26, 0.08);
+    padding: 10px 16px;
+    text-align: left;
+  }
+
+  .prose tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .prose th {
+    background: var(--surface);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Diagrams come out of the source documents at wildly different aspect
+     ratios. Width alone is not enough: a tall portrait diagram scaled to the
+     column width runs several screens long. Capping height as well lets the
+     browser fit whichever dimension binds first, and `width: auto` keeps a
+     narrow image from being stretched to fill the column. */
+  .prose img {
+    display: block;
+    max-width: 100%;
+    max-height: 78vh;
+    width: auto;
+    height: auto;
+    margin: 32px auto;
+    border-radius: 16px;
+    border: 1px solid rgba(10, 5, 26, 0.06);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    background: #fff;
+  }
+
+  .prose ol,
+  .prose ul {
+    padding-left: 22px;
+  }
+
+  .prose li {
+    margin-bottom: 6px;
+  }
+
+  .prose a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgba(75, 23, 229, 0.3);
+    text-underline-offset: 3px;
+  }
+</style>

@@ -1,0 +1,125 @@
+---
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
+import '../styles/global.css';
+
+const { title, description, ogType = 'website', navTitle = 'Blog' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="MOI Blog"
+      href={`/rss.xml`}
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="site-header" id="site-header">
+      <div class="nav-shell">
+        <div class="nav-pill" id="nav-pill" aria-expanded="true">
+          <a class="nav-logo" href="https://moi.technology/" aria-label="MOI — home">
+            <img src={`/brand/logos/SVG/default-light.svg`} alt="MOI" />
+          </a>
+          <nav class="nav-center">
+            <a href="https://moi.technology/why-moi">The Shift</a>
+            <a href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer">Docs</a>
+            <a href="https://moi.technology/manifesto">Manifesto</a>
+            <a href="https://moi.technology/papers">Papers</a>
+            <a class="nav-active" href={`/`}>Blog</a>
+          </nav>
+          <a class="nav-cta" href="https://voyage.moi.technology" target="_blank" rel="noopener noreferrer">Explore the network</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>© {new Date().getFullYear()} Sarva Labs — MOI</span>
+        <span>Not your Context, Not your Agent.</span>
+      </div>
+    </footer>
+
+    <script is:inline>
+      // jelly navbar: scrolling past the hero collapses the pill from the
+      // right toward the MOI logo; clicking the collapsed pill re-expands it,
+      // scrolling again re-collapses.
+      (function () {
+        var header = document.getElementById('site-header');
+        var pill = document.getElementById('nav-pill');
+        var hero = document.querySelector('[data-hero]');
+        var pinnedOpen = false;
+        var pastHero = false;
+
+        function setCollapsed(v) {
+          header.classList.toggle('collapsed', v);
+          pill.setAttribute('aria-expanded', String(!v));
+        }
+
+        if (hero) {
+          new IntersectionObserver(
+            function (entries) {
+              pastHero = !entries[0].isIntersecting;
+              if (!pastHero) pinnedOpen = false;
+              if (!pinnedOpen) setCollapsed(pastHero);
+              // enable animations only after the first observer tick, so the
+              // initial paint doesn't play a phantom jelly
+              requestAnimationFrame(function () {
+                header.classList.add('anim-ready');
+              });
+            },
+            { rootMargin: '-96px 0px 0px 0px' }
+          ).observe(hero);
+        } else {
+          pastHero = true;
+          setCollapsed(true);
+          requestAnimationFrame(function () {
+            header.classList.add('anim-ready');
+          });
+        }
+
+        pill.addEventListener('click', function (ev) {
+          if (header.classList.contains('collapsed')) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            pinnedOpen = true;
+            setCollapsed(false);
+          }
+        });
+
+        var lastY = window.scrollY;
+        window.addEventListener(
+          'scroll',
+          function () {
+            var dy = Math.abs(window.scrollY - lastY);
+            lastY = window.scrollY;
+            if (pinnedOpen && pastHero && dy > 8) {
+              pinnedOpen = false;
+              setCollapsed(true);
+            }
+          },
+          { passive: true }
+        );
+      })();
+    </script>
+  </body>
+</html>
