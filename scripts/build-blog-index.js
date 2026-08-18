@@ -126,10 +126,10 @@ ${thumb}          <div class="card-body">
               <time datetime="${new Date(p.date).toISOString()}">${esc(fmtDate(p.date))}</time>
               <span aria-hidden="true">·</span>
               <span>${p.minutes} min read</span>
+              ${tags}
             </p>
             <h2>${esc(p.title)}</h2>
             <p class="summary">${esc(p.summary)}</p>
-            ${tags ? `<p class="tags">${tags}</p>` : ''}
             <span class="go">Read <span aria-hidden="true">→</span></span>
           </div>
         </a>
