@@ -21,7 +21,6 @@ for (const p of posts) for (const t of p.data.tags) tagCounts.set(t, (tagCounts.
       <p class="lede">
         Learn about agents bound by your authority, native assets, and the protocol underneath.
       </p>
-      <a class="home-btn" href="https://moi.technology/">moi.technology →</a>
       <nav class="tag-row center" aria-label="Filter by tag">
         <a class="tag-pill active" href={`/`}>All</a>
         {NAV_TOPICS.map((t) => (
@@ -66,24 +65,6 @@ for (const p of posts) for (const t of p.data.tags) tagCounts.set(t, (tagCounts.
     max-width: 52ch;
     margin: 0;
     font-size: 16px;
-  }
-
-  .home-btn {
-    display: inline-flex;
-    align-items: center;
-    font-size: 13px;
-    font-weight: 600;
-    color: #fff;
-    background: var(--moi-main);
-    border-radius: 999px;
-    padding: 11px 20px;
-    box-shadow: 0 4px 14px rgba(75, 23, 229, 0.28);
-    transition: background 200ms ease;
-  }
-
-  .home-btn:hover {
-    background: var(--moi-dark);
-    color: #fff;
   }
 
   .tag-row.center {

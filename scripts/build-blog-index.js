@@ -445,7 +445,7 @@ ${JSON.stringify(jsonLd, null, 2)}
       <p class="lede">
         Learn about agents bound by your authority, native assets, and the protocol underneath.
       </p>
-      <a class="home-btn" href="/">moi.technology →</a>
+      <a class="home-btn" href="${BLOG_ORIGIN}">Read all blogs →</a>
 
       <main>
 ${posts.length === 0 ? '        <p class="empty">No posts published yet — the first one is on its way.</p>' : cards}
