@@ -1,6 +1,6 @@
 ---
 title: "What Is MOI Network? The Participant Layer That Provides On-Chain Authority"
-summary: "MOI Network is infrastructure where participants exist natively in computation, and authority over an agent stays a live relationship you hold rather than a credential the agent carries."
+summary: "MOI Network makes participants native to computation: authority over an agent is a live relationship you hold, never a credential the agent carries."
 date: 2026-08-18
 author:
   name: "Sarva Labs"
