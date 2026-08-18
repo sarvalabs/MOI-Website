@@ -1,0 +1,171 @@
+name: MOI Website PR Preview
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: moi-website-preview-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  PREVIEW_ROOT: /var/www/moi-previews
+  PREVIEW_DOMAIN: preview.moi.technology
+
+jobs:
+  build-and-deploy:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+
+    env:
+      VM_HOST: ${{ vars.PREVIEW_VM_HOST }}
+      VM_USER: ${{ vars.PREVIEW_VM_USER }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Verify build
+        run: |
+          test -f dist/index.html
+          echo "Build completed successfully"
+          du -sh dist
+
+      - name: Install Teleport CLI
+        uses: teleport-actions/setup@v1
+        with:
+          version: 16.2.1
+
+      - name: Authenticate to Teleport
+        uses: teleport-actions/auth@v2
+        with:
+          proxy: ${{ secrets.TELEPORT_PROXY }}
+          token: ${{ secrets.TELEPORT_JOIN_TOKEN }}
+          certificate-ttl: 2h
+
+      - name: Deploy preview
+        run: |
+          tsh ssh "${VM_USER}@${VM_HOST}" \
+            "mkdir -p '${PREVIEW_ROOT}/pr-${PR_NUMBER}' && \
+             rm -rf '${PREVIEW_ROOT}/pr-${PR_NUMBER}'/*"
+
+          tar -C dist -cf - . | \
+            tsh ssh "${VM_USER}@${VM_HOST}" \
+            "tar -C '${PREVIEW_ROOT}/pr-${PR_NUMBER}' -xf -"
+
+      - name: Verify deployment
+        run: |
+          tsh ssh "${VM_USER}@${VM_HOST}" \
+            "test -f '${PREVIEW_ROOT}/pr-${PR_NUMBER}/index.html'"
+
+          echo "Preview deployment successfully"
+          echo "URL: http://pr-${PR_NUMBER}.${PREVIEW_DOMAIN}"
+
+      - name: Cleanup stale previews
+        run: |
+          tsh ssh "${VM_USER}@${VM_HOST}" \
+            "if [ -d '${PREVIEW_ROOT}' ]; then
+               find '${PREVIEW_ROOT}' \
+                 -mindepth 1 \
+                 -maxdepth 1 \
+                 -type d \
+                 -mtime +7 \
+                 -exec rm -rf {} +
+             fi"
+
+      - name: Add preview URL to PR
+        uses: actions/github-script@v7
+        env:
+          PREVIEW_URL: https://pr-${{ github.event.pull_request.number }}.${{ env.PREVIEW_DOMAIN }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const marker = '<!-- moi-website-pr-preview -->';
+
+            const body = `${marker}
+            ### MOI Website Preview
+
+            Preview URL: ${process.env.PREVIEW_URL}
+            `;
+
+            const { data: comments } =
+              await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number
+              });
+
+            const existingComment = comments.find(
+              comment =>
+                comment.user.type === 'Bot' &&
+                comment.body.includes(marker)
+            );
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
+
+  cleanup-closed-pr:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+
+    env:
+      VM_HOST: ${{ vars.PREVIEW_VM_HOST }}
+      VM_USER: ${{ vars.PREVIEW_VM_USER }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+
+    steps:
+      - name: Install Teleport CLI
+        uses: teleport-actions/setup@v1
+        with:
+          version: 16.2.1
+
+      - name: Authenticate to Teleport
+        uses: teleport-actions/auth@v2
+        with:
+          proxy: ${{ secrets.TELEPORT_PROXY }}
+          token: ${{ secrets.TELEPORT_JOIN_TOKEN }}
+          certificate-ttl: 2h
+
+      - name: Remove preview
+        run: |
+          tsh ssh "${VM_USER}@${VM_HOST}" \
+            "rm -rf '${PREVIEW_ROOT}/pr-${PR_NUMBER}'"
+
+          echo "Preview for PR #${PR_NUMBER} removed"
