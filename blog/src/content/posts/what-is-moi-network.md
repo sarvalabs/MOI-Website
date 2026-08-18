@@ -61,9 +61,7 @@ The design follows a chain of reasoning rather than a list of features. A paradi
 
 The rest of this page works down that chain: what the Participant Layer is, what it makes possible across several domains, what is missing in the systems it replaces, and why authority for AI agents is the problem it addresses first.
 
-<!-- TODO: link the phrase "how to give an AI agent authority without handing it
-     your credentials" below to Cornerstone 2 once that post is published. -->
-If you are comparing approaches to agent authority rather than evaluating MOI specifically, how to give an AI agent authority without handing it your credentials sets the same argument against OAuth, JWT, capability tokens and runtime policy engines.
+If you are comparing approaches to agent authority rather than evaluating MOI specifically, [how to give an AI agent authority without handing it your credentials](https://blog.moi.technology/article/how-to-give-an-ai-agent-authority-without-your-credentials/) sets the same argument against OAuth, JWT, capability tokens and runtime policy engines.
 
 ## What is the Participant Layer?
 
@@ -531,6 +529,4 @@ MOI is the Participant Layer that provides on-chain authority. The list below cl
 
 - MOI is currently live on DevNet, and MOI Agent Launchpad runs on it.
 
-<!-- TODO: link the phrase "how to give an AI agent authority without handing it
-     your credentials" below to Cornerstone 2 once that post is published. -->
-The comparison against OAuth, JWT, capability tokens, policy engines and agent memory layers is set out in how to give an AI agent authority without handing it your credentials.
+The comparison against OAuth, JWT, capability tokens, policy engines and agent memory layers is set out in [how to give an AI agent authority without handing it your credentials](https://blog.moi.technology/article/how-to-give-an-ai-agent-authority-without-your-credentials/).
