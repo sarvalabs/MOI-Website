@@ -1,16 +1,22 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 export default function Navbar({ activePage = "home" }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const [animReady, setAnimReady] = useState(false);
   const pinnedOpen = useRef(false);
+  const collapsedRef = useRef(false);
   const location = useLocation();
 
-  // Jelly collapse (ported from the blog demo): scrolling past the hero
-  // sweeps the pill right-to-left into the logo; clicking the collapsed
-  // pill re-expands it, scrolling again re-collapses. Desktop-only via CSS.
+  // Scrolling past the hero collapses the pill to the bare MOI mark;
+  // clicking it re-expands, scrolling again re-collapses. Desktop-only
+  // via CSS — mobile keeps the full pill and hamburger.
+  const applyCollapsed = useCallback((next) => {
+    if (collapsedRef.current === next) return;
+    collapsedRef.current = next;
+    setCollapsed(next);
+  }, []);
+
   useEffect(() => {
     const COLLAPSE_AT = 360;
     const EXPAND_AT = 280;
@@ -23,35 +29,26 @@ export default function Navbar({ activePage = "home" }) {
         if (y < EXPAND_AT) pinnedOpen.current = false;
         else if (dy > 8) {
           pinnedOpen.current = false;
-          setCollapsed(true);
+          applyCollapsed(true);
         }
         return;
       }
-      if (y > COLLAPSE_AT) setCollapsed(true);
-      else if (y < EXPAND_AT) setCollapsed(false);
+      if (y > COLLAPSE_AT) applyCollapsed(true);
+      else if (y < EXPAND_AT) applyCollapsed(false);
     };
+    // Match the current scroll position on mount, so a reload partway down
+    // the page starts collapsed.
     onScroll();
-    // enable animations only after the initial state has painted, so a
-    // mid-page load doesn't play a phantom jelly
-    let cancelled = false;
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => {
-        if (!cancelled) setAnimReady(true);
-      })
-    );
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      cancelled = true;
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [applyCollapsed]);
 
   const handlePillClickCapture = (e) => {
     if (!collapsed) return;
     e.preventDefault();
     e.stopPropagation();
     pinnedOpen.current = true;
-    setCollapsed(false);
+    applyCollapsed(false);
   };
 
   // When the logo is clicked while already on "/", scroll to top
@@ -73,19 +70,10 @@ export default function Navbar({ activePage = "home" }) {
   return (
     <nav className="fixed top-4 left-0 right-0 z-50 px-4 md:px-6">
       <div
-        className={`moi-nav-pill flex items-center justify-between rounded-full px-5 h-[56px]${
+        className={`moi-nav-pill flex items-center justify-between rounded-full px-5${
           collapsed ? " collapsed" : ""
-        }${animReady ? " anim-ready" : ""}`}
+        }`}
         onClickCapture={handlePillClickCapture}
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(60, 44, 130, 0.55) 0%, rgba(34, 22, 88, 0.55) 100%)",
-          backdropFilter: "blur(28px) saturate(150%)",
-          WebkitBackdropFilter: "blur(28px) saturate(150%)",
-          border: "1px solid rgba(200, 191, 239, 0.28)",
-          boxShadow:
-            "inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 14px 36px rgba(10, 5, 38, 0.32)",
-        }}
       >
         {/* Logo — MOI planetoid mark */}
         <Link

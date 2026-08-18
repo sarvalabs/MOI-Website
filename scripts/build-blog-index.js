@@ -159,7 +159,7 @@ const html = `<!doctype html>
     <meta property="og:type" content="website" />
     <meta property="og:url" content="${SITE_ORIGIN}/blog" />
     <link rel="alternate" type="application/rss+xml" title="MOI Blog" href="${BLOG_ORIGIN}/rss.xml" />
-    <link rel="icon" type="image/svg+xml" href="/brand/logos/SVG/default-dark.svg" />
+    <link rel="icon" type="image/svg+xml" href="/brand/logos/SVG/default-light.svg" />
     <script type="application/ld+json">
 ${JSON.stringify(jsonLd, null, 2)}
     </script>
@@ -173,7 +173,8 @@ ${JSON.stringify(jsonLd, null, 2)}
       * { box-sizing: border-box; }
       body {
         margin: 0;
-        padding: 0 24px 96px;
+        /* top padding clears the fixed navbar (top: 16px + 50px tall) */
+        padding: 96px 24px 96px;
         background: linear-gradient(180deg, #1a0b4d 0%, var(--moi-black) 60%);
         color: #fff;
         font-family: var(--font);
@@ -181,16 +182,101 @@ ${JSON.stringify(jsonLd, null, 2)}
         min-height: 100vh;
       }
       .wrap { max-width: 860px; margin: 0 auto; }
-      header.top { display: flex; align-items: center; justify-content: space-between; padding: 28px 0 0; }
-      header.top img { height: 34px; width: auto; display: block; }
-      nav a {
-        color: rgba(255, 255, 255, 0.72);
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 600;
-        margin-left: 20px;
+
+      /* Navbar — hand-mirrored from src/components/Navbar.jsx and kept in step
+         with .moi-nav-pill in src/styles/moi-tokens.css. This page is static
+         HTML generated outside the React app, so the component cannot be
+         reused; both have to be changed together. */
+      .site-nav {
+        position: fixed;
+        top: 16px;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        padding: 0 16px;
       }
-      nav a:hover { color: #fff; }
+      .nav-pill {
+        position: relative;
+        overflow: hidden;
+        height: 50px;
+        width: min(100%, 1200px);
+        margin-inline: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(60, 44, 130, 0.55) 0%, rgba(34, 22, 88, 0.55) 100%);
+        backdrop-filter: blur(28px) saturate(150%);
+        -webkit-backdrop-filter: blur(28px) saturate(150%);
+        border: 1px solid rgba(200, 191, 239, 0.28);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.18),
+          0 14px 36px rgba(10, 5, 38, 0.32);
+        transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+      }
+      .site-nav a { text-decoration: none; }
+      .nav-logo { display: flex; align-items: center; flex-shrink: 0; }
+      .nav-logo img { height: 36px; width: auto; display: block; }
+      .nav-center { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+      .nav-center a {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: rgba(255, 255, 255, 0.72);
+        padding: 6px 14px;
+        border-radius: 999px;
+        white-space: nowrap;
+        transition: color 0.3s ease, background 0.3s ease;
+      }
+      .nav-center a:hover { color: #fff; }
+      .nav-center a.active { color: #fff; background: rgba(255, 255, 255, 0.1); }
+      .nav-cta {
+        flex-shrink: 0;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: -0.005em;
+        color: #fff;
+        background: var(--moi-main);
+        border-radius: 999px;
+        padding: 9px 20px;
+        white-space: nowrap;
+        box-shadow: 0 4px 14px rgba(75, 23, 229, 0.28);
+        transition: background 0.2s ease;
+      }
+      .nav-cta:hover { background: #320f99; }
+
+      @media (min-width: 768px) {
+        .nav-pill { transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1), background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease; }
+        /* Collapsed is the bare mark: no plate, no border, no shadow, and the
+           padding goes so it sits centred rather than pinned left. */
+        .nav-pill.collapsed {
+          width: 48px;
+          padding: 0;
+          justify-content: center;
+          cursor: pointer;
+          background: none;
+          border-color: transparent;
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+        /* Absolute, not merely faded: opacity alone still occupies layout, and
+           in a 48px pill that pushes the mark outside the box, where
+           overflow: hidden clips it. */
+        .nav-center, .nav-cta { transition: opacity 0.18s ease 0.3s; }
+        .nav-pill.collapsed .nav-center,
+        .nav-pill.collapsed .nav-cta {
+          position: absolute;
+          left: 50%;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.14s ease;
+        }
+      }
+      @media (max-width: 767px) {
+        .nav-center { display: none; }
+      }
       h1 {
         font-size: clamp(38px, 7vw, 62px);
         line-height: 1.05;
@@ -256,17 +342,23 @@ ${JSON.stringify(jsonLd, null, 2)}
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <header class="top">
-        <a href="/" aria-label="MOI — home"><img src="/brand/logos/SVG/default-light.svg" alt="MOI" /></a>
-        <nav>
-          <a href="/why-moi">The Shift</a>
-          <a href="/manifesto">Manifesto</a>
-          <a href="/papers">Papers</a>
-          <a href="${BLOG_ORIGIN}">All posts</a>
-        </nav>
-      </header>
+    <nav class="site-nav">
+        <div class="nav-pill" id="nav-pill">
+          <a class="nav-logo" href="/" aria-label="MOI — home">
+            <img src="/brand/logos/SVG/default-light.svg" alt="MOI" />
+          </a>
+          <div class="nav-center">
+            <a href="/why-moi">The Shift</a>
+            <a href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer">Docs</a>
+            <a href="/manifesto">Manifesto</a>
+            <a href="/papers">Papers</a>
+            <a class="active" href="/blog">Blog</a>
+          </div>
+          <a class="nav-cta" href="https://voyage.moi.technology" target="_blank" rel="noopener noreferrer">Explore the network</a>
+        </div>
+    </nav>
 
+    <div class="wrap">
       <h1>Writing on the personal internet</h1>
       <p class="lede">
         Contextual Compute, agent authority, protocol research, and product
@@ -274,7 +366,6 @@ ${JSON.stringify(jsonLd, null, 2)}
       </p>
       <p class="note">
         Full articles are published on <a href="${BLOG_ORIGIN}">blog.moi.technology</a>.
-        <a href="${BLOG_ORIGIN}/rss.xml">RSS</a>
       </p>
 
       <main>
@@ -283,9 +374,57 @@ ${posts.length === 0 ? '        <p class="empty">No posts published yet — the 
 
       <footer>
         <span>© ${new Date().getFullYear()} Sarva Labs — MOI</span>
-        <span>Not your Context, Not your Agent.</span>
       </footer>
     </div>
+
+    <script>
+      // Same behaviour as src/components/Navbar.jsx: past 360px the pill
+      // collapses to the bare mark, clicking it re-expands, scrolling again
+      // re-collapses. Thresholds are deliberately identical so the two pages
+      // collapse at the same point.
+      (function () {
+        var pill = document.getElementById('nav-pill');
+        var COLLAPSE_AT = 360, EXPAND_AT = 280;
+        var collapsed = false, pinnedOpen = false;
+        var lastY = window.scrollY;
+
+        function apply(next) {
+          if (collapsed === next) return;
+          collapsed = next;
+          pill.classList.toggle('collapsed', next);
+        }
+
+        function onScroll() {
+          var y = window.scrollY;
+          var dy = Math.abs(y - lastY);
+          lastY = y;
+          if (pinnedOpen) {
+            if (y < EXPAND_AT) pinnedOpen = false;
+            else if (dy > 8) { pinnedOpen = false; apply(true); }
+            return;
+          }
+          if (y > COLLAPSE_AT) apply(true);
+          else if (y < EXPAND_AT) apply(false);
+        }
+
+        // Match the current scroll position on load, so a reload partway down
+        // the page starts collapsed.
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        pill.addEventListener(
+          'click',
+          function (ev) {
+            if (!collapsed) return;
+            ev.preventDefault();
+            ev.stopPropagation();
+            pinnedOpen = true;
+            apply(false);
+          },
+          true
+        );
+      })();
+    </script>
   </body>
 </html>
 `;

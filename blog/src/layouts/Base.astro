@@ -17,6 +17,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <!-- The blog declared no icon at all, so browsers fell back to a generic
+         globe. default-light is the purple-planet mark and the only file under
+         brand/logos/SVG whose stylesheet is intact; the rest render black. -->
+    <link rel="icon" type="image/svg+xml" href="/brand/logos/SVG/default-light.svg" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={ogType} />
@@ -55,7 +59,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <footer class="site-footer">
       <div class="wrap">
         <span>© {new Date().getFullYear()} Sarva Labs — MOI</span>
-        <span>Not your Context, Not your Agent.</span>
       </div>
     </footer>
 
@@ -81,20 +84,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
               pastHero = !entries[0].isIntersecting;
               if (!pastHero) pinnedOpen = false;
               if (!pinnedOpen) setCollapsed(pastHero);
-              // enable animations only after the first observer tick, so the
-              // initial paint doesn't play a phantom jelly
-              requestAnimationFrame(function () {
-                header.classList.add('anim-ready');
-              });
             },
             { rootMargin: '-96px 0px 0px 0px' }
           ).observe(hero);
         } else {
           pastHero = true;
           setCollapsed(true);
-          requestAnimationFrame(function () {
-            header.classList.add('anim-ready');
-          });
         }
 
         pill.addEventListener('click', function (ev) {
