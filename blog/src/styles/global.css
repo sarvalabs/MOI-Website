@@ -250,6 +250,27 @@ a:focus-visible {
   background: rgba(75, 23, 229, 0.08);
 }
 
+.nav-home {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: #fff;
+  background: var(--moi-main);
+  border-radius: 999px;
+  padding: 8px 16px;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(75, 23, 229, 0.28);
+  transition: background 200ms ease;
+}
+
+.nav-home:hover {
+  background: var(--moi-dark);
+  color: #fff;
+}
+
 
 
 /* Collapsed leaves the bare mark. The wordmark and the right-hand group leave

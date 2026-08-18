@@ -309,7 +309,23 @@ ${JSON.stringify(jsonLd, null, 2)}
         text-wrap: balance;
         color: var(--ink);
       }
-      .lede { color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 52ch; margin: 0 0 40px; }
+      .lede { color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 52ch; margin: 0 0 20px; }
+      .home-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #fff;
+        background: var(--moi-main);
+        border-radius: 999px;
+        padding: 11px 20px;
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgba(75, 23, 229, 0.28);
+        margin: 0 0 40px;
+        transition: background 200ms ease;
+      }
+      .home-btn:hover { background: var(--moi-dark); color: #fff; }
       main { display: flex; flex-direction: column; gap: 16px; }
       .card {
         display: block;
@@ -429,6 +445,7 @@ ${JSON.stringify(jsonLd, null, 2)}
       <p class="lede">
         How agents get to act. Native assets. The protocol underneath.
       </p>
+      <a class="home-btn" href="/">moi.technology →</a>
 
       <main>
 ${posts.length === 0 ? '        <p class="empty">No posts published yet — the first one is on its way.</p>' : cards}
