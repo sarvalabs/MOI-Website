@@ -4,25 +4,16 @@ import { Link, useLocation } from "react-router-dom";
 export default function Navbar({ activePage = "home" }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const [animReady, setAnimReady] = useState(false);
   const pinnedOpen = useRef(false);
   const collapsedRef = useRef(false);
-  const settled = useRef(false);
   const location = useLocation();
 
-  // Jelly collapse (ported from the blog demo): scrolling past the hero
-  // sweeps the pill right-to-left into the logo; clicking the collapsed
-  // pill re-expands it, scrolling again re-collapses. Desktop-only via CSS.
-  //
-  // `anim-ready` is what arms the animation, and the CSS applies
-  // `moi-jelly-open` to any pill carrying it while expanded. So it must go on
-  // at the first real transition, never at mount — arming it on mount played
-  // the open animation against the resting state and bounced the navbar on
-  // every page load.
+  // Scrolling past the hero collapses the pill to the bare MOI mark;
+  // clicking it re-expands, scrolling again re-collapses. Desktop-only
+  // via CSS — mobile keeps the full pill and hamburger.
   const applyCollapsed = useCallback((next) => {
     if (collapsedRef.current === next) return;
     collapsedRef.current = next;
-    if (settled.current) setAnimReady(true);
     setCollapsed(next);
   }, []);
 
@@ -45,10 +36,9 @@ export default function Navbar({ activePage = "home" }) {
       if (y > COLLAPSE_AT) applyCollapsed(true);
       else if (y < EXPAND_AT) applyCollapsed(false);
     };
-    // Match the current scroll position without animating: reloading partway
-    // down the page should start collapsed, not replay the collapse.
+    // Match the current scroll position on mount, so a reload partway down
+    // the page starts collapsed.
     onScroll();
-    settled.current = true;
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [applyCollapsed]);
@@ -82,17 +72,8 @@ export default function Navbar({ activePage = "home" }) {
       <div
         className={`moi-nav-pill flex items-center justify-between rounded-full px-5${
           collapsed ? " collapsed" : ""
-        }${animReady ? " anim-ready" : ""}`}
+        }`}
         onClickCapture={handlePillClickCapture}
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(60, 44, 130, 0.55) 0%, rgba(34, 22, 88, 0.55) 100%)",
-          backdropFilter: "blur(28px) saturate(150%)",
-          WebkitBackdropFilter: "blur(28px) saturate(150%)",
-          border: "1px solid rgba(200, 191, 239, 0.28)",
-          boxShadow:
-            "inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 14px 36px rgba(10, 5, 38, 0.32)",
-        }}
       >
         {/* Logo — MOI planetoid mark */}
         <Link
