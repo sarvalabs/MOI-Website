@@ -61,7 +61,9 @@ The design follows a chain of reasoning rather than a list of features. A paradi
 
 The rest of this page works down that chain: what the Participant Layer is, what it makes possible across several domains, what is missing in the systems it replaces, and why authority for AI agents is the problem it addresses first.
 
-If you are comparing approaches to agent authority rather than evaluating MOI specifically, [how to give an AI agent authority without handing it your credentials](about:blank) sets the same argument against OAuth, JWT, capability tokens and runtime policy engines.
+<!-- TODO: link the phrase "how to give an AI agent authority without handing it
+     your credentials" below to Cornerstone 2 once that post is published. -->
+If you are comparing approaches to agent authority rather than evaluating MOI specifically, how to give an AI agent authority without handing it your credentials sets the same argument against OAuth, JWT, capability tokens and runtime policy engines.
 
 ## What is the Participant Layer?
 
