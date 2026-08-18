@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MOI /blog — four directions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --moi-main: #4B17E5;
+      --moi-dark: #320F99;
+      --moi-white: #FFFFFF;
+      --moi-grey: #BFBFBF;
+      --moi-black: #0A0026;
+      --almost: #FCFBFF;
+      --certainly: #F5F2FF;
+      --pastel: #D9CCFF;
+      --ink: rgba(10, 5, 26, 0.85);
+      --ink-2: rgba(10, 5, 26, 0.69);
+      --ink-3: rgba(10, 5, 26, 0.55);
+      --on-dark: rgba(255, 255, 255, 0.85);
+      --on-dark-2: rgba(255, 255, 255, 0.69);
+      --on-dark-3: rgba(255, 255, 255, 0.55);
+      --accent-dark: #BCA6FF;
+      --font: "Poppins", system-ui, sans-serif;
+      --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); font-weight: 500; color: var(--ink); background: #0A0026; }
+
+    /* ── picker ── */
+    .picker {
+      position: sticky; top: 0; z-index: 40;
+      display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+      padding: 12px 16px;
+      background: rgba(10, 0, 38, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(217, 204, 255, 0.18);
+    }
+    .picker strong {
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--accent-dark); margin-right: 8px; font-weight: 600;
+    }
+    .picker button {
+      font: inherit; font-size: 12px; font-weight: 600;
+      padding: 7px 12px; border-radius: 999px; cursor: pointer;
+      border: 1px solid rgba(217, 204, 255, 0.28);
+      background: transparent; color: var(--on-dark);
+    }
+    .picker button.on {
+      background: var(--moi-main); border-color: var(--moi-main); color: #fff;
+    }
+
+    .dir { display: none; min-height: 100vh; }
+    .dir.on { display: block; }
+
+    /* ── shared nav (simplified) ── */
+    .nav {
+      position: sticky; top: 53px; z-index: 30; padding: 12px 16px 0;
+    }
+    .pill {
+      height: 50px; max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; border-radius: 999px;
+      background: linear-gradient(180deg, rgba(60, 44, 130, 0.55), rgba(34, 22, 88, 0.55));
+      backdrop-filter: blur(28px) saturate(150%);
+      border: 1px solid rgba(200, 191, 239, 0.28);
+    }
+    .pill img { height: 32px; display: block; }
+    .pill nav { display: flex; gap: 4px; }
+    .pill nav span {
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.72);
+      padding: 6px 14px; border-radius: 999px;
+    }
+    .pill nav span.active { color: #fff; background: rgba(255,255,255,0.1); }
+    .cta {
+      font-size: 12px; font-weight: 600; color: #fff;
+      background: var(--moi-main); border-radius: 999px; padding: 9px 20px;
+    }
+    @media (max-width: 760px) { .pill nav, .cta { display: none; } }
+
+    .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px 96px; }
+    .wide { max-width: 960px; }
+
+    .chip {
+      display: inline-block;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--moi-main);
+      margin-bottom: 16px;
+    }
+    .chip.light { color: var(--accent-dark); }
+
+    h1 {
+      font-weight: 700; font-size: clamp(36px, 6vw, 56px);
+      line-height: 1.08; letter-spacing: -0.02em;
+    }
+    .lede { font-size: 16px; line-height: 1.6; max-width: 52ch; margin-top: 12px; }
+
+    .meta {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; border-radius: 999px; padding: 4px 10px;
+    }
+
+    /* ════════════ A — light journal ════════════ */
+    #a { background: var(--almost); color: var(--ink); }
+    #a .hero { padding: 72px 0 40px; }
+    #a h1 { color: var(--ink); }
+    #a .lede { color: var(--ink-2); }
+    #a .feed { display: flex; flex-direction: column; }
+    #a .row {
+      display: block; padding: 28px 0;
+      border-top: 1px solid rgba(10, 5, 26, 0.08);
+      text-decoration: none; color: inherit;
+    }
+    #a .row .meta { color: var(--ink-3); margin-bottom: 10px; }
+    #a .row h2 {
+      font-size: clamp(22px, 3vw, 28px); font-weight: 700;
+      line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 8px;
+    }
+    #a .row p { color: var(--ink-2); font-size: 15px; line-height: 1.6; }
+    #a .tag { color: var(--moi-main); border: 1px solid rgba(75, 23, 229, 0.22); margin-top: 14px; }
+    #a .go { display: inline-block; margin-top: 14px; font-size: 13px; font-weight: 600; color: var(--moi-main); }
+
+    /* ════════════ B — split ════════════ */
+    #b { background: var(--almost); }
+    #b .band {
+      background:
+        radial-gradient(60% 50% at 80% 0%, rgba(75, 23, 229, 0.45), transparent 60%),
+        linear-gradient(180deg, #0A0526, var(--moi-black));
+      color: #fff; padding: 88px 0 64px; margin-bottom: 40px;
+    }
+    #b .band h1 { color: var(--on-dark); }
+    #b .band .lede { color: var(--on-dark-2); }
+    #b .feed { display: flex; flex-direction: column; gap: 16px; }
+    #b .card {
+      display: block; background: #fff; border-radius: 20px;
+      padding: 28px 32px; text-decoration: none; color: inherit;
+      border: 1px solid rgba(10, 5, 26, 0.06);
+      box-shadow: 0 4px 24px rgba(50, 15, 153, 0.06);
+    }
+    #b .card .meta { color: var(--ink-3); margin-bottom: 10px; }
+    #b .card h2 { font-size: 24px; font-weight: 700; line-height: 1.25; margin: 0 0 8px; }
+    #b .card p { color: var(--ink-2); font-size: 15px; line-height: 1.6; }
+    #b .tag { color: var(--moi-main); border: 1px solid rgba(75, 23, 229, 0.22); }
+    #b .tags { margin-top: 14px; }
+    #b .go { display: inline-block; margin-top: 16px; font-size: 13px; font-weight: 600; color: var(--moi-main); }
+
+    /* ════════════ C — featured ════════════ */
+    #c { background: var(--almost); color: var(--ink); }
+    #c .hero { padding: 56px 0 24px; }
+    #c .hero h1 { font-size: clamp(28px, 4vw, 36px); }
+    #c .feature {
+      display: block; text-decoration: none; color: #fff;
+      background: linear-gradient(160deg, var(--moi-dark), var(--moi-main));
+      border-radius: 20px; padding: 40px 36px 32px;
+      box-shadow: inset 0 1.45px 33px rgba(255, 255, 255, 0.18);
+      margin-bottom: 12px;
+    }
+    #c .feature .kicker {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--accent-dark); margin-bottom: 16px;
+    }
+    #c .feature h2 {
+      font-size: clamp(26px, 4vw, 36px); font-weight: 700;
+      line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 12px;
+      color: rgba(255,255,255,0.92);
+    }
+    #c .feature p { color: rgba(255,255,255,0.69); max-width: 58ch; line-height: 1.6; }
+    #c .feature .go { display: inline-block; margin-top: 24px; font-weight: 600; color: #fff; }
+    #c .rest { display: flex; flex-direction: column; }
+    #c .rest a {
+      display: grid; grid-template-columns: 140px 1fr; gap: 24px;
+      padding: 24px 8px; border-top: 1px solid rgba(10, 5, 26, 0.08);
+      text-decoration: none; color: inherit; align-items: start;
+    }
+    #c .rest .meta { color: var(--ink-3); }
+    #c .rest h2 { font-size: 20px; font-weight: 700; line-height: 1.3; margin: 0 0 6px; }
+    #c .rest p { color: var(--ink-2); font-size: 14px; line-height: 1.55; }
+    @media (max-width: 640px) {
+      #c .rest a { grid-template-columns: 1fr; gap: 8px; }
+    }
+
+    /* ════════════ D — manifesto column ════════════ */
+    #d { background: var(--almost); color: var(--ink); }
+    #d .hero { padding: 80px 0 48px; max-width: 40rem; }
+    #d h1 { font-size: clamp(32px, 5vw, 44px); }
+    #d .lede { color: var(--ink-2); }
+    #d .col { max-width: 40rem; }
+    #d .entry {
+      display: block; padding: 32px 0;
+      border-top: 1px solid rgba(10, 5, 26, 0.08);
+      text-decoration: none; color: inherit;
+    }
+    #d .entry .meta { color: var(--moi-main); margin-bottom: 12px; }
+    #d .entry h2 {
+      font-size: clamp(22px, 3vw, 28px); font-weight: 700;
+      line-height: 1.25; letter-spacing: -0.015em; margin: 0 0 12px;
+    }
+    #d .entry p { color: var(--ink-2); font-size: 16px; line-height: 1.7; }
+    #d .entry .go { display: inline-block; margin-top: 16px; font-weight: 600; color: var(--moi-main); }
+
+    .why {
+      max-width: 760px; margin: 0 auto; padding: 0 24px 48px;
+      font-size: 13px; line-height: 1.6;
+    }
+    #a .why, #c .why, #d .why { color: var(--ink-3); }
+    #b .why { color: var(--ink-3); }
+  </style>
+</head>
+<body>
+  <div class="picker">
+    <strong>Directions</strong>
+    <button class="on" data-dir="a">A · Light journal</button>
+    <button data-dir="b">B · Split</button>
+    <button data-dir="c">C · Featured</button>
+    <button data-dir="d">D · Manifesto column</button>
+  </div>
+
+  <!-- A -->
+  <section id="a" class="dir on">
+    <div class="nav"><div class="pill">
+      <img src="../public/brand/logos/SVG/default-light.svg" alt="MOI" />
+      <nav><span>The Shift</span><span>Docs</span><span>Manifesto</span><span>Papers</span><span class="active">Blog</span></nav>
+      <span class="cta">Explore the network</span>
+    </div></div>
+    <div class="wrap">
+      <header class="hero">
+        <span class="chip">Journal</span>
+        <h1>Authority, on the page.</h1>
+        <p class="lede">How agents get to act. Native assets. The protocol underneath. From the team building MOI.</p>
+      </header>
+      <div class="feed">
+        <a class="row" href="#">
+          <p class="meta">19 Aug 2026 · 31 min</p>
+          <h2>How to give an AI agent authority without handing it your credentials</h2>
+          <p>A credential is not authority. How to give an agent scoped, revocable authority anchored to you — and why OAuth, JWT and policy engines cannot.</p>
+          <span class="tag">Safe agents</span>
+          <span class="go">Read →</span>
+        </a>
+        <a class="row" href="#">
+          <p class="meta">18 Aug 2026 · 35 min</p>
+          <h2>What is MOI Network?</h2>
+          <p>MOI Network makes participants native to computation: authority over an agent is a live relationship you hold, never a credential the agent carries.</p>
+          <span class="tag">Protocol</span>
+          <span class="go">Read →</span>
+        </a>
+      </div>
+    </div>
+    <p class="why">Same paper as the Manifesto and the blog host. You leave the cosmic marketing site and enter a reading room. Contrast is the whole point — not another purple surface.</p>
+  </section>
+
+  <!-- B -->
+  <section id="b" class="dir">
+    <div class="band">
+      <div class="nav" style="position:absolute;top:12px;left:0;right:0"><div class="pill">
+        <img src="../public/brand/logos/SVG/default-light.svg" alt="MOI" />
+        <nav><span>The Shift</span><span>Docs</span><span>Manifesto</span><span>Papers</span><span class="active">Blog</span></nav>
+        <span class="cta">Explore the network</span>
+      </div></div>
+      <div class="wrap" style="padding-top:24px">
+        <span class="chip light">Journal</span>
+        <h1>How your agents get to act.</h1>
+        <p class="lede">Scoped, revocable authority — and the protocol that holds it.</p>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="feed">
+        <a class="card" href="#">
+          <p class="meta">19 Aug 2026 · 31 min</p>
+          <h2>How to give an AI agent authority without handing it your credentials</h2>
+          <p>A credential is not authority. How to give an agent scoped, revocable authority anchored to you — and why OAuth, JWT and policy engines cannot.</p>
+          <p class="tags"><span class="tag">Safe agents</span></p>
+          <span class="go">Read →</span>
+        </a>
+        <a class="card" href="#">
+          <p class="meta">18 Aug 2026 · 35 min</p>
+          <h2>What is MOI Network?</h2>
+          <p>MOI Network makes participants native to computation: authority over an agent is a live relationship you hold, never a credential the agent carries.</p>
+          <p class="tags"><span class="tag">Protocol</span></p>
+          <span class="go">Read →</span>
+        </a>
+      </div>
+    </div>
+    <p class="why">Keeps the marketing cosmos for one screen, then drops you onto white paper. Two surfaces, one page. The dark band is the only purple; the list is ink on Almost Lavender.</p>
+  </section>
+
+  <!-- C -->
+  <section id="c" class="dir">
+    <div class="nav"><div class="pill">
+      <img src="../public/brand/logos/SVG/default-light.svg" alt="MOI" />
+      <nav><span>The Shift</span><span>Docs</span><span>Manifesto</span><span>Papers</span><span class="active">Blog</span></nav>
+      <span class="cta">Explore the network</span>
+    </div></div>
+    <div class="wrap wide">
+      <header class="hero">
+        <span class="chip">Journal</span>
+        <h1>Latest</h1>
+      </header>
+      <a class="feature" href="#">
+        <p class="kicker">Latest · 19 Aug · 31 min · Safe agents</p>
+        <h2>How to give an AI agent authority without handing it your credentials</h2>
+        <p>A credential is not authority. How to give an agent scoped, revocable authority anchored to you — and why OAuth, JWT and policy engines cannot.</p>
+        <span class="go">Read →</span>
+      </a>
+      <div class="rest">
+        <a href="#">
+          <p class="meta">18 Aug 2026<br />35 min</p>
+          <div>
+            <h2>What is MOI Network?</h2>
+            <p>MOI Network makes participants native to computation: authority over an agent is a live relationship you hold, never a credential the agent carries.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    <p class="why">Kill the slogan. The newest post is the hero — purple is a colour field with the title on it, not an empty tile. Everything older is a compact index. Scales as you publish.</p>
+  </section>
+
+  <!-- D -->
+  <section id="d" class="dir">
+    <div class="nav"><div class="pill">
+      <img src="../public/brand/logos/SVG/default-light.svg" alt="MOI" />
+      <nav><span>The Shift</span><span>Docs</span><span>Manifesto</span><span>Papers</span><span class="active">Blog</span></nav>
+      <span class="cta">Explore the network</span>
+    </div></div>
+    <div class="wrap">
+      <header class="hero">
+        <span class="chip">Journal</span>
+        <h1>You exist once. This is the writing.</h1>
+        <p class="lede">The argument, in long form.</p>
+      </header>
+      <div class="col">
+        <a class="entry" href="#">
+          <p class="meta">19 August 2026</p>
+          <h2>How to give an AI agent authority without handing it your credentials</h2>
+          <p>A credential is not authority. How to give an agent scoped, revocable authority anchored to you — and why OAuth, JWT and policy engines cannot.</p>
+          <span class="go">Continue →</span>
+        </a>
+        <a class="entry" href="#">
+          <p class="meta">18 August 2026</p>
+          <h2>What is MOI Network? The participant layer that provides on-chain authority</h2>
+          <p>MOI Network makes participants native to computation: authority over an agent is a live relationship you hold, never a credential the agent carries.</p>
+          <span class="go">Continue →</span>
+        </a>
+      </div>
+    </div>
+    <p class="why">Same measure and paper as the Manifesto. No cards, no chips, no “blog UI.” It reads as a continuation of the site’s most serious page.</p>
+  </section>
+
+  <script>
+    const buttons = document.querySelectorAll(".picker button");
+    const dirs = document.querySelectorAll(".dir");
+    buttons.forEach((b) => b.addEventListener("click", () => {
+      buttons.forEach((x) => x.classList.toggle("on", x === b));
+      dirs.forEach((d) => d.classList.toggle("on", d.id === b.dataset.dir));
+      window.scrollTo(0, 0);
+    }));
+  </script>
+</body>
+</html>
