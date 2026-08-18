@@ -250,28 +250,7 @@ a:focus-visible {
   background: rgba(75, 23, 229, 0.08);
 }
 
-.nav-rule {
-  width: 1px;
-  height: 18px;
-  background: rgba(10, 5, 26, 0.12);
-  margin: 0 8px;
-}
 
-.nav-rss {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  color: rgba(10, 5, 26, 0.6);
-  transition: color 0.3s ease, background 0.3s ease;
-}
-
-.nav-rss:hover {
-  color: var(--moi-main);
-  background: rgba(75, 23, 229, 0.08);
-}
 
 /* Collapsed leaves the bare mark. The wordmark and the right-hand group leave
    the flow rather than merely fading: opacity alone still occupies layout, and
@@ -288,8 +267,7 @@ a:focus-visible {
 /* Narrow screens keep the identity and the feed; topics live in the page's own
    tag row, which is one scroll away. */
 @media (max-width: 760px) {
-  .nav-topics,
-  .nav-rule {
+  .nav-topics {
     display: none;
   }
 }
