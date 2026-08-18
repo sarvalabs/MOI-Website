@@ -4,8 +4,18 @@ import '@fontsource/poppins/500.css';
 import '@fontsource/poppins/600.css';
 import '@fontsource/poppins/700.css';
 import '../styles/global.css';
+import Analytics from '../components/Analytics.astro';
 
 const { title, description, ogType = 'website', navTitle = 'Blog' } = Astro.props;
+
+// The masthead's topics are a fixed editorial set — the blog's three beats.
+// Each is a tag slug with a display label; the tag pages are guaranteed to
+// exist by tags/[tag].astro, which unions these into its static paths.
+export const NAV_TOPICS = [
+  { slug: 'safe-agents', label: 'Safe agents' },
+  { slug: 'native-assets', label: 'Native assets' },
+  { slug: 'protocol', label: 'Protocol' },
+];
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -31,23 +41,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       title="MOI Blog"
       href={`/rss.xml`}
     />
+    <Analytics />
     <slot name="head" />
   </head>
   <body>
     <header class="site-header" id="site-header">
       <div class="nav-shell">
         <div class="nav-pill" id="nav-pill" aria-expanded="true">
-          <a class="nav-logo" href="https://moi.technology/" aria-label="MOI — home">
-            <img src={`/brand/logos/SVG/default-light.svg`} alt="MOI" />
+          <a class="nav-brand" href="https://moi.technology/" aria-label="MOI — moi.technology">
+            <img src="/brand/logos/SVG/default-light.svg" alt="MOI" />
+            <span class="nav-wordmark">MOI <span>Blog</span></span>
           </a>
-          <nav class="nav-center">
-            <a href="https://moi.technology/why-moi">The Shift</a>
-            <a href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer">Docs</a>
-            <a href="https://moi.technology/manifesto">Manifesto</a>
-            <a href="https://moi.technology/papers">Papers</a>
-            <a class="nav-active" href={`/`}>Blog</a>
-          </nav>
-          <a class="nav-cta" href="https://voyage.moi.technology" target="_blank" rel="noopener noreferrer">Explore the network</a>
+          <div class="nav-right">
+            <nav class="nav-topics" aria-label="Topics">
+              {NAV_TOPICS.map((t) => <a href={`/tags/${t.slug}/`}>{t.label}</a>)}
+            </nav>
+          </div>
         </div>
       </div>
     </header>
