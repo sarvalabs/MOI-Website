@@ -18,6 +18,9 @@ for (const p of posts) for (const t of p.data.tags) tagCounts.set(t, (tagCounts.
   <section class="hero haze" data-hero>
     <div class="wrap hero-inner">
       <h1>MOI network blog</h1>
+      <p class="lede">
+        How agents get to act. Native assets. The protocol underneath.
+      </p>
       <nav class="tag-row center" aria-label="Filter by tag">
         <a class="tag-pill active" href={`/`}>All</a>
         {NAV_TOPICS.map((t) => (
@@ -55,6 +58,13 @@ for (const p of posts) for (const t of p.data.tags) tagCounts.set(t, (tagCounts.
     line-height: 1.08;
     letter-spacing: -0.02em;
     margin: 0;
+  }
+
+  .lede {
+    color: var(--muted);
+    max-width: 52ch;
+    margin: 0;
+    font-size: 16px;
   }
 
   .tag-row.center {

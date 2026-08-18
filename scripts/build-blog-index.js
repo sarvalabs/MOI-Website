@@ -305,10 +305,11 @@ ${JSON.stringify(jsonLd, null, 2)}
         font-weight: 700;
         line-height: 1.1;
         letter-spacing: -0.02em;
-        margin: 56px 0 40px;
+        margin: 56px 0 12px;
         text-wrap: balance;
         color: var(--ink);
       }
+      .lede { color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 52ch; margin: 0 0 40px; }
       main { display: flex; flex-direction: column; gap: 16px; }
       .card {
         display: block;
@@ -425,6 +426,9 @@ ${JSON.stringify(jsonLd, null, 2)}
 
     <div class="wrap">
       <h1>MOI network blog</h1>
+      <p class="lede">
+        How agents get to act. Native assets. The protocol underneath.
+      </p>
 
       <main>
 ${posts.length === 0 ? '        <p class="empty">No posts published yet — the first one is on its way.</p>' : cards}
