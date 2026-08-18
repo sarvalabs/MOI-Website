@@ -172,9 +172,13 @@ ${JSON.stringify(jsonLd, null, 2)}
     <style>
       :root {
         --moi-main: #4b17e5;
+        --moi-dark: #320f99;
         --moi-black: #0a0026;
-        --moi-lavender: #d9ccff;
+        --almost: #fcfbff;
         --font: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        --ink: rgba(10, 5, 26, 0.85);
+        --ink-2: rgba(10, 5, 26, 0.69);
+        --ink-3: rgba(10, 5, 26, 0.55);
       }
       * { box-sizing: border-box; }
       body {
@@ -182,12 +186,10 @@ ${JSON.stringify(jsonLd, null, 2)}
         /* top padding clears the fixed navbar (top: 16px + 50px tall) */
         padding: 96px 24px 96px;
         background:
-          radial-gradient(60% 40% at 80% 8%, rgba(75, 23, 229, 0.32), transparent 60%),
-          radial-gradient(50% 35% at 8% 40%, rgba(111, 69, 234, 0.22), transparent 60%),
-          radial-gradient(50% 40% at 92% 60%, rgba(75, 23, 229, 0.22), transparent 60%),
-          linear-gradient(180deg, #0A0526 0%, #1B1148 50%, var(--moi-black) 100%);
-        background-attachment: fixed;
-        color: #fff;
+          radial-gradient(ellipse at 25% 15%, rgba(217, 204, 255, 0.55), transparent 55%),
+          radial-gradient(ellipse at 75% 70%, rgba(188, 166, 255, 0.4), transparent 55%),
+          var(--almost);
+        color: var(--ink);
         font-family: var(--font);
         font-weight: 500;
         -webkit-font-smoothing: antialiased;
@@ -289,44 +291,57 @@ ${JSON.stringify(jsonLd, null, 2)}
       @media (max-width: 767px) {
         .nav-center { display: none; }
       }
-      h1 {
-        font-size: clamp(38px, 7vw, 62px);
-        font-weight: 700;
-        line-height: 1.05;
-        letter-spacing: -0.02em;
-        margin: 72px 0 16px;
-        text-wrap: balance;
-        color: rgba(255, 255, 255, 0.85);
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(75, 23, 229, 0.15);
+        background: rgba(75, 23, 229, 0.08);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--moi-main);
+        font-weight: 600;
+        margin: 56px 0 20px;
       }
-      .lede { color: rgba(255, 255, 255, 0.69); font-size: 17px; line-height: 1.6; max-width: 60ch; margin: 0 0 8px; }
-      .note { color: rgba(255, 255, 255, 0.55); font-size: 13px; margin: 0 0 48px; }
-      .note a { color: #BCA6FF; }
+      h1 {
+        font-size: clamp(32px, 5.5vw, 48px);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin: 0 0 12px;
+        text-wrap: balance;
+        color: var(--ink);
+      }
+      .lede { color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 52ch; margin: 0 0 40px; }
       main { display: flex; flex-direction: column; gap: 16px; }
       .card {
         display: block;
         text-decoration: none;
         color: inherit;
         padding: 32px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(200, 191, 239, 0.20);
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(10, 5, 26, 0.06);
         border-radius: 20px;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 4px 24px rgba(50, 15, 153, 0.06);
         transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
       }
       .card:hover {
-        transform: translateY(-3px);
-        border-color: rgba(200, 191, 239, 0.45);
-        box-shadow: 0 14px 36px rgba(75, 23, 229, 0.28);
+        transform: translateY(-2px);
+        border-color: rgba(75, 23, 229, 0.22);
+        box-shadow: 0 12px 32px rgba(50, 15, 153, 0.10);
       }
-      .card:hover .go { color: #fff; }
+      .card:hover .go { color: var(--moi-dark); }
       .thumb {
         display: block;
         border-radius: 12px;
         overflow: hidden;
         aspect-ratio: 40 / 26;
         margin: -32px -32px 24px;
-        background: rgba(217, 204, 255, 0.08);
+        background: #F5F2FF;
       }
       .thumb img {
         width: 100%;
@@ -343,7 +358,7 @@ ${JSON.stringify(jsonLd, null, 2)}
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-weight: 600;
-        color: rgba(255, 255, 255, 0.55);
+        color: var(--ink-3);
         margin: 0 0 12px;
       }
       h2 {
@@ -353,17 +368,17 @@ ${JSON.stringify(jsonLd, null, 2)}
         letter-spacing: -0.01em;
         margin: 0 0 10px;
         text-wrap: balance;
-        color: rgba(255, 255, 255, 0.85);
+        color: var(--ink);
       }
-      .summary { color: rgba(255, 255, 255, 0.69); font-size: 15px; line-height: 1.65; margin: 0; }
+      .summary { color: var(--ink-2); font-size: 15px; line-height: 1.65; margin: 0; }
       .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; }
       .tag {
         font-size: 11px;
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: #BCA6FF;
-        border: 1px solid rgba(217, 204, 255, 0.28);
+        color: var(--moi-main);
+        border: 1px solid rgba(75, 23, 229, 0.18);
         border-radius: 999px;
         padding: 4px 10px;
       }
@@ -374,7 +389,7 @@ ${JSON.stringify(jsonLd, null, 2)}
         margin-top: 20px;
         font-size: 13px;
         font-weight: 600;
-        color: #BCA6FF;
+        color: var(--moi-main);
         transition: color 160ms ease;
       }
       @media (max-width: 640px) {
@@ -387,14 +402,14 @@ ${JSON.stringify(jsonLd, null, 2)}
       .empty {
         margin: 0;
         padding: 40px 32px;
-        color: rgba(255, 255, 255, 0.55);
+        color: var(--ink-3);
         font-size: 15px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(200, 191, 239, 0.20);
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(10, 5, 26, 0.06);
         border-radius: 20px;
       }
-      footer { border-top: 1px solid rgba(217, 204, 255, 0.16); margin-top: 56px; padding-top: 24px; color: rgba(255, 255, 255, 0.55); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-      footer a { color: #BCA6FF; }
+      footer { border-top: 1px solid rgba(10, 5, 26, 0.08); margin-top: 56px; padding-top: 24px; color: var(--ink-3); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+      footer a { color: var(--moi-main); }
     </style>
   </head>
   <body>
@@ -415,13 +430,10 @@ ${JSON.stringify(jsonLd, null, 2)}
     </nav>
 
     <div class="wrap">
-      <h1>Writing on the personal internet</h1>
+      <span class="chip">Journal</span>
+      <h1>Authority, on the page.</h1>
       <p class="lede">
-        Contextual Compute, agent authority, protocol research, and product
-        updates — from the team building MOI.
-      </p>
-      <p class="note">
-        Full articles are published on <a href="${BLOG_ORIGIN}">blog.moi.technology</a>.
+        How agents get to act. Native assets. The protocol underneath.
       </p>
 
       <main>
