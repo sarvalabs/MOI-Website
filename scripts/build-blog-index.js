@@ -220,13 +220,13 @@ ${JSON.stringify(jsonLd, null, 2)}
         justify-content: space-between;
         padding: 0 20px;
         border-radius: 999px;
-        background: linear-gradient(180deg, rgba(60, 44, 130, 0.55) 0%, rgba(34, 22, 88, 0.55) 100%);
+        background: rgba(255, 255, 255, 0.78);
         backdrop-filter: blur(28px) saturate(150%);
         -webkit-backdrop-filter: blur(28px) saturate(150%);
-        border: 1px solid rgba(200, 191, 239, 0.28);
+        border: 1px solid rgba(10, 5, 26, 0.08);
         box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.18),
-          0 14px 36px rgba(10, 5, 38, 0.32);
+          inset 0 1px 0 rgba(255, 255, 255, 0.9),
+          0 14px 36px rgba(50, 15, 153, 0.08);
         transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
       }
       .site-nav a { text-decoration: none; }
@@ -237,14 +237,14 @@ ${JSON.stringify(jsonLd, null, 2)}
         font-size: 12px;
         font-weight: 600;
         letter-spacing: 0.04em;
-        color: rgba(255, 255, 255, 0.72);
+        color: rgba(10, 5, 26, 0.69);
         padding: 6px 14px;
         border-radius: 999px;
         white-space: nowrap;
         transition: color 0.3s ease, background 0.3s ease;
       }
-      .nav-center a:hover { color: #fff; }
-      .nav-center a.active { color: #fff; background: rgba(255, 255, 255, 0.1); }
+      .nav-center a:hover { color: rgba(10, 5, 26, 0.85); }
+      .nav-center a.active { color: var(--moi-main); background: rgba(75, 23, 229, 0.08); }
       .nav-cta {
         flex-shrink: 0;
         font-size: 12px;
