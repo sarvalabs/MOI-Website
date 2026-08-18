@@ -100,26 +100,30 @@ const jsonLd = {
 };
 
 // Thumbnail only when the post set `cover`. No cover means no tile — the
-// card is the title, summary, date, and tags, and the title is the link.
+// card is the title, summary, date, and tags, and the whole card is the link.
 const cards = posts
   .map((p) => {
     const thumb = p.cover
-      ? `          <a class="thumb" href="${articleUrl(p.slug)}" tabindex="-1" aria-hidden="true">
-            <img src="${esc(coverUrl(p.cover))}" alt="" loading="lazy" />
-          </a>
+      ? `          <span class="thumb"><img src="${esc(coverUrl(p.cover))}" alt="" loading="lazy" /></span>
 `
       : '';
-    return `        <article class="card">
+    const tags = (p.tags || [])
+      .map((t) => `<span class="tag">${esc(t)}</span>`)
+      .join('');
+    return `        <article>
+        <a class="card" href="${articleUrl(p.slug)}">
 ${thumb}          <div class="card-body">
             <p class="meta">
               <time datetime="${new Date(p.date).toISOString()}">${esc(fmtDate(p.date))}</time>
-              ${(p.tags || []).map((t) => `<span class="tag">${esc(t)}</span>`).join('\n              ')}
-              <span class="read">${p.minutes} min read</span>
+              <span aria-hidden="true">·</span>
+              <span>${p.minutes} min read</span>
             </p>
-            <h2><a href="${articleUrl(p.slug)}">${esc(p.title)}</a></h2>
+            <h2>${esc(p.title)}</h2>
             <p class="summary">${esc(p.summary)}</p>
-            ${p.author?.name ? `<p class="byline">${esc(p.author.name)}</p>` : ''}
+            ${tags ? `<p class="tags">${tags}</p>` : ''}
+            <span class="go">Read <span aria-hidden="true">→</span></span>
           </div>
+        </a>
         </article>`;
   })
   .join('\n');
@@ -144,6 +148,9 @@ const html = `<!doctype html>
     <meta property="og:url" content="${SITE_ORIGIN}/blog" />
     <link rel="alternate" type="application/rss+xml" title="MOI Blog" href="${BLOG_ORIGIN}/rss.xml" />
     <link rel="icon" type="image/svg+xml" href="/brand/logos/SVG/default-light.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <script type="application/ld+json">
 ${JSON.stringify(jsonLd, null, 2)}
     </script>
@@ -159,13 +166,19 @@ ${JSON.stringify(jsonLd, null, 2)}
         margin: 0;
         /* top padding clears the fixed navbar (top: 16px + 50px tall) */
         padding: 96px 24px 96px;
-        background: linear-gradient(180deg, #1a0b4d 0%, var(--moi-black) 60%);
+        background:
+          radial-gradient(60% 40% at 80% 8%, rgba(75, 23, 229, 0.32), transparent 60%),
+          radial-gradient(50% 35% at 8% 40%, rgba(111, 69, 234, 0.22), transparent 60%),
+          radial-gradient(50% 40% at 92% 60%, rgba(75, 23, 229, 0.22), transparent 60%),
+          linear-gradient(180deg, #0A0526 0%, #1B1148 50%, var(--moi-black) 100%);
+        background-attachment: fixed;
         color: #fff;
         font-family: var(--font);
+        font-weight: 500;
         -webkit-font-smoothing: antialiased;
         min-height: 100vh;
       }
-      .wrap { max-width: 860px; margin: 0 auto; }
+      .wrap { max-width: 760px; margin: 0 auto; }
 
       /* Navbar — hand-mirrored from src/components/Navbar.jsx and kept in step
          with .moi-nav-pill in src/styles/moi-tokens.css. This page is static
@@ -263,29 +276,41 @@ ${JSON.stringify(jsonLd, null, 2)}
       }
       h1 {
         font-size: clamp(38px, 7vw, 62px);
+        font-weight: 700;
         line-height: 1.05;
         letter-spacing: -0.02em;
         margin: 72px 0 16px;
         text-wrap: balance;
+        color: rgba(255, 255, 255, 0.85);
       }
-      .lede { color: rgba(255, 255, 255, 0.7); font-size: 17px; line-height: 1.6; max-width: 60ch; margin: 0 0 8px; }
-      .note { color: rgba(255, 255, 255, 0.45); font-size: 13px; margin: 0 0 48px; }
-      .note a { color: var(--moi-lavender); }
+      .lede { color: rgba(255, 255, 255, 0.69); font-size: 17px; line-height: 1.6; max-width: 60ch; margin: 0 0 8px; }
+      .note { color: rgba(255, 255, 255, 0.55); font-size: 13px; margin: 0 0 48px; }
+      .note a { color: #BCA6FF; }
+      main { display: flex; flex-direction: column; gap: 16px; }
       .card {
-        border-top: 1px solid rgba(217, 204, 255, 0.16);
-        padding: 32px 0;
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(200, 191, 239, 0.20);
+        border-radius: 20px;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
       }
-      .card:has(.thumb) {
-        display: grid;
-        grid-template-columns: 210px 1fr;
-        gap: 28px;
-        align-items: start;
+      .card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(200, 191, 239, 0.45);
+        box-shadow: 0 14px 36px rgba(75, 23, 229, 0.28);
       }
+      .card:hover .go { color: #fff; }
       .thumb {
         display: block;
         border-radius: 12px;
         overflow: hidden;
         aspect-ratio: 40 / 26;
+        margin: -32px -32px 24px;
         background: rgba(217, 204, 255, 0.08);
       }
       .thumb img {
@@ -294,37 +319,67 @@ ${JSON.stringify(jsonLd, null, 2)}
         object-fit: cover;
         display: block;
       }
-      .read { color: rgba(255, 255, 255, 0.5); }
-      @media (max-width: 640px) {
-        .card { grid-template-columns: 1fr; gap: 16px; }
-      }
       .meta {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: 8px;
         align-items: baseline;
         font-size: 11px;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
         font-weight: 600;
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.55);
+        margin: 0 0 12px;
+      }
+      h2 {
+        font-size: clamp(22px, 3.4vw, 28px);
+        font-weight: 700;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
         margin: 0 0 10px;
+        text-wrap: balance;
+        color: rgba(255, 255, 255, 0.85);
       }
-      .tag { color: var(--moi-lavender); }
-      h2 { font-size: clamp(22px, 3.4vw, 31px); line-height: 1.2; letter-spacing: -0.01em; margin: 0 0 10px; text-wrap: balance; }
-      h2 a { color: #fff; text-decoration: none; }
-      h2 a:hover { color: var(--moi-lavender); }
-      .summary { color: rgba(255, 255, 255, 0.68); font-size: 15px; line-height: 1.65; margin: 0; max-width: 62ch; }
-      .byline { color: var(--moi-lavender); font-size: 12px; font-weight: 600; margin: 14px 0 0; }
+      .summary { color: rgba(255, 255, 255, 0.69); font-size: 15px; line-height: 1.65; margin: 0; }
+      .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; }
+      .tag {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #BCA6FF;
+        border: 1px solid rgba(217, 204, 255, 0.28);
+        border-radius: 999px;
+        padding: 4px 10px;
+      }
+      .go {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #BCA6FF;
+        transition: color 160ms ease;
+      }
+      @media (max-width: 640px) {
+        .card { padding: 24px; }
+        .thumb { margin: -24px -24px 20px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .card, .card:hover { transform: none; transition: border-color 200ms ease, box-shadow 200ms ease; }
+      }
       .empty {
-        border-top: 1px solid rgba(217, 204, 255, 0.16);
-        padding: 40px 0;
         margin: 0;
-        color: rgba(255, 255, 255, 0.5);
+        padding: 40px 32px;
+        color: rgba(255, 255, 255, 0.55);
         font-size: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(200, 191, 239, 0.20);
+        border-radius: 20px;
       }
-      footer { border-top: 1px solid rgba(217, 204, 255, 0.16); margin-top: 56px; padding-top: 24px; color: rgba(255, 255, 255, 0.45); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-      footer a { color: var(--moi-lavender); }
+      footer { border-top: 1px solid rgba(217, 204, 255, 0.16); margin-top: 56px; padding-top: 24px; color: rgba(255, 255, 255, 0.55); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+      footer a { color: #BCA6FF; }
     </style>
   </head>
   <body>
