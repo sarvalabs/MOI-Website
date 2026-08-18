@@ -159,7 +159,7 @@ const html = `<!doctype html>
     <meta property="og:type" content="website" />
     <meta property="og:url" content="${SITE_ORIGIN}/blog" />
     <link rel="alternate" type="application/rss+xml" title="MOI Blog" href="${BLOG_ORIGIN}/rss.xml" />
-    <link rel="icon" type="image/svg+xml" href="/brand/logos/SVG/default-dark.svg" />
+    <link rel="icon" type="image/svg+xml" href="/brand/logos/SVG/default-light.svg" />
     <script type="application/ld+json">
 ${JSON.stringify(jsonLd, null, 2)}
     </script>
