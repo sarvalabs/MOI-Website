@@ -512,3 +512,25 @@ MOI is the Participant Layer that provides on-chain authority. The list below cl
 **Not an identity layer.** Decentralized identifiers, verifiable credentials and know-your-agent schemes establish who an agent is. MOI establishes what it may do. Identity is a precondition for authority, not a substitute for it, and the identity stack keeps its contract unchanged.
 
 **Not a policy engine.** A runtime policy decision point makes the decision fresh while leaving the authority what it was: a one-writer artifact authored at administrative cadence, in which you appear as data rather than as a writer. A stateful decision about a static authority is not stateful authority.
+
+## Key takeaways, recap
+
+- **MOI Network is the Participant Layer that provides on-chain authority.** Participants exist natively in computation, state is participant-owned, and context accumulates as a verifiable structure that travels with the participant.
+
+- **The paradigm underneath is Contextual Compute,** which adds WHO as a fourth dimension alongside WHAT, WHERE and HOW. Everything else in the architecture is a consequence of that.
+
+- **The layer carries four classes of value:** owned, attested, contextual and relational. Proving the substrate at the hardest class proves it for the rest.
+
+- **Four structural effects follow:** portable business trust, agent safety, native assets, and participant-specific intelligence.
+
+- **Participant-centric authority is the shift the industry needs now,** because agents act at machine speed against authority models built for a human at a login screen, and the exposure inside a revocation window scales with actions rather than with time.
+
+- **MOI enables that shift** by making the participant a dimension of the substrate, which lets the authority relation be composed from two independently owned records rather than materialised as an object someone has to own.
+
+- **The MOI Authority Layer is the first implementation** of the relational class, not the boundary of what the Participant Layer is for.
+
+- MOI is currently live on DevNet, and MOI Agent Launchpad runs on it.
+
+<!-- TODO: link the phrase "how to give an AI agent authority without handing it
+     your credentials" below to Cornerstone 2 once that post is published. -->
+The comparison against OAuth, JWT, capability tokens, policy engines and agent memory layers is set out in how to give an AI agent authority without handing it your credentials.
