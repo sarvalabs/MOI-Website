@@ -160,21 +160,13 @@ const html = `<!doctype html>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <script>
-      (function () {
-        var id = 'G-NRC43H4SZF';
-        var hosts = ['moi.technology', 'www.moi.technology', 'blog.moi.technology'];
-        if (hosts.indexOf(location.hostname) === -1) return;
-        var s = document.createElement('script');
-        s.async = true;
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
-        document.head.appendChild(s);
-        window.dataLayer = window.dataLayer || [];
-        window.gtag = function () { dataLayer.push(arguments); };
-        window.gtag('js', new Date());
-        window.gtag('config', id, { cookie_domain: '.moi.technology' });
-      })();
-    </script>
+    <!-- Google Tag Manager. GA4 is a tag inside the container; the hostname
+         guard is a trigger condition there, not here. -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-M4BR46Z2');</script>
     <script type="application/ld+json">
 ${JSON.stringify(jsonLd, null, 2)}
     </script>
@@ -424,6 +416,8 @@ ${JSON.stringify(jsonLd, null, 2)}
     </style>
   </head>
   <body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M4BR46Z2"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <nav class="site-nav">
         <div class="nav-pill" id="nav-pill">
           <a class="nav-logo" href="/" aria-label="MOI — home">
