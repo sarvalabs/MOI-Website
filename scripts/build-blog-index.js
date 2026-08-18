@@ -443,7 +443,7 @@ ${JSON.stringify(jsonLd, null, 2)}
     <div class="wrap">
       <h1>MOI Network Blog</h1>
       <p class="lede">
-        How agents get to act. Native assets. The protocol underneath.
+        Learn about agents bound by your authority, native assets, and the protocol underneath.
       </p>
       <a class="home-btn" href="/">moi.technology →</a>
 
