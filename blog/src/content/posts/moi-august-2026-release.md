@@ -34,11 +34,13 @@ draft: false
 
 Two things became true on MOI in August 2026. State costs something, and it has an owner who decides who may write to it.
 
-Both land in **go-moi v0.12.0**. go-moi is the reference implementation of the MOI protocol, the network where every participant, human or agent, holds their own state. Both changes run the full height of the stack: **PISA**, the runtime that executes logic; **Coco**, the language you write that logic in; **js-moi-sdk**, the JavaScript SDK you call it from; and **Voyage**, the network explorer and faucet. This is one upgrade with a lot of moving parts, not a pile of separate ones.
+Both land in **go-moi v0.12.0**. go-moi is the reference implementation of the MOI protocol, the network where every participant, human or agent, holds their own state. Both changes run the full height of the stack: **PISA**, the runtime that executes logic; **Coco**, the language you write that logic in; and **js-moi-sdk**, the JavaScript SDK you call it from. This is one upgrade with a lot of moving parts, not a pile of separate ones.
+
+Two things shipped in the same window on their own track. **Voyage**, the network explorer and faucet, moved to wallet sign-in and changed how the faucet works, and the **MOI wallet extension** shipped twice. Neither follows from storage costing or access control; they are covered separately below.
 
 ## What changed in this release?
 
-Storage costing and access control. They shape most of what follows, though a few account-level additions ride along independently of both.
+Storage costing and access control. They shape most of what follows — though the account-level additions, and everything in Voyage and the wallet, ride along independently of both.
 
 The versions this covers, all released between 12 and 18 August 2026:
 
@@ -55,8 +57,6 @@ Storage costing and access control are related. Once a logic's state lives on *y
 | **PISA** v0.8.0 | `VOLPAY` and `VOLRES` opcodes, metering per (account, payer) | The `AccessControl` hook go-moi's default-deny runs through |
 | **Coco** v0.9.0 | `payer` clause on `mutate` | `grant storage_mutate` in Cocolab, `Actor()` queries |
 | **js-moi-sdk** v0.8.0 | Deposit and withdraw, automatic funding on creation | Policy create, update and delete |
-
-Voyage and the wallet also shipped in this window, with changes that belong to neither theme — wallet sign-in, participant registration, a changed faucet. Those are [further down](#what-changed-in-voyage-and-the-wallet).
 
 ## How does paying for storage work?
 
