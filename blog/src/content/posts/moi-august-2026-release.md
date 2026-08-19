@@ -42,7 +42,7 @@ Storage costing and access control. Everything else in this post follows from th
 The versions this covers, all released between 13 and 18 August 2026:
 
 `go-moi:v0.12.0` · `go-pisa:v0.8.0` · `cocolang:v0.9.0` · `vscode-coco:v0.4.0` ·
-`js-moi-sdk:v0.8.0` · `js-moi-agent-registry:v0.3.0-rc1` · `voyage:v0.9.0` ·
+`js-moi-sdk:v0.8.0` · `voyage:v0.9.0` ·
 `voyage-api:v0.9.0` · `voyage:v0.8.2` · `voyage-api:v0.8.2` ·
 `moi-wallet-extension:v0.1.5` · `moi-wallet-extension:v0.1.4`
 
@@ -152,7 +152,6 @@ Most application code keeps working. These are the things that do not.
 
 Smaller things that are simply nice: `predictAssetId` and `predictLogicId` give you an account ID before creation; Coco gained field-name shorthand in class literals (`Person{name, age}`); and vscode-coco v0.4.0 does more than understand the `payer` clause — it reads `[target.pisa] version` from the `coco.nut` beside the file you are editing and gates every version-dependent check on it, so it reports `VolumeCapacity()` as removed on a 0.8.0 target while still accepting it on 0.7.1. It also infers the state qualifier a callable needs from its body and compares it to what you declared, which surfaces one rule worth committing to memory: **an omitted qualifier means `pure`, not `static`**.
 
-<!-- TODO(review): js-moi-agent-registry v0.3.0-rc1 is a release candidate whose peer dependency is js-moi-sdk 0.8.0 — mention it here, or wait for the final? -->
 
 ## What do node operators need to do?
 
@@ -170,7 +169,6 @@ Config and genesis files need updating for `ProtocolVersion 0.12.0`.
 
 What you will notice once it is running: consensus and syncer traffic is now compressed, which shows up most on large ICS sets; a restarted node waits for initial sync to finish before joining consensus; read locks let accounts take part in a tesseract with a latest-consistent-read guarantee instead of a full mutation, lightening the consensus hot path; and validator data now lives in a dedicated system object, readable through `moi.Validators`, instead of being tracked ad hoc. Images are now published multi-OS and multi-arch, and the liveness algorithm is randomised, with a slot-locking stall fixed.
 
-<!-- TODO(review): guardian staking interaction types appear in the go-moi op-code table with no release note — shipped or guarded? Anything operators must do? -->
 
 ## What changed in Voyage and the wallet?
 
@@ -195,7 +193,6 @@ Voyage shipped twice in this window, and the second release changes how you get 
 | `cocolang:v0.9.0` | `payer` on `mutate`, `Actor()` queries, field shorthand, `grant storage_mutate` in Cocolab, asset state qualifiers — [release notes](https://cocolang.dev/docs/releases/#v090) · [docs](https://cocolang.dev/docs/book) |
 | `vscode-coco:v0.4.0` | Coco 0.9.0 and PISA 0.8.0 support, the `payer` clause, actor validation — [release notes](https://github.com/sarvalabs/vscode-coco/releases/tag/v0.4.0), and on the VS Code marketplace |
 | `js-moi-sdk:v0.8.0` | Storage and access-policy operations, automatic funding on creation, ID prediction, MAS0/1/2 flows, state renames — [release notes](https://github.com/sarvalabs/js-moi-sdk/releases/tag/v0.8.0) |
-| `js-moi-agent-registry:v0.3.0-rc1` | Release candidate. Read methods surface failures instead of swallowing them; peers with SDK 0.8.0 |
 | `voyage:v0.9.0` · `voyage-api:v0.9.0` | Wallet sign-in; faucet funds existing accounts only |
 | `voyage:v0.8.2` · `voyage-api:v0.8.2` | Participant registration with rate limits, tesseracts by participant with pagination, pending-interactions fix |
 | `moi-wallet-extension:v0.1.4` · `v0.1.5` | Multi-account picker on Connect Wallet, self-registration link, shorter address truncation; then error handling in network config and a larger registration amount |
@@ -203,7 +200,6 @@ Voyage shipped twice in this window, and the second release changes how you get 
 <!-- Version check: go-moi v0.12.0's go.mod pins go-pisa v0.8.0 and Go 1.24.6, so
      the "PISA v0.5.0" line in its Compute changelog is stale — worth fixing in the
      release notes, but the post is correct as written. -->
-<!-- TODO(review): MOI Wallet extension v0.1.4 shipped in this window; release notes were not accessible to the author -->
 
 ## What to do now
 
