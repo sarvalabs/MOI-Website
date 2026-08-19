@@ -43,7 +43,8 @@ The versions this covers, all released between 13 and 18 August 2026:
 
 `go-moi:v0.12.0` · `go-pisa:v0.8.0` · `cocolang:v0.9.0` · `vscode-coco:v0.4.0` ·
 `js-moi-sdk:v0.8.0` · `js-moi-agent-registry:v0.3.0-rc1` · `voyage:v0.9.0` ·
-`voyage-api:v0.9.0` · `voyage:v0.8.2` · `voyage-api:v0.8.2`
+`voyage-api:v0.9.0` · `voyage:v0.8.2` · `voyage-api:v0.8.2` ·
+`moi-wallet-extension:v0.1.5` · `moi-wallet-extension:v0.1.4`
 
 They are related. Once a logic's state lives on *your* account rather than the logic's — which is what [the Participant Layer means in practice](https://blog.moi.technology/article/what-is-moi-network/) — two questions have to be answered explicitly that other chains answer implicitly. Who pays for the space that state occupies? And who is allowed to write into it?
 
@@ -149,7 +150,7 @@ Most application code keeps working. These are the things that do not.
 - **A logic can no longer load another logic's actor state.** The runtime raises an error.
 - **Return types changed** on `moi.LogicIDs`, `debug.Accounts` and `net.Peers` — they now return a unified identifier type, so parsers need updating.
 
-Smaller things that are simply nice: `predictAssetId` and `predictLogicId` give you an account ID before creation; Coco gained field-name shorthand in class literals (`Person{name, age}`); and vscode-coco v0.4.0 understands the `payer` clause.
+Smaller things that are simply nice: `predictAssetId` and `predictLogicId` give you an account ID before creation; Coco gained field-name shorthand in class literals (`Person{name, age}`); and vscode-coco v0.4.0 does more than understand the `payer` clause — it reads `[target.pisa] version` from the `coco.nut` beside the file you are editing and gates every version-dependent check on it, so it reports `VolumeCapacity()` as removed on a 0.8.0 target while still accepting it on 0.7.1. It also infers the state qualifier a callable needs from its body and compares it to what you declared, which surfaces one rule worth committing to memory: **an omitted qualifier means `pure`, not `static`**.
 
 <!-- TODO(review): js-moi-agent-registry v0.3.0-rc1 is a release candidate whose peer dependency is js-moi-sdk 0.8.0 — mention it here, or wait for the final? -->
 
@@ -183,7 +184,7 @@ Voyage shipped twice in this window, and the second release changes how you get 
 
 **The faucet changed, and this is the one that will catch people out.** It used to create an account and fund it in one step. Now it only sends tokens to accounts that already exist on the network — if the account is not on-chain yet, it returns `USER DOESNT EXIST`. Register first, then use the faucet.
 
-<!-- TODO(review): MOI Wallet extension v0.1.4 shipped in this window and Voyage's new sign-in depends on it, but its release notes were not accessible — what changed in the extension? -->
+**In the wallet itself**, two releases landed. v0.1.4 added a multi-account picker to the Connect Wallet screen — which is what makes connecting more than one account to Voyage possible — and a link for users to register their own wallet account. It also shortened how addresses are truncated, from `0x000address…` to `0x00…ess`, and dropped sequence-number validation and fuel estimation from the sign-interaction screen. v0.1.5 followed with better error handling and validation in network configuration, and raised the participant registration amount in the encoded payload from 1k to 100k.
 
 ## Everything shipped
 
@@ -197,8 +198,11 @@ Voyage shipped twice in this window, and the second release changes how you get 
 | `js-moi-agent-registry:v0.3.0-rc1` | Release candidate. Read methods surface failures instead of swallowing them; peers with SDK 0.8.0 |
 | `voyage:v0.9.0` · `voyage-api:v0.9.0` | Wallet sign-in; faucet funds existing accounts only |
 | `voyage:v0.8.2` · `voyage-api:v0.8.2` | Participant registration with rate limits, tesseracts by participant with pagination, pending-interactions fix |
+| `moi-wallet-extension:v0.1.4` · `v0.1.5` | Multi-account picker on Connect Wallet, self-registration link, shorter address truncation; then error handling in network config and a larger registration amount |
 
-<!-- TODO(review): go-moi's notes cite the embedded runtime as PISA v0.8.0 in Highlights and v0.5.0 in the Compute changelog, and Coco v0.7.0 where the language release is v0.9.0 — confirm before publishing -->
+<!-- Version check: go-moi v0.12.0's go.mod pins go-pisa v0.8.0 and Go 1.24.6, so
+     the "PISA v0.5.0" line in its Compute changelog is stale — worth fixing in the
+     release notes, but the post is correct as written. -->
 <!-- TODO(review): MOI Wallet extension v0.1.4 shipped in this window; release notes were not accessible to the author -->
 
 ## What to do now
