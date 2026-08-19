@@ -117,6 +117,27 @@ grant storage_mutate to callers(any) origins(Alice) through Token as Bob
 
 <!-- TODO: link the Manage Access Policies tutorial once moidocs#120 merges (docs/build/tutorials/access-policy-tutorial) -->
 
+## What else landed at the account level?
+
+Three things worth knowing, none of which are storage or access control.
+
+**Participant variants got first-class support.** Two new interactions,
+`AccountConfigure` and `AccountInherit`, cover account configuration and
+context inheritance — a variant account inheriting context from its parent.
+`moi.SubAccountCount` reports how many variants sit under an account, and
+participant-create is now correctly rejected when the target is itself a
+variant. The syncer was optimised for inheritance too, so this is not a
+surface-level addition.
+
+**Asset approvals became inspectable.** Three read RPCs arrived for things
+that previously had no direct query: `moi.Lockups` for asset lockups held by
+an account, `moi.Deeds` for the lockup deeds behind them, and
+`moi.Mandates` for asset approvals *and their expiry*. If you have been
+tracking approvals by replaying interactions, you can now just ask.
+
+**Keys are enumerable.** `moi.AccountKeys` lists the keys on an account,
+which multi-key and recovery flows previously had to infer.
+
 ## What do developers need to change?
 
 Most application code keeps working. These are the things that do not.
@@ -146,17 +167,23 @@ Access control, storage costing and the new validator system object all change s
 
 Config and genesis files need updating for `ProtocolVersion 0.12.0`.
 
-What you will notice once it is running: consensus and syncer traffic is now compressed, which shows up most on large ICS sets; a restarted node waits for initial sync to finish before joining consensus; read locks let accounts take part in a tesseract with a latest-consistent-read guarantee instead of a full mutation, lightening the consensus hot path; and validator data now lives in a dedicated system object, readable through `moi.Validators`, instead of being tracked ad hoc.
+What you will notice once it is running: consensus and syncer traffic is now compressed, which shows up most on large ICS sets; a restarted node waits for initial sync to finish before joining consensus; read locks let accounts take part in a tesseract with a latest-consistent-read guarantee instead of a full mutation, lightening the consensus hot path; and validator data now lives in a dedicated system object, readable through `moi.Validators`, instead of being tracked ad hoc. Images are now published multi-OS and multi-arch, and the liveness algorithm is randomised, with a slot-locking stall fixed.
 
 <!-- TODO(review): guardian staking interaction types appear in the go-moi op-code table with no release note — shipped or guarded? Anything operators must do? -->
 
-## What changed for people using MOI?
+## What changed in Voyage and the wallet?
 
-You can now **sign in to Voyage with your MOI wallet**. You sign a short message — no transaction is sent and no fuel is spent — and you can connect more than one wallet account to a Voyage account.
+Voyage shipped twice in this window, and the second release changes how you get in.
 
-You can also **register yourself as a participant** directly from Voyage, and browse a participant's tesseracts with pagination. Pending interactions show on the home page again.
+**Sign in with your wallet.** Voyage v0.9.0 replaces the old sign-in — generate a MOI ID, log in with IOME, or import an existing ID — with signing in through the MOI wallet Chrome extension. It works the way "Connect Wallet" does elsewhere: you sign a short message, **no transaction is sent and no fuel is spent**. You can connect more than one wallet account to a single Voyage account.
 
-And one change that will catch people out: **the faucet no longer creates accounts.** It only sends tokens to accounts that already exist on the network. Register first, then request funds. If you see `USER DOESNT EXIST`, that is why.
+**Register yourself as a participant.** Since v0.8.2 you can complete on-chain registration from Voyage itself, by supplying either POLO-encoded account details or ordinary account details. The API side added rate limits on how many registrations and token transfers are allowed per day.
+
+**Better history.** A new API returns a participant's tesseracts with pagination, so Voyage can page through an account's history rather than truncating it, and pending interactions appear on the home page again after a spell of going missing.
+
+**The faucet changed, and this is the one that will catch people out.** It used to create an account and fund it in one step. Now it only sends tokens to accounts that already exist on the network — if the account is not on-chain yet, it returns `USER DOESNT EXIST`. Register first, then use the faucet.
+
+<!-- TODO(review): MOI Wallet extension v0.1.4 shipped in this window and Voyage's new sign-in depends on it, but its release notes were not accessible — what changed in the extension? -->
 
 ## Everything shipped
 
