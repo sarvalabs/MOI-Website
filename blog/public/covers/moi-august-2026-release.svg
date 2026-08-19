@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="MOI August 2026 release: state costs something, and state has an owner">
+  <defs>
+    <radialGradient id="h1" cx="25%" cy="15%" r="60%">
+      <stop offset="0" stop-color="#d9ccff" stop-opacity=".55"/><stop offset="1" stop-color="#d9ccff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="h2" cx="78%" cy="72%" r="60%">
+      <stop offset="0" stop-color="#bca6ff" stop-opacity=".40"/><stop offset="1" stop-color="#bca6ff" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .f{font-family:Poppins,'Helvetica Neue',Arial,sans-serif}
+      .lbl{font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;fill:#4b17e5}
+      .hd{font-size:46px;font-weight:600;letter-spacing:-.02em;fill:#0a051a}
+      .sub{font-size:19px;font-weight:400;fill:rgba(10,5,26,.62)}
+      .ver{font-size:17px;font-weight:600;fill:#320f99;letter-spacing:.01em}
+    </style>
+  </defs>
+
+  <rect width="1200" height="630" fill="#fcfbff"/>
+  <rect width="1200" height="630" fill="url(#h1)"/>
+  <rect width="1200" height="630" fill="url(#h2)"/>
+
+  <g class="f">
+    <text x="80" y="96" class="lbl">MOI release · August 2026</text>
+
+    <!-- LEFT PANEL: state costs something -->
+    <g transform="translate(80,150)">
+      <rect width="480" height="300" rx="24" fill="#ffffff" fill-opacity=".70" stroke="rgba(10,5,26,.07)"/>
+      <!-- coin -->
+      <ellipse cx="112" cy="112" rx="42" ry="42" fill="#4b17e5" fill-opacity=".10" stroke="#4b17e5" stroke-width="2"/>
+      <text x="112" y="120" text-anchor="middle" class="f" font-size="19" font-weight="600" fill="#4b17e5">KMOI</text>
+      <!-- arrow -->
+      <path d="M168 112 H236" stroke="#4b17e5" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M228 104 L238 112 L228 120" fill="none" stroke="#4b17e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- bytes block -->
+      <g transform="translate(256,70)">
+        <rect width="128" height="84" rx="12" fill="#f5f2ff" stroke="#4b17e5" stroke-opacity=".35"/>
+        <rect x="14" y="18" width="100" height="9" rx="4.5" fill="#4b17e5" fill-opacity=".55"/>
+        <rect x="14" y="37" width="100" height="9" rx="4.5" fill="#4b17e5" fill-opacity=".38"/>
+        <rect x="14" y="56" width="62"  height="9" rx="4.5" fill="#4b17e5" fill-opacity=".22"/>
+      </g>
+      <text x="40" y="212" class="hd" font-size="30">State costs</text>
+      <text x="40" y="248" class="hd" font-size="30">something</text>
+      <text x="40" y="278" class="sub" font-size="16">Bought up front as a storage grant</text>
+    </g>
+
+    <!-- RIGHT PANEL: state has an owner -->
+    <g transform="translate(640,150)">
+      <rect width="480" height="300" rx="24" fill="#ffffff" fill-opacity=".70" stroke="rgba(10,5,26,.07)"/>
+      <!-- foreign logic -->
+      <rect x="34" y="86" width="96" height="52" rx="12" fill="#f5f2ff" stroke="#4b17e5" stroke-opacity=".35"/>
+      <text x="82" y="118" text-anchor="middle" class="f" font-size="14" font-weight="600" fill="#4b17e5">logic</text>
+      <!-- blocked arrow -->
+      <path d="M142 112 H208" stroke="rgba(10,5,26,.32)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="7 6"/>
+      <g stroke="#d1495b" stroke-width="3" stroke-linecap="round">
+        <path d="M166 98 L190 126"/><path d="M190 98 L166 126"/>
+      </g>
+      <!-- shielded account -->
+      <g transform="translate(238,58)">
+        <path d="M56 2 L108 22 V62 C108 92 84 112 56 122 C28 112 4 92 4 62 V22 Z" fill="#4b17e5" fill-opacity=".10" stroke="#4b17e5" stroke-width="2"/>
+        <circle cx="56" cy="52" r="15" fill="none" stroke="#4b17e5" stroke-width="2"/>
+        <path d="M31 92 C31 76 81 76 81 92" fill="none" stroke="#4b17e5" stroke-width="2" stroke-linecap="round"/>
+      </g>
+      <text x="40" y="212" class="hd" font-size="30">State has</text>
+      <text x="40" y="248" class="hd" font-size="30">an owner</text>
+      <text x="40" y="278" class="sub" font-size="16">Foreign writes need a published policy</text>
+    </g>
+
+    <text x="80" y="536" class="ver">go-moi v0.12.0 · go-pisa v0.8.0 · cocolang v0.9.0 · js-moi-sdk v0.8.0</text>
+    <text x="80" y="572" class="sub" font-size="16">Storage costing and access control</text>
+  </g>
+</svg>

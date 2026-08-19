@@ -2,6 +2,7 @@
 title: "MOI August 2026 release: storage costing and access control"
 summary: "go-moi v0.12.0: state is bought up front as a storage grant, and a logic writing to your account now needs a policy you published."
 date: 2026-08-19
+cover: "/covers/moi-august-2026-release.svg"
 author:
   name: "Sarva Labs"
   role: "Engineering"
@@ -84,6 +85,8 @@ mutate cfg  -> MyModule.Logic.config payer Actor(sponsor)
 
 For most application code, none of this is work you have to do. **js-moi-sdk v0.8.0 funds newly created asset and logic accounts automatically** so they can cover their initial storage, with the amount tunable through `RoutineOption`. You reach for `payer` when you want a different answer to who pays — a logic that sponsors its own users, say.
 
+![A storage grant lifecycle: KMOI converts into a grant held on the target account, a logic write deducts bytes from that grant, StorageWithdraw converts unused bytes back to KMOI, and a write with no grant behind it is refused and reverts the interaction](../../assets/moi-august-2026-release/storage-grant-lifecycle.svg)
+
 <!-- TODO: link the Manage Storage tutorial once moidocs#120 merges (docs/build/tutorials/storage-cost-tutorial) -->
 
 ## Why does a logic need permission to write my state?
@@ -115,6 +118,8 @@ In Coco, Cocolab now emulates the runtime's default-deny, so a logic that quietl
 ```
 grant storage_mutate to callers(any) origins(Alice) through Token as Bob
 ```
+
+![Foreign access on MOI, denied and allowed: without a policy a logic writing to your account is refused, and with a policy published by the account owner — naming resource, actions, caller and origin — the same write passes](../../assets/moi-august-2026-release/foreign-access.svg)
 
 <!-- TODO: link the Manage Access Policies tutorial once moidocs#120 merges (docs/build/tutorials/access-policy-tutorial) -->
 

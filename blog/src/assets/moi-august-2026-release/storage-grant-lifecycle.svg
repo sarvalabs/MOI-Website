@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 430" width="1000" height="430" role="img">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4b17e5"/>
+    </marker>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#d1495b"/>
+    </marker>
+    <style>
+      .f{font-family:Poppins,'Helvetica Neue',Arial,sans-serif}
+      .n{font-size:15px;font-weight:600;fill:#0a051a}
+      .e{font-size:12.5px;font-weight:600;fill:#4b17e5;letter-spacing:.01em}
+      .m{font-size:12.5px;font-weight:400;fill:rgba(10,5,26,.62)}
+      .err{font-size:12.5px;font-weight:600;fill:#d1495b}
+      .box{fill:#ffffff;stroke:rgba(10,5,26,.10)}
+      .edge{stroke:#4b17e5;stroke-width:2.2;fill:none;marker-end:url(#a)}
+    </style>
+  </defs>
+  <rect width="1000" height="430" fill="#fcfbff"/>
+
+  <g class="f">
+    <!-- KMOI -->
+    <circle cx="90" cy="120" r="52" fill="#4b17e5" fill-opacity=".10" stroke="#4b17e5" stroke-width="2"/>
+    <text x="90" y="118" text-anchor="middle" class="n" fill="#4b17e5">KMOI</text>
+    <text x="90" y="138" text-anchor="middle" class="m" font-size="11">balance</text>
+
+    <!-- deposit -->
+    <path class="edge" d="M148 120 H288"/>
+    <text x="218" y="106" text-anchor="middle" class="e">StorageDeposit</text>
+
+    <!-- grant on account -->
+    <g transform="translate(296,52)">
+      <rect width="228" height="136" rx="18" class="box"/>
+      <text x="20" y="32" class="n">Storage grant</text>
+      <text x="20" y="52" class="m">held on the target account</text>
+      <rect x="20" y="68" width="188" height="14" rx="7" fill="#f5f2ff" stroke="#4b17e5" stroke-opacity=".28"/>
+      <rect x="20" y="68" width="118" height="14" rx="7" fill="#4b17e5" fill-opacity=".55"/>
+      <text x="20" y="104" class="m" font-size="11">used</text>
+      <text x="208" y="104" text-anchor="end" class="m" font-size="11">free</text>
+    </g>
+
+    <!-- write -->
+    <path class="edge" d="M532 120 H672"/>
+    <text x="602" y="106" text-anchor="middle" class="e">logic writes</text>
+    <text x="602" y="140" text-anchor="middle" class="m">bytes deducted</text>
+
+    <!-- state -->
+    <g transform="translate(680,52)">
+      <rect width="228" height="136" rx="18" class="box"/>
+      <text x="20" y="32" class="n">State persists</text>
+      <text x="20" y="52" class="m">paid for before it landed</text>
+      <rect x="20" y="72" width="188" height="9" rx="4.5" fill="#4b17e5" fill-opacity=".50"/>
+      <rect x="20" y="88" width="188" height="9" rx="4.5" fill="#4b17e5" fill-opacity=".34"/>
+      <rect x="20" y="104" width="112" height="9" rx="4.5" fill="#4b17e5" fill-opacity=".20"/>
+    </g>
+
+    <!-- withdraw arc back to KMOI -->
+    <path class="edge" d="M794 196 V246 Q794 268 772 268 H112 Q90 268 90 246 V180"/>
+    <text x="770" y="256" text-anchor="end" class="e">StorageWithdraw — unused bytes convert back to KMOI</text>
+
+    <!-- failure path -->
+    <path d="M410 196 V330" stroke="#d1495b" stroke-width="2.2" fill="none" stroke-dasharray="7 6" marker-end="url(#ar)"/>
+    <text x="398" y="252" text-anchor="end" class="err">no grant</text>
+    <g transform="translate(296,344)">
+      <rect width="424" height="58" rx="16" fill="#fff" stroke="#d1495b" stroke-opacity=".45"/>
+      <text x="22" y="26" class="err">Write refused</text>
+      <text x="22" y="45" class="m">the whole interaction reverts — storage is never billed after the fact</text>
+    </g>
+  </g>
+</svg>
