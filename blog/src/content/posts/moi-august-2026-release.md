@@ -39,6 +39,12 @@ Both land in **go-moi v0.12.0**, and both run the full height of the stack — t
 
 Storage costing and access control. Everything else in this post follows from those two.
 
+The versions this covers, all released between 13 and 18 August 2026:
+
+`go-moi:v0.12.0` · `go-pisa:v0.8.0` · `cocolang:v0.9.0` · `vscode-coco:v0.4.0` ·
+`js-moi-sdk:v0.8.0` · `js-moi-agent-registry:v0.3.0-rc1` · `voyage:v0.9.0` ·
+`voyage-api:v0.9.0` · `voyage:v0.8.2` · `voyage-api:v0.8.2`
+
 They are related. Once a logic's state lives on *your* account rather than the logic's — which is what [the Participant Layer means in practice](https://blog.moi.technology/article/what-is-moi-network/) — two questions have to be answered explicitly that other chains answer implicitly. Who pays for the space that state occupies? And who is allowed to write into it?
 
 | Layer | Storage costing | Access control |
@@ -154,15 +160,16 @@ And one change that will catch people out: **the faucet no longer creates accoun
 
 ## Everything shipped
 
-| Component | Version | What |
-|---|---|---|
-| go-moi | v0.12.0 | Storage costing, access control, read locks, validator system object, native asset logics, message compression |
-| go-pisa | v0.8.0 | `VOLPAY` and `VOLRES` opcodes, access-control interface, per-(account, payer) metering, asset access levels |
-| cocolang | v0.9.0 | `payer` on `mutate`, `Actor()` queries, field shorthand, `grant storage_mutate` in Cocolab, asset qualifiers |
-| vscode-coco | v0.4.0 | Coco 0.9.0 and PISA 0.8.0 support, `payer` clause, actor validation |
-| js-moi-sdk | v0.8.0 | Storage and access-policy operations, automatic funding, ID prediction, MAS0/1/2 flows, state renames |
-| voyage / voyage-api | v0.9.0 | Wallet sign-in; faucet funds existing accounts only |
-| voyage / voyage-api | v0.8.2 | Participant registration, tesseracts by participant, pending-interactions fix |
+| Release | What it brings |
+|---|---|
+| `go-moi:v0.12.0` | Storage costing, access control, read locks, validator system object, native asset logics, message compression. Protocol version 0.12.0; Go 1.24.6 |
+| `go-pisa:v0.8.0` | `VOLPAY` and `VOLRES` opcodes, the `AccessControl` interface, metering per (account, payer), asset access levels |
+| `cocolang:v0.9.0` | `payer` on `mutate`, `Actor()` queries, field shorthand, `grant storage_mutate` in Cocolab, asset state qualifiers — [release notes](https://cocolang.dev/docs/releases/#v090) · [docs](https://cocolang.dev/docs/book) |
+| `vscode-coco:v0.4.0` | Coco 0.9.0 and PISA 0.8.0 support, the `payer` clause, actor validation — [release notes](https://github.com/sarvalabs/vscode-coco/releases/tag/v0.4.0), and on the VS Code marketplace |
+| `js-moi-sdk:v0.8.0` | Storage and access-policy operations, automatic funding on creation, ID prediction, MAS0/1/2 flows, state renames — [release notes](https://github.com/sarvalabs/js-moi-sdk/releases/tag/v0.8.0) |
+| `js-moi-agent-registry:v0.3.0-rc1` | Release candidate. Read methods surface failures instead of swallowing them; peers with SDK 0.8.0 |
+| `voyage:v0.9.0` · `voyage-api:v0.9.0` | Wallet sign-in; faucet funds existing accounts only |
+| `voyage:v0.8.2` · `voyage-api:v0.8.2` | Participant registration with rate limits, tesseracts by participant with pagination, pending-interactions fix |
 
 <!-- TODO(review): go-moi's notes cite the embedded runtime as PISA v0.8.0 in Highlights and v0.5.0 in the Compute changelog, and Coco v0.7.0 where the language release is v0.9.0 — confirm before publishing -->
 <!-- TODO(review): MOI Wallet extension v0.1.4 shipped in this window; release notes were not accessible to the author -->
