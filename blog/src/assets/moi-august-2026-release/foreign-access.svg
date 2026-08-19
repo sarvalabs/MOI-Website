@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" width="1000" height="520" role="img">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 580" width="680" height="580" role="img">
   <defs>
     <marker id="ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M0 0 L10 5 L0 10 z" fill="#4b17e5"/>
@@ -8,69 +8,69 @@
     </marker>
     <style>
       .f{font-family:Poppins,'Helvetica Neue',Arial,sans-serif}
-      .cap{font-size:13px;font-weight:600;letter-spacing:.13em;text-transform:uppercase}
-      .n{font-size:14.5px;font-weight:600;fill:#0a051a}
-      .m{font-size:12.5px;font-weight:400;fill:rgba(10,5,26,.62)}
-      .k{font-size:11.5px;font-weight:600;fill:#4b17e5;letter-spacing:.04em}
+      .cap{font-size:11.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase}
+      .n{font-size:14px;font-weight:600;fill:#0a051a}
+      .m{font-size:11.5px;font-weight:400;fill:rgba(10,5,26,.62)}
+      .k{font-size:11.5px;font-weight:600;fill:#4b17e5}
       .v{font-size:11.5px;font-weight:400;fill:rgba(10,5,26,.62)}
       .panel{fill:#ffffff;fill-opacity:.72;stroke:rgba(10,5,26,.08)}
       .node{fill:#f5f2ff;stroke:#4b17e5;stroke-opacity:.32}
     </style>
   </defs>
-  <rect width="1000" height="520" fill="#fcfbff"/>
+  <rect width="680" height="580" fill="#fcfbff"/>
 
-  <!-- ── LEFT: denied ── -->
-  <g class="f" transform="translate(24,24)">
-    <rect width="452" height="472" rx="22" class="panel"/>
-    <text x="28" y="42" class="cap" fill="#d1495b">Without a policy</text>
+  <!-- ── denied ── -->
+  <g class="f" transform="translate(10,10)">
+    <rect width="660" height="240" rx="20" class="panel"/>
+    <text x="24" y="36" class="cap" fill="#d1495b">Without a policy</text>
 
-    <rect x="28" y="82" width="152" height="60" rx="14" class="node"/>
-    <text x="104" y="110" text-anchor="middle" class="n" fill="#4b17e5">logic</text>
-    <text x="104" y="128" text-anchor="middle" class="m" font-size="11">not you, not the sender</text>
+    <rect x="24" y="64" width="152" height="56" rx="13" class="node"/>
+    <text x="100" y="90" text-anchor="middle" class="n" fill="#4b17e5">logic</text>
+    <text x="100" y="108" text-anchor="middle" class="m" font-size="10.5">not you, not the sender</text>
 
-    <path d="M188 112 H286" stroke="rgba(10,5,26,.32)" stroke-width="2.2" stroke-dasharray="7 6" fill="none" marker-end="url(#no)"/>
-    <g stroke="#d1495b" stroke-width="3" stroke-linecap="round">
-      <path d="M224 98 L250 126"/><path d="M250 98 L224 126"/>
+    <path d="M184 92 H298" stroke="rgba(10,5,26,.32)" stroke-width="2" stroke-dasharray="6 5" fill="none" marker-end="url(#no)"/>
+    <g stroke="#d1495b" stroke-width="2.6" stroke-linecap="round">
+      <path d="M228 79 L252 105"/><path d="M252 79 L228 105"/>
     </g>
 
-    <rect x="294" y="76" width="128" height="72" rx="14" fill="#fff" stroke="rgba(10,5,26,.12)"/>
-    <text x="358" y="106" text-anchor="middle" class="n">your account</text>
-    <text x="358" y="126" text-anchor="middle" class="m" font-size="11">holds the actor state</text>
+    <rect x="306" y="60" width="152" height="64" rx="13" fill="#fff" stroke="rgba(10,5,26,.12)"/>
+    <text x="382" y="88" text-anchor="middle" class="n">your account</text>
+    <text x="382" y="106" text-anchor="middle" class="m" font-size="10.5">holds the actor state</text>
 
-    <text x="28" y="212" class="n" fill="#d1495b">Foreign access — denied</text>
-    <text x="28" y="240" class="m">A write to an account that neither sent the</text>
-    <text x="28" y="260" class="m">interaction nor is the logic itself is foreign.</text>
-    <text x="28" y="280" class="m">The execution engine refuses it by default.</text>
+    <text x="24" y="172" class="n" fill="#d1495b">Foreign access — denied</text>
+    <text x="24" y="198" class="m">A write to an account that neither sent the interaction nor is the logic</text>
+    <text x="24" y="218" class="m">itself is foreign. The execution engine refuses it by default.</text>
   </g>
 
-  <!-- ── RIGHT: allowed ── -->
-  <g class="f" transform="translate(524,24)">
-    <rect width="452" height="472" rx="22" class="panel"/>
-    <text x="28" y="42" class="cap" fill="#4b17e5">With a published policy</text>
+  <!-- ── allowed ── -->
+  <g class="f" transform="translate(10,270)">
+    <rect width="660" height="290" rx="20" class="panel"/>
+    <text x="24" y="36" class="cap" fill="#4b17e5">With a published policy</text>
 
-    <rect x="28" y="82" width="128" height="60" rx="14" class="node"/>
-    <text x="92" y="110" text-anchor="middle" class="n" fill="#4b17e5">logic</text>
-    <text x="92" y="128" text-anchor="middle" class="m" font-size="11">named by Logic ID</text>
+    <rect x="24" y="64" width="152" height="56" rx="13" class="node"/>
+    <text x="100" y="90" text-anchor="middle" class="n" fill="#4b17e5">logic</text>
+    <text x="100" y="108" text-anchor="middle" class="m" font-size="10.5">named by Logic ID</text>
 
-    <path d="M164 112 H286" stroke="#4b17e5" stroke-width="2.2" fill="none" marker-end="url(#ok)"/>
+    <path d="M184 92 H298" stroke="#4b17e5" stroke-width="2" fill="none" marker-end="url(#ok)"/>
 
-    <rect x="294" y="76" width="128" height="72" rx="14" fill="#fff" stroke="#4b17e5" stroke-opacity=".35"/>
-    <text x="358" y="106" text-anchor="middle" class="n">your account</text>
-    <text x="358" y="126" text-anchor="middle" class="m" font-size="11">holds the actor state</text>
+    <rect x="306" y="60" width="152" height="64" rx="13" fill="#fff" stroke="#4b17e5" stroke-opacity=".35"/>
+    <text x="382" y="88" text-anchor="middle" class="n">your account</text>
+    <text x="382" y="106" text-anchor="middle" class="m" font-size="10.5">holds the actor state</text>
 
-    <!-- policy card hangs off the ACCOUNT, not the logic -->
-    <path d="M358 148 V178" stroke="#4b17e5" stroke-width="2" stroke-dasharray="4 4"/>
-    <g transform="translate(214,166)">
-      <rect width="208" height="152" rx="16" fill="#f5f2ff" stroke="#4b17e5" stroke-opacity=".35"/>
-      <text x="18" y="28" class="n" fill="#4b17e5" font-size="13">Access policy</text>
-      <text x="18" y="56" class="k">resource</text><text x="190" y="56" text-anchor="end" class="v">storage · Logic ID</text>
-      <text x="18" y="80" class="k">actions</text> <text x="190" y="80" text-anchor="end" class="v">write</text>
-      <text x="18" y="104" class="k">caller</text>  <text x="190" y="104" text-anchor="end" class="v">immediate invoker</text>
-      <text x="18" y="128" class="k">origin</text>  <text x="190" y="128" text-anchor="end" class="v">original sender</text>
+    <path d="M382 124 V150" stroke="#4b17e5" stroke-width="1.8" stroke-dasharray="4 4"/>
+    <g transform="translate(306,150)">
+      <rect width="330" height="118" rx="14" fill="#f5f2ff" stroke="#4b17e5" stroke-opacity=".35"/>
+      <text x="18" y="26" class="n" fill="#4b17e5" font-size="13">Access policy</text>
+      <text x="18" y="52" class="k">resource</text><text x="312" y="52"  text-anchor="end" class="v">storage · Logic ID</text>
+      <text x="18" y="72" class="k">actions</text> <text x="312" y="72"  text-anchor="end" class="v">write</text>
+      <text x="18" y="92" class="k">caller</text>  <text x="312" y="92"  text-anchor="end" class="v">immediate invoker</text>
+      <text x="18" y="112" class="k">origin</text> <text x="312" y="112" text-anchor="end" class="v">original sender</text>
     </g>
 
-    <text x="28" y="368" class="n" fill="#4b17e5">Owner-published</text>
-    <text x="28" y="396" class="m">The policy lives on the account being written to.</text>
-    <text x="28" y="416" class="m">Only its owner can create, modify or delete it.</text>
+    <text x="24" y="176" class="n" fill="#4b17e5">Owner-published</text>
+    <text x="24" y="202" class="m">The policy lives on the</text>
+    <text x="24" y="222" class="m">account being written to.</text>
+    <text x="24" y="242" class="m">Only its owner can create,</text>
+    <text x="24" y="262" class="m">modify or delete it.</text>
   </g>
 </svg>
