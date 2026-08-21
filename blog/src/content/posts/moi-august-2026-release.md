@@ -188,6 +188,27 @@ go-moi v0.12.0 also adds account-level features that are neither storage nor acc
 
 **Keys are enumerable.** `moi.AccountKeys` lists the keys on an account.
 
+## What do node operators need to do?
+
+Upgrade every node together. This one does not roll.
+
+From the go-moi v0.12.0 release notes: access control, the storage cost mechanism and the new system object all change state-transition semantics, and access control adds new interaction types that older nodes cannot decode. Nodes running mixed versions will diverge. The protocol version moves to 0.12.0, config and genesis files need to be updated, and the build requirement is Go 1.24.6 or later (was 1.22).
+
+The upgrade steps, as the release notes give them:
+
+1. Stop all nodes — do not roll.
+2. Pull the latest docker image.
+3. Deploy the v0.12.0 binary or image to every node.
+4. Restart bootnodes, then guardian nodes.
+5. Verify peers connect on the `0.12.0` protocol IDs before resuming traffic.
+
+Once it is running you will notice:
+
+- Consensus and syncer traffic is compressed, reducing bandwidth on large ICS sets.
+- Read locks let accounts take part in a tesseract with a latest-consistent-read guarantee instead of a full mutation, alongside consensus hot-path optimisation.
+- Validator and consensus-node data lives in a dedicated system object, readable through `moi.Validators`, replacing ad-hoc tracking.
+- The liveness algorithm is randomised, a slot-locking stall is fixed, and the Docker images are multi-OS and multi-arch.
+
 ## What changed in Voyage and the wallet?
 
 Voyage shipped twice in this window, v0.8.2 and v0.9.0, and v0.9.0 changes how you get in.
@@ -227,6 +248,8 @@ Everything here landed between 12 and 18 August 2026.
 4. Run your logic in Cocolab under Coco v0.9.0; anything relying on a foreign actor-state write fails there first, where you want to find it.
 
 If you already have users, go-moi v0.12.0 means planning for the policy step and the grant behind it. Nothing is grandfathered: writes to a user's actor state in interactions they did not sign are denied until that user publishes a policy naming your logic, from their own account; you cannot publish it for them. Each write draws on a storage grant on the user's account: their own deposit, or one you made on their behalf, which you cannot later withdraw. The FAQ carries the per-user order.
+
+**If you run a node** — follow the five steps above, inside a coordinated window.
 
 **If you use Voyage** — sign in with your wallet, and register as a participant before asking the faucet for anything.
 
