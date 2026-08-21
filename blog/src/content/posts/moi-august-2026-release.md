@@ -213,7 +213,7 @@ Once it is running you will notice:
 
 Voyage shipped twice in this window, v0.8.2 and v0.9.0, and v0.9.0 changes how you get in.
 
-**Sign in with your wallet.** Voyage v0.9.0 replaces the old sign-in (generate a MOI ID, log in with IOME, or import an existing ID) with the MOI wallet Chrome extension. You sign a short message; no transaction is sent and no fuel is spent. You can connect several wallet accounts to one Voyage account.
+**Sign in with your wallet.** Voyage v0.9.0 replaces the old sign-in (generate a MOI ID, log in with IOME, or import an existing ID) with the [MOI wallet Chrome extension](https://chromewebstore.google.com/detail/moi-wallet/abjpinodmdoipbdlihecmhjflebogjil). You sign a short message; no transaction is sent and no fuel is spent. You can connect several wallet accounts to one Voyage account.
 
 **Register yourself as a participant.** Since v0.8.2, you can register on-chain from Voyage itself, with POLO-encoded or ordinary account details; the API rate-limits registrations and token transfers per day. The same release returns a participant's tesseracts with pagination, so Voyage pages through history instead of one unbounded response.
 
@@ -235,7 +235,7 @@ Everything here landed between 12 and 18 August 2026.
 | `js-moi-agent-registry:v0.3.0-rc1` | 16 Aug | New registry Logic ID, `SendOptions` for fuel overrides; pins `js-moi-sdk@0.8.0` as an exact peer dependency — [on npm](https://www.npmjs.com/package/js-moi-agent-registry) |
 | `voyage:v0.9.0` · `voyage-api:v0.9.0` | 18 Aug | Wallet sign-in; faucet funds existing accounts only — [voyage.moi.technology](https://voyage.moi.technology) |
 | `voyage:v0.8.2` · `voyage-api:v0.8.2` | 13 Aug | Participant registration with rate limits, tesseracts by participant with pagination, pending-interactions fix |
-| `moi-wallet-extension:v0.1.5` | 14 Aug | Error handling and validation in network configuration; registration amount in the encoded payload raised from 1k to 100k |
+| `moi-wallet-extension:v0.1.5` | 14 Aug | Error handling and validation in network configuration; registration amount in the encoded payload raised from 1k to 100k — [Chrome Web Store](https://chromewebstore.google.com/detail/moi-wallet/abjpinodmdoipbdlihecmhjflebogjil) |
 | `moi-wallet-extension:v0.1.4` | 12 Aug | Multi-account picker on Connect Wallet, a self-registration link, and the new address-truncation format |
 
 ## What to do now
