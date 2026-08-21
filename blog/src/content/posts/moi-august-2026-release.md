@@ -25,7 +25,7 @@ faq:
   - q: "I have a dapp with existing users. What breaks when v0.12.0 lands?"
     a: "Writes to a user's actor state inside interactions someone else signed are foreign accesses, denied until that user publishes an access policy naming your logic. Writes inside interactions the user signed themselves are self-access and keep working with no policy. Nothing is grandfathered, and the policy interaction must be sent by the account it protects — you cannot publish it on a user's behalf. Each foreign write draws on a storage grant on the user's account, funded by the user's own StorageDeposit or by your deposit with .for(), which you cannot later withdraw. Per user, the order is: register as a participant (the devnet reset removed existing accounts, so devnet users register again), put a grant on their account, then publish the policy naming your logic."
   - q: "js-moi-agent-registry v0.3.0-rc1 is a release candidate. Why move to it?"
-    a: "It is the client library for MOI's agent registry, and v0.3.0-rc1 carries the registry Logic ID for the reset devnet and pins js-moi-sdk 0.8.0 as an exact peer dependency. Keeping v0.2.0 next to the new SDK fails at install with an ERESOLVE conflict."
+    a: "It is the client library for the MOI agent registry, and v0.3.0-rc1 carries the registry Logic ID for the reset devnet and pins js-moi-sdk 0.8.0 as an exact peer dependency. Keeping v0.2.0 next to the new SDK fails at install with an ERESOLVE conflict."
   - q: "Can I set access policies on my assets or keys yet?"
     a: "Not yet. The model defines resource types for assets, logics, storage and keys, but go-moi v0.12.0 enforces only storage. A policy naming any other class is rejected at validation."
   - q: "I run a node. Can I upgrade one node at a time?"
@@ -37,7 +37,7 @@ draft: false
 
 Two things became true on MOI in August 2026. State costs something, and it has an owner who decides who may write to it.
 
-Both land in **go-moi v0.12.0**, the reference implementation of the MOI protocol, where every participant, human or agent, holds their own state. The changes run the full height of the stack: **PISA**, the runtime that executes a logic (MOI's term for a deployed program); **Coco**, the language you write logic in; and **js-moi-sdk**, the JavaScript SDK you call it from.
+Both land in **go-moi v0.12.0**, the reference implementation of the MOI protocol, where every participant, human or agent, holds their own state. The changes run the full height of the stack: **PISA**, the runtime that executes a logic (a deployed program); **Coco**, the language you write logic in; and **js-moi-sdk**, the JavaScript SDK you call it from.
 
 In the same window, **Voyage**, the network explorer and faucet, moved to wallet sign-in and changed how the faucet works, and the **MOI wallet extension** shipped twice — unrelated to the protocol changes, covered at the end.
 
@@ -45,7 +45,7 @@ In the same window, **Voyage**, the network explorer and faucet, moved to wallet
 
 go-moi v0.12.0 makes storage a resource you buy and own, and puts writes to other accounts behind published policy.
 
-Once a logic's state lives on *your* account rather than the logic's, which is what [the Participant Layer means in practice](https://blog.moi.technology/article/what-is-moi-network/), two questions other chains leave implicit need explicit answers: who pays for the space, and who may write into it. Storage costing answers the first, access control the second; both arrive as new interaction types (an interaction is MOI's transaction).
+Once a logic's state lives on *your* account rather than the logic's, which is what [the Participant Layer means in practice](https://blog.moi.technology/article/what-is-moi-network/), two questions other chains leave implicit need explicit answers: who pays for the space, and who may write into it. Storage costing answers the first, access control the second; both arrive as new interaction types (interactions are the network's transactions).
 
 **Where each change lands, by layer and version**
 
@@ -104,7 +104,7 @@ Because on MOI it is writing to *your* account, not its own.
 
 This is the part that differs most from what you may be used to. On Ethereum a contract owns its storage, so authorization to write it is implicit; finer control is hand-written with `require(msg.sender == owner)`. MOI moves that state to the participant: the data a logic keeps about you, its **actor state**, lives on your account. A logic routinely writes to storage it does not own, so the protocol needs an explicit answer: may this logic write to this account, in this situation?
 
-MOI's developer docs put it as a scheduling logic. Bob books his own time all day; he signed those interactions, so writes to his own account need no permission. His assistant Alice arranges meetings for him too, putting a write on Bob's account inside an interaction Bob never signed: a **foreign access**, and without a rule anyone could fill Bob's calendar. Before the write lands, the engine checks whether Bob's published policies authorise this logic driven by Alice; they do, so her write goes through. The same write driven by anyone else is denied.
+The MOI developer docs put it as a scheduling logic. Bob books his own time all day; he signed those interactions, so writes to his own account need no permission. His assistant Alice arranges meetings for him too, putting a write on Bob's account inside an interaction Bob never signed: a **foreign access**, and without a rule anyone could fill Bob's calendar. Before the write lands, the engine checks whether Bob's published policies authorise this logic driven by Alice; they do, so her write goes through. The same write driven by anyone else is denied.
 
 ### What does a policy contain?
 
@@ -152,7 +152,7 @@ Neither change is free for existing code: writes that assumed storage was nobody
 Most application code keeps working. Four changes in go-moi v0.12.0 touch the wire format:
 
 - **go-moi v0.12.0 renumbered the interaction op-codes.** `IxOpType` is an integer on the wire and the values were reordered; only `0`, `1` and `4` kept their meaning. A client that decodes interactions by numeric op-code reads wrong values with no error to say so.
-- **Five asset operations fold into one.** Transfer, approve, revoke, mint and burn now travel as a single `IxAssetAction` carrying a callsite string and calldata encoded in POLO, MOI's wire encoding. The callsite set is wider: `Lockup`, `Release` and `MintWithMetadata` ship too.
+- **Five asset operations fold into one.** Transfer, approve, revoke, mint and burn now travel as a single `IxAssetAction` carrying a callsite string and calldata encoded in POLO, the network's wire encoding. The callsite set is wider: `Lockup`, `Release` and `MintWithMetadata` ship too.
 - **`TxFuelSupply` is dropped**, with no successor.
 - **`moi.Registry` is renamed `moi.Deeds`.** Same `{asset_id, asset_info}` shape, still the assets an account has created: a rename in your client, not a removal.
 
