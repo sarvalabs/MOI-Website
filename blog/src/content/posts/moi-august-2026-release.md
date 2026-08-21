@@ -14,6 +14,7 @@ takeaways:
   - "cocolang v0.9.0: `payer` clause on `mutate`, `Actor()` queries, `grant storage_mutate` in Cocolab, exact state qualifiers on asset methods."
   - "vscode-coco v0.4.0: Coco 0.9.0 and PISA 0.8.0 support, with checks gated on the `[target.pisa]` version in `coco.nut`."
   - "js-moi-sdk v0.8.0: storage and access-policy builders, automatic funding on account creation, `LogicState`/`ActorState` renames, MAS0/1/2 create flows."
+  - "js-moi-agent-registry v0.3.0-rc1: a new registry Logic ID; pins js-moi-sdk 0.8.0 as an exact peer dependency."
   - "voyage v0.8.2 and v0.9.0: participant registration and paginated history, then wallet sign-in and a faucet that funds only existing accounts."
   - "moi-wallet-extension v0.1.4 and v0.1.5: multi-account picker and a new address format, then network-config validation and a 100k registration amount."
 faq:
@@ -23,6 +24,8 @@ faq:
     a: "Yes. StorageWithdraw releases unused bytes back into KMOI, returned to the sender, so a logic that cleans up after itself reclaims what it no longer uses. Only grant attributed to the sender is reclaimable; a deposit made on someone else's behalf cannot be withdrawn by the depositor."
   - q: "I have a dapp with existing users. What breaks when v0.12.0 lands?"
     a: "Writes to a user's actor state inside interactions someone else signed are foreign accesses, denied until that user publishes an access policy naming your logic. Writes inside interactions the user signed themselves are self-access and keep working with no policy. Nothing is grandfathered, and the policy interaction must be sent by the account it protects — you cannot publish it on a user's behalf. Each foreign write draws on a storage grant on the user's account, funded by the user's own StorageDeposit or by a deposit you make on their behalf, which you cannot later withdraw. Per user, the order is: register as a participant (the devnet reset removed existing accounts, so devnet users register again), put a grant on their account, then publish the policy naming your logic."
+  - q: "js-moi-agent-registry v0.3.0-rc1 is a release candidate. Why move to it?"
+    a: "It is the client library for the MOI agent registry, and v0.3.0-rc1 carries a new registry Logic ID and pins js-moi-sdk 0.8.0 as an exact peer dependency. Keeping v0.2.0 next to the new SDK fails at install with an ERESOLVE conflict."
   - q: "Can I set access policies on my assets or keys yet?"
     a: "Not yet. The model defines resource types for assets, logics, storage and keys, but go-moi v0.12.0 enforces only storage. A policy naming any other class is rejected at validation."
   - q: "I run a node. Can I upgrade one node at a time?"
@@ -164,6 +167,10 @@ Most application code keeps working. What does not, by package:
 - **New accounts are funded automatically** on creation, as covered above, with the amount tunable through `RoutineOption.storageFund`.
 - **IDs before creation.** The SDK can now give you an asset or logic account ID before the account exists, from the sender and, for assets, the standard.
 
+### js-moi-agent-registry v0.3.0-rc1
+
+- **A release candidate, and what npm serves as latest.** It carries a new registry Logic ID, which older versions do not have, and pins `js-moi-sdk@0.8.0` as an exact peer dependency, so staying on v0.2.0 beside the new SDK fails at install. `SendOptions` adds fuel overrides on write calls.
+
 ### vscode-coco v0.4.0
 
 - **Checks are gated on your target.** The extension reads `[target.pisa] version` from the `coco.nut` beside the file and gates every version-dependent check on it, reporting `VolumeCapacity()` as removed on a 0.8.0 target while accepting it on 0.7.1.
@@ -225,6 +232,7 @@ Everything here landed between 12 and 18 August 2026.
 | `cocolang:v0.9.0` | 14 Aug | `payer` on `mutate`, `Actor()` queries, field shorthand, `grant storage_mutate` in Cocolab, asset state qualifiers — [release notes](https://cocolang.dev/docs/releases/#v090) · [docs](https://cocolang.dev/docs/book) |
 | `vscode-coco:v0.4.0` | 14 Aug | Coco 0.9.0 and PISA 0.8.0 support, the `payer` clause, actor validation — [changelog](https://github.com/sarvalabs/vscode-coco/blob/v0.4.0/CHANGELOG.md) · [VS Code marketplace](https://marketplace.visualstudio.com/items?itemName=sarvalabs.cocolang) |
 | `js-moi-sdk:v0.8.0` | 15 Aug | Storage and access-policy operations, automatic funding on creation, account IDs before creation, MAS0/1/2 flows, state renames — [release notes](https://github.com/sarvalabs/js-moi-sdk/releases/tag/v0.8.0) · [on npm](https://www.npmjs.com/package/js-moi-sdk) |
+| `js-moi-agent-registry:v0.3.0-rc1` | 16 Aug | New registry Logic ID, `SendOptions` for fuel overrides; pins `js-moi-sdk@0.8.0` as an exact peer dependency — [on npm](https://www.npmjs.com/package/js-moi-agent-registry) |
 | `voyage:v0.9.0` · `voyage-api:v0.9.0` | 18 Aug | Wallet sign-in; faucet funds existing accounts only — [voyage.moi.technology](https://voyage.moi.technology) |
 | `voyage:v0.8.2` · `voyage-api:v0.8.2` | 13 Aug | Participant registration with rate limits, tesseracts by participant with pagination, pending-interactions fix |
 | `moi-wallet-extension:v0.1.5` | 14 Aug | Error handling and validation in network configuration; registration amount in the encoded payload raised from 1k to 100k |
@@ -234,7 +242,7 @@ Everything here landed between 12 and 18 August 2026.
 
 **If you build on MOI**, in this order:
 
-1. Move to js-moi-sdk v0.8.0: `npm i js-moi-sdk@0.8.0`.
+1. Move to the new versions: `npm i js-moi-sdk@0.8.0`, and `npm i js-moi-agent-registry@0.3.0-rc1` if you use the registry. v0.3.0-rc1 is a release candidate; it pins `js-moi-sdk@0.8.0` as an exact peer dependency, so staying on v0.2.0 fails at install.
 2. In js-moi-sdk v0.8.0, rename `PersistentState` and `EphemeralState`; in Coco v0.9.0, add `dynamic` and `static` qualifiers to custom asset logic. If anything you own decodes interaction op-codes, fix the mapping *before* it touches a v0.12.0 node.
 3. Bump `[target.pisa]` version to `"0.8.0"` in `coco.nut`.
 4. Run your logic in Cocolab under Coco v0.9.0; anything relying on a foreign actor-state write fails there first, where you want to find it.
