@@ -23,7 +23,7 @@ faq:
   - q: "Do I get anything back if my logic frees state?"
     a: "Yes. StorageWithdraw releases unused bytes back into KMOI, returned to the sender, so a logic that cleans up after itself reclaims what it no longer uses. Only grant attributed to the sender is reclaimable; a deposit made on someone else's behalf cannot be withdrawn by the depositor."
   - q: "I have a dapp with existing users. What breaks when v0.12.0 lands?"
-    a: "Writes to a user's actor state inside interactions someone else signed are foreign accesses, denied until that user publishes an access policy naming your logic. Writes inside interactions the user signed themselves are self-access and keep working with no policy. Nothing is grandfathered, and the policy interaction must be sent by the account it protects — you cannot publish it on a user's behalf. Each foreign write draws on a storage grant on the user's account, funded by the user's own StorageDeposit or by your deposit with .for(), which you cannot later withdraw. Per user, the order is: register as a participant (the devnet reset removed existing accounts, so devnet users register again), put a grant on their account, then publish the policy naming your logic."
+    a: "Writes to a user's actor state inside interactions someone else signed are foreign accesses, denied until that user publishes an access policy naming your logic. Writes inside interactions the user signed themselves are self-access and keep working with no policy. Nothing is grandfathered, and the policy interaction must be sent by the account it protects — you cannot publish it on a user's behalf. Each foreign write draws on a storage grant on the user's account, funded by the user's own StorageDeposit or by a deposit you make on their behalf, which you cannot later withdraw. Per user, the order is: register as a participant (the devnet reset removed existing accounts, so devnet users register again), put a grant on their account, then publish the policy naming your logic."
   - q: "js-moi-agent-registry v0.3.0-rc1 is a release candidate. Why move to it?"
     a: "It is the client library for the MOI agent registry, and v0.3.0-rc1 carries the registry Logic ID for the reset devnet and pins js-moi-sdk 0.8.0 as an exact peer dependency. Keeping v0.2.0 next to the new SDK fails at install with an ERESOLVE conflict."
   - q: "Can I set access policies on my assets or keys yet?"
@@ -58,61 +58,43 @@ Once a logic's state lives on *your* account rather than the logic's, which is w
 
 ## How does paying for storage work?
 
-On MOI, you buy storage before you use it. A **storage grant** is a quota of bytes reserved on a target account, attributed to a specific participant, and paid for in KMOI.
+On MOI, you buy storage before you use it. A **storage grant** is a prepaid quota of bytes on an account, bought with KMOI. Before a logic can write state onto an account, there has to be enough unused grant there to hold the write.
 
-The order matters. Storage is not metered as you go and invoiced later. If a write arrives with no grant behind it, the engine refuses it and the whole interaction reverts.
+If there is not, the write is refused and the whole interaction reverts. Nothing is metered and billed afterwards. The grant is a precondition, not an invoice.
 
-Two interactions manage a grant. `StorageDeposit` converts KMOI into bytes of grant on a target account. `StorageWithdraw` runs the other way: it releases bytes that are no longer in use and returns the KMOI to the sender.
+Two interactions manage a grant. `StorageDeposit` turns KMOI into bytes of grant on a target account; how many bytes it buys depends on the network's current rate, which `moi.StoragePricing` reports. `StorageWithdraw` runs the other way, releasing bytes that are no longer in use and returning the KMOI to the sender. `moi.StorageMetric` shows where a grant stands: how much was granted and how much has been consumed. js-moi-sdk v0.8.0 has a builder for each; the [tutorials](https://docs.moi.technology/docs/build/tutorials) and the [JSON-RPC reference](https://docs.moi.technology/docs/build/json-rpc) carry the calls.
 
-In js-moi-sdk v0.8.0, a deposit is a short builder chain:
+Two things trip people up.
 
-```js
-import { StorageDeposit } from "js-moi-sdk";
+**Fuel and storage are separate dimensions.** Fuel is what an interaction pays to execute. The grant is what pays for the bytes that persist afterwards. A write needs both.
 
-await new StorageDeposit(signer).target(account).amount(5000).send();
-```
+**Withdrawal is asymmetric.** A grant is attributed to a participant. Normally that is whoever deposited it, but you can deposit on someone else's behalf, and then the grant is theirs: only grant attributed to the sender can be withdrawn, so sponsoring a user is a gift you cannot take back.
 
-Three things about that call. `.amount()` is denominated in KMOI, not bytes; how many bytes it buys depends on the network's current rate, which `moi.StoragePricing` reports. `.target()` is the account the grant lands on. And the grant is attributed to the signer unless you say otherwise: `.for(participant)` credits someone else.
-
-Once a grant exists, `moi.StorageMetric` tells you where it stands: how much was granted and how much has been consumed.
-
-A logic that frees state reclaims the bytes behind it, and `StorageWithdraw` turns unused grant back into KMOI. One asymmetry to keep in mind: only grant attributed to the sender can be withdrawn. If you deposited on someone else's behalf with `.for()`, that grant is theirs, and you cannot take it back.
-
-Under the hood, PISA does the accounting. `VOLPAY` charges a write against the grant and `VOLRES` reports what is left (`VOLRES` is a rename of `VOLAVL`, not a new opcode). From Coco, `Environment.StorageResult(account, payer)` replaces the removed `VolumeCapacity()`. None of this touches fuel, the per-execution cost of an interaction; the grant is a separate dimension.
+Under the hood, PISA v0.8.0 does the accounting with two opcodes, `VOLPAY` to charge a write against the grant and `VOLRES` to report what is left (`VOLRES` is a rename of `VOLAVL`, not a new opcode). From Coco, `Environment.StorageResult(account, payer)` replaces the removed `VolumeCapacity()`.
 
 ### Who pays when my logic writes?
 
-By default, the participant who sent the interaction. Coco v0.9.0 lets a logic change that with a `payer` clause on `mutate`:
+By default, the participant who sent the interaction, out of their grant. Coco v0.9.0 lets a logic redirect that with a `payer` clause on `mutate`, in one of three forms. `payer Sender` is the default and bills whoever sent the interaction. `payer Logic` makes the logic pay from its own grant, which is how a logic absorbs its own setup cost. `payer Actor(<id>)` bills a named participant instead.
 
-```coco
-mutate name -> MyModule.Logic.name payer Logic            // the logic absorbs its own setup cost
-mutate cfg  -> MyModule.Logic.config payer Actor(sponsor) // sponsor: a participant who signed this interaction
-```
+That named participant has to have signed the interaction. If they have not, execution raises `payer has to sign the transaction`, the interaction reverts, and fuel already spent stays spent. The clause applies to logic state only. The syntax is in the [Coco book](https://cocolang.dev/docs/book).
 
-The clause takes one of three forms. `payer Sender` is the default and bills whoever sent the interaction. `payer Logic` makes the logic carry the cost itself, which is how a logic absorbs its own setup. `payer Actor(<id>)` bills a named participant instead.
-
-That named participant has to have signed the interaction. If they have not, execution raises `payer has to sign the transaction`, the interaction reverts, and fuel already spent stays spent. The clause applies to logic state only.
-
-Creating an account is the one case the SDK handles for you. **js-moi-sdk v0.8.0 funds new asset and logic accounts automatically.** The amount is tunable through `RoutineOption.storageFund` and falls back to 1,000,000 KMOI, a flat default rather than a computed cost. You can see it in the create signature for MAS0, the first of the native asset standards:
-
-```js
-// v0.7.x
-MAS0AssetLogic.create(signer, symbol, supply, manager, enableEvents);
-// v0.8.0: adds an optional RoutineOption and bundles a KMOI storage fund
-MAS0AssetLogic.create(signer, symbol, supply, manager, enableEvents, option);
-```
-
-Read that fund narrowly. It covers the new account's own creation cost and nothing more. A deploy routine that also writes logic state still needs `payer Logic`, or a `StorageDeposit` grant already in place.
+Creating an account is the one case the SDK handles for you. **js-moi-sdk v0.8.0 funds new asset and logic accounts automatically**, with the amount tunable through `RoutineOption.storageFund` and a fallback of 1,000,000 KMOI, a flat default rather than a computed cost. Read that fund narrowly: it covers the new account's own creation cost and nothing more. A deploy routine that also writes logic state still needs `payer Logic`, or a `StorageDeposit` grant already in place.
 
 ## Why does a logic need permission to write my state?
 
 Because on MOI it is writing to *your* account, not its own.
 
-This is the part that differs most from what you may be used to. On Ethereum a contract owns its storage, so authorization to write it is implicit; finer control is hand-written with `require(msg.sender == owner)`. MOI moves that state to the participant: the data a logic keeps about you, its **actor state**, lives on your account. A logic routinely writes to storage it does not own, so the protocol needs an explicit answer: may this logic write to this account, in this situation?
+A logic holds state in two places. Its own account holds its **logic state**, the data that belongs to the logic as a whole. Your account holds its **actor state**, the data it keeps about you. The second is what access control is about.
 
-The MOI developer docs put it as a scheduling logic. Bob books his own time all day; he signed those interactions, so writes to his own account need no permission. His assistant Alice arranges meetings for him too, putting a write on Bob's account inside an interaction Bob never signed: a **foreign access**, and without a rule anyone could fill Bob's calendar. Before the write lands, the engine checks whether Bob's published policies authorise this logic driven by Alice; they do, so her write goes through. The same write driven by anyone else is denied.
+This is the part that differs most from what you may be used to. On Ethereum a contract owns its storage, so authorization to write it is implicit; finer control is hand-written with `require(msg.sender == owner)`. On MOI a logic routinely writes to storage it does not own, so implicit trust stops being a safe default and the protocol needs an explicit answer: may this logic write to this account, in this situation?
+
+The answer splits into two cases. A **self-access** is a write to the account that signed the interaction: you initiated it, so no permission is needed. A **foreign access** is a write to an account that neither signed the interaction nor is the logic itself, and go-moi v0.12.0 denies it by default.
+
+The MOI developer docs put it as a scheduling logic. Bob books his own time all day; he signed those interactions, so writes to his own calendar are self-access. His assistant Alice arranges meetings for him too, which puts a write on Bob's account inside an interaction Alice signed. That is foreign, and without a rule anyone could fill Bob's calendar. Before the write lands, the engine checks whether Bob has published a policy authorising this logic, driven by Alice. He has, so her write goes through. The same write driven by anyone else is denied.
 
 ### What does a policy contain?
+
+The rule is an **access policy**. It lives on the account being written to, Bob's, and only Bob can publish, change or delete it.
 
 **Fields of a go-moi v0.12.0 access policy**
 
@@ -125,31 +107,19 @@ The MOI developer docs put it as a scheduling logic. Bob books his own time all 
 | `Origin` | The original sender of the interaction |
 | `Scope` | Intended to narrow a policy to part of a resource — reserved, unenforced |
 
-Caller and origin are each unrestricted or a fixed set of participants and logics; constraining both lets Bob say *this logic, driven by Alice* rather than *this logic*.
+Caller and origin are each unrestricted or a fixed set of participants and logics. Constraining both is what lets Bob say *this logic, driven by Alice* rather than *this logic, driven by anyone*.
 
-You publish a policy with `AccessCreate`, amend it with `AccessUpdate` and remove it with `AccessDelete`; `moi.AccessPolicy` reads one back and `moi.AccessPolicies` lists everything on an account. From js-moi-sdk v0.8.0:
+Policies are published with `AccessCreate`, amended with `AccessUpdate` and removed with `AccessDelete`; `moi.AccessPolicy` reads one back and `moi.AccessPolicies` lists everything on an account. js-moi-sdk v0.8.0 wraps all five in a builder, documented in the [tutorials](https://docs.moi.technology/docs/build/tutorials).
 
-```js
-import { Access, access, AccessAction } from "js-moi-sdk";
+Three things matter in practice.
 
-// Bob signs this himself: only the account a policy protects may publish it
-await new Access(bobSigner)
-  .storage(logicId)                  // the writing logic
-  .allow(AccessAction.STORAGE_MUTATE)
-  .caller(access.callers(aliceId))
-  .create()
-  .send();
-```
+**Only the owner publishes.** A dapp cannot publish a policy on a user's behalf. Each user publishes their own, from their own account.
 
-The model defines resource types for assets, logics, storage and keys, but **go-moi v0.12.0 enforces only `storage`** — a policy naming any other class is rejected at validation. `Scope` is reserved and unenforced too.
+**Nothing is grandfathered.** A dapp with existing users that writes actor state inside interactions those users did not sign stops working on go-moi v0.12.0 until each user has published a policy naming it.
 
-Cocolab, the local lab you run Coco logic in, now emulates the runtime's default-deny, so a logic that relied on writing other actors' state fails in the lab before failing on the network. You type the grant in Cocolab:
+**Only storage is enforced.** The model defines resource types for assets, logics, storage and keys, but go-moi v0.12.0 enforces `storage` alone; a policy naming any other class is rejected at validation. `Scope` is reserved and unenforced too.
 
-```
-grant storage_mutate to callers(any) origins(Alice) through Token as Bob
-```
-
-`through Token` names the writing logic, `as Bob` the account written to; `callers` and `origins` mirror the policy's two constraints. The lab applies default-deny only to projects whose `coco.nut` targets `[target.pisa] version = "0.8.0"`; a project still pinned to 0.7.1 keeps the old runtime, passes in the lab, and fails on the network.
+Cocolab, the local lab you run Coco logic in, now emulates the runtime's default-deny through a `grant` statement that mirrors the policy's caller and origin constraints, so a logic that relied on writing other actors' state fails in the lab before failing on the network. One caveat: the lab applies default-deny only to projects whose `coco.nut` targets `[target.pisa] version = "0.8.0"`. A project still pinned to 0.7.1 keeps the old runtime, passes in the lab, and fails on the network.
 
 Neither change is free for existing code: writes that assumed storage was nobody's problem stop working, and so do writes into accounts that never published consent.
 
@@ -210,12 +180,7 @@ The window is network-wide, and go-moi is not a public repository, so what you n
 5. Restart bootnodes and wait until they report healthy: `net.Version` answers `0.12.0` and `Peer Connected` lines appear in the log. If the bootnodes are not yours, wait for the confirmation on the announcement channel. Then restart guardians, then any other nodes. Each node completes initial sync before joining consensus; watch for the sync signal from the announcement and budget its duration into the window.
 6. Verify each node the same way: `net.Version` answers `0.12.0` and `net.Peers` returns a non-empty array. Once v0.12.0 is up, `moi.Validators` confirms which nodes the network records as validators.
 
-```
-curl -s -X POST http://localhost:1600/ -H 'Content-Type: application/json' \
-  -d '{"jsonrpc":"2.0","id":1,"method":"net.Peers","params":[]}'
-```
-
-Peer IDs are KramaID strings, a prefix and a libp2p peer ID joined by a dot. When both checks pass on every node, re-open the traffic you closed in step 1.
+Both are JSON-RPC calls against the node's endpoint (port 1600 by default); the [JSON-RPC reference](https://docs.moi.technology/docs/build/json-rpc) has the request shape. When both checks pass on every node, re-open the traffic you closed in step 1.
 
 If the window blows out across the network, the coordinator calls a restore: every node returns to its step-2 cold backup together, all-or-nothing for the same reason the upgrade is. If one node fails to sync while the rest run v0.12.0, do not restore its pre-0.12.0 backup next to live nodes; wipe its database and start it fresh on v0.12.0 to rebuild from the new genesis (the shipped flow itself starts nodes with `--clean-db`). If it still refuses, keep it down and escalate to the coordinator.
 
@@ -264,7 +229,7 @@ Everything here landed between 12 and 18 August 2026.
 3. Bump `[target.pisa]` version to `"0.8.0"` in `coco.nut`.
 4. Run your logic in Cocolab under Coco v0.9.0; anything relying on a foreign actor-state write fails there first, where you want to find it.
 
-If you already have users, go-moi v0.12.0 means planning for the policy step and the grant behind it. Nothing is grandfathered: writes to a user's actor state in interactions they did not sign are denied until that user publishes a policy naming your logic, from their own account; you cannot publish it for them. Each write draws on a storage grant on the user's account — their own deposit or yours with `.for()`. The FAQ carries the per-user order.
+If you already have users, go-moi v0.12.0 means planning for the policy step and the grant behind it. Nothing is grandfathered: writes to a user's actor state in interactions they did not sign are denied until that user publishes a policy naming your logic, from their own account; you cannot publish it for them. Each write draws on a storage grant on the user's account: their own deposit, or one you made on their behalf, which you cannot later withdraw. The FAQ carries the per-user order.
 
 **If you run a node** — get the release announcement, schedule the stop, and follow the six steps above.
 
