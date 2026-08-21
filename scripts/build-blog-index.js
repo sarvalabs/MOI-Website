@@ -21,7 +21,15 @@ import matter from 'gray-matter';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const POSTS_DIR = path.join(root, 'blog/src/content/posts');
 const OUT_DIR = path.join(root, 'public/blog');
-const BLOG_ORIGIN = 'https://blog.moi.technology';
+// Covers are authored in the blog app, but the listing is served by this
+// site — on previews, from a different host than the blog. Copying them into
+// this site's public/ and linking root-relative makes the thumbnail work on
+// every host instead of only on production.
+const COVERS_SRC = path.join(root, 'blog/public/covers');
+const COVERS_OUT = path.join(root, 'public/covers');
+// Overridable so a PR preview links to its own blog host instead of sending
+// readers to production and 404ing on covers that only exist on the preview.
+const BLOG_ORIGIN = (process.env.BLOG_ORIGIN || 'https://blog.moi.technology').replace(/\/$/, '');
 const SITE_ORIGIN = 'https://moi.technology';
 const TOPIC_TAGS = [
   ['agents', 'Agents'],
@@ -80,7 +88,14 @@ const articleUrl = (slug) => `${BLOG_ORIGIN}/article/${slug}/`;
 // this listing is served from the apex — so a root-relative `cover` has to be
 // resolved against the blog origin or it 404s here. Absolute URLs pass through.
 const coverUrl = (cover) =>
-  cover.startsWith('/') ? `${BLOG_ORIGIN}${cover}` : cover;
+  cover.startsWith('/covers/') ? cover : cover.startsWith('/') ? `${BLOG_ORIGIN}${cover}` : cover;
+
+if (fs.existsSync(COVERS_SRC)) {
+  fs.mkdirSync(COVERS_OUT, { recursive: true });
+  for (const f of fs.readdirSync(COVERS_SRC)) {
+    fs.copyFileSync(path.join(COVERS_SRC, f), path.join(COVERS_OUT, f));
+  }
+}
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -120,7 +135,7 @@ const cards = posts
       })
       .join('');
     return `        <article>
-        <a class="card" href="${articleUrl(p.slug)}">
+        <a class="card${p.cover ? ' has-thumb' : ''}" href="${articleUrl(p.slug)}">
 ${thumb}          <div class="card-body">
             <p class="meta">
               <time datetime="${new Date(p.date).toISOString()}">${esc(fmtDate(p.date))}</time>
@@ -342,9 +357,20 @@ ${JSON.stringify(jsonLd, null, 2)}
         display: block;
         border-radius: 12px;
         overflow: hidden;
-        aspect-ratio: 40 / 26;
+        aspect-ratio: 40 / 21;
         margin: -32px -32px 24px;
         background: #F5F2FF;
+      }
+      /* Beside the text on desktop. Full-bleed above it, the cards are one
+         column wide, which turns a cover into a several-hundred-pixel banner. */
+      @media (min-width: 760px) {
+        .card.has-thumb {
+          display: grid;
+          grid-template-columns: 320px 1fr;
+          gap: 28px;
+          align-items: center;
+        }
+        .has-thumb .thumb { margin: 0; }
       }
       .thumb img {
         width: 100%;

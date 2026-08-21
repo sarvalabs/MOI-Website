@@ -9,7 +9,12 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const { title, summary, date, updated, author, tags, takeaways, faq } = post.data;
+const { title, summary, date, updated, author, tags, takeaways, faq, cover } = post.data;
+
+// The listing thumbnail is the SVG cover; social cards are not. X, LinkedIn
+// and Slack do not render SVG og:images, so a raster sibling with the same
+// name ships beside every SVG cover (public/covers/<slug>.png, 1200x630).
+const ogImage = cover ? new URL(cover.replace(/\.svg$/, '.png'), Astro.site).href : undefined;
 
 const fmt = (d) =>
   d.toLocaleDateString('en-US', {
@@ -45,7 +50,7 @@ const jsonLd = [
 ].filter(Boolean);
 ---
 
-<Base title={`${title} — MOI Blog`} description={summary} ogType="article" navTitle={title}>
+<Base title={`${title} — MOI Blog`} description={summary} ogType="article" navTitle={title} image={ogImage}>
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
 
   <header class="post-hero haze" data-hero>
