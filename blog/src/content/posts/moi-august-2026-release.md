@@ -2,12 +2,13 @@
 title: "MOI August 2026 Release: storage costing and access control"
 summary: "MOI's August 2026 release: state is bought up front as a storage grant, foreign writes need a policy you publish, and the faucet funds only existing accounts."
 date: 2026-08-19
+updated: 2026-08-21
 cover: "/covers/moi-august-2026-release.svg"
 author:
   name: "Sarva Labs"
   role: "Engineering"
   url: "https://sarvalabs.com"
-tags: ["protocol", "agents", "native-assets", "release", "go-moi"]
+tags: ["protocol", "agents", "native-assets", "release", "go-moi", "storage-costing", "access-control"]
 takeaways:
   - "go-moi v0.12.0: storage costing (StorageDeposit/StorageWithdraw), access control (AccessCreate/Update/Delete), renumbered op-codes. Coordinated upgrade to protocol version 0.12.0."
   - "go-pisa v0.8.0: VOLPAY and VOLRES opcodes, the AccessControl interface, storage metering per (account, payer)."
@@ -236,7 +237,7 @@ Everything here landed between 12 and 18 August 2026.
 | `voyage:v0.9.0` · `voyage-api:v0.9.0` | 18 Aug | Wallet sign-in; faucet funds existing accounts only — [voyage.moi.technology](https://voyage.moi.technology) |
 | `voyage:v0.8.2` · `voyage-api:v0.8.2` | 13 Aug | Participant registration with rate limits, tesseracts by participant with pagination, pending-interactions fix |
 | `moi-wallet-extension:v0.1.5` | 14 Aug | Error handling and validation in network configuration; registration amount in the encoded payload raised from 1k to 100k — [Chrome Web Store](https://chromewebstore.google.com/detail/moi-wallet/abjpinodmdoipbdlihecmhjflebogjil) |
-| `moi-wallet-extension:v0.1.4` | 12 Aug | Multi-account picker on Connect Wallet, a self-registration link, and the new address-truncation format |
+| `moi-wallet-extension:v0.1.4` | 12 Aug | Multi-account picker on Connect Wallet, a self-registration link, and the new address-truncation format — [Chrome Web Store](https://chromewebstore.google.com/detail/moi-wallet/abjpinodmdoipbdlihecmhjflebogjil) |
 
 ## What to do now
 
