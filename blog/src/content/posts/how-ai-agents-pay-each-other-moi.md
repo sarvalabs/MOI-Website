@@ -1,5 +1,5 @@
 ---
-title: "How AI Agents Pay Each Other — A Working Demo on MOI"
+title: "How AI Agents Pay Each Other — MOI Webinars VII"
 summary: "Two AI agents transact on MOI with no human, no accounts, no payment processor. How agentic payments work: on-chain identity, HTTP 402, and a real settled transaction."
 date: 2026-08-21
 author:
