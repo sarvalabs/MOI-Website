@@ -25,7 +25,7 @@ faq:
     a: "Yes. StorageWithdraw releases unused bytes back into KMOI, returned to the sender, so a logic that cleans up after itself reclaims what it no longer uses. Only grant attributed to the sender is reclaimable; a deposit made on someone else's behalf cannot be withdrawn by the depositor."
   - q: "I have a dapp with existing users. What breaks when v0.12.0 lands?"
     a: "Writes to a user's actor state inside interactions someone else signed are foreign accesses, denied until that user publishes an access policy naming your logic. Writes inside interactions the user signed themselves are self-access and keep working with no policy. Nothing is grandfathered, and the policy interaction must be sent by the account it protects — you cannot publish it on a user's behalf. Each foreign write draws on a storage grant on the user's account, funded by the user's own StorageDeposit or by a deposit you make on their behalf, which you cannot later withdraw. Per user, the order is: register as a participant (the devnet reset removed existing accounts, so devnet users register again), put a grant on their account, then publish the policy naming your logic."
-  - q: "js-moi-agent-registry v0.3.0-rc1 is a release candidate. Why move to it?"
+  - q: "Why move to js-moi-agent-registry v0.3.0-rc1?"
     a: "It is the client library for the MOI agent registry, and v0.3.0-rc1 carries a new registry Logic ID and pins js-moi-sdk 0.8.0 as an exact peer dependency. Keeping v0.2.0 next to the new SDK fails at install with an ERESOLVE conflict."
   - q: "Can I set access policies on my assets or keys yet?"
     a: "Not yet. The model defines resource types for assets, logics, storage and keys, but go-moi v0.12.0 enforces only storage. A policy naming any other class is rejected at validation."
@@ -170,7 +170,7 @@ Most application code keeps working. What does not, by package:
 
 ### js-moi-agent-registry v0.3.0-rc1
 
-- **A release candidate, and what npm serves as latest.** It carries a new registry Logic ID, which older versions do not have, and pins `js-moi-sdk@0.8.0` as an exact peer dependency, so staying on v0.2.0 beside the new SDK fails at install. `SendOptions` adds fuel overrides on write calls.
+- **What npm serves as latest.** It carries a new registry Logic ID, which older versions do not have, and pins `js-moi-sdk@0.8.0` as an exact peer dependency, so staying on v0.2.0 beside the new SDK fails at install. `SendOptions` adds fuel overrides on write calls.
 
 ### vscode-coco v0.4.0
 
@@ -243,7 +243,7 @@ Everything here landed between 12 and 18 August 2026.
 
 **If you build on MOI**, in this order:
 
-1. Move to the new versions: `npm i js-moi-sdk@0.8.0`, and `npm i js-moi-agent-registry@0.3.0-rc1` if you use the registry. v0.3.0-rc1 is a release candidate; it pins `js-moi-sdk@0.8.0` as an exact peer dependency, so staying on v0.2.0 fails at install.
+1. Move to the new versions: `npm i js-moi-sdk@0.8.0`, and `npm i js-moi-agent-registry@0.3.0-rc1` if you use the registry. v0.3.0-rc1 pins `js-moi-sdk@0.8.0` as an exact peer dependency, so staying on v0.2.0 fails at install.
 2. In js-moi-sdk v0.8.0, rename `PersistentState` and `EphemeralState`; in Coco v0.9.0, add `dynamic` and `static` qualifiers to custom asset logic. If anything you own decodes interaction op-codes, fix the mapping *before* it touches a v0.12.0 node.
 3. Bump `[target.pisa]` version to `"0.8.0"` in `coco.nut`.
 4. Run your logic in Cocolab under Coco v0.9.0; anything relying on a foreign actor-state write fails there first, where you want to find it.
