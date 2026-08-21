@@ -6,7 +6,10 @@ import '@fontsource/poppins/700.css';
 import '../styles/global.css';
 import Analytics from '../components/Analytics.astro';
 
-const { title, description, ogType = 'website', navTitle = 'Blog' } = Astro.props;
+// `image` is an absolute URL to a raster social card. Pages without one emit
+// no og:image at all rather than a placeholder — a missing card degrades to a
+// text preview, a wrong one misrepresents the page.
+const { title, description, ogType = 'website', navTitle = 'Blog', image } = Astro.props;
 
 // The masthead's topics are a fixed editorial set — the blog's three beats.
 // Each is a tag slug with a display label; the tag pages are guaranteed to
@@ -35,6 +38,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonical} />
+    {
+      image && (
+        <>
+          <meta property="og:image" content={image} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:image" content={image} />
+        </>
+      )
+    }
     <link
       rel="alternate"
       type="application/rss+xml"

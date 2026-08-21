@@ -11,12 +11,12 @@ tags: ["protocol", "agents", "native-assets", "release", "go-moi"]
 takeaways:
   - "On MOI, state is bought up front as a storage grant, not billed per interaction. A write with no grant behind it is refused and the interaction reverts. Unused bytes convert back to KMOI, but only grant attributed to the sender is reclaimable — a deposit made on someone else's behalf cannot be withdrawn by the depositor."
   - "On MOI, a logic writing to an account that neither sent the interaction nor is the logic itself is a foreign access, denied unless that account published a policy allowing it."
-  - "Access policies are defined over assets, logics, storage and keys, but the protocol enforces the storage dimension only in this release. The rest are reserved."
+  - "MOI access policies are defined over assets, logics, storage and keys, but go-moi v0.12.0 enforces only the storage dimension. The rest are reserved."
   - "go-moi v0.12.0 renumbered the interaction op-codes. Only 0, 1 and 4 kept their meaning, so any indexer or custom client that decodes by numeric op-code is wrong until updated."
-  - "This is a coordinated upgrade. Nodes must stop together — mixed versions cannot decode each other's interactions and will diverge."
+  - "go-moi v0.12.0 is a coordinated upgrade. Nodes must stop together — mixed versions cannot decode each other's interactions and will diverge."
 faq:
   - q: "What happens if a logic writes state and there is no storage grant?"
-    a: "The engine refuses the write and the interaction reverts. Nothing is billed afterwards; the grant has to exist before the write lands. moi.StorageMetric reports where a grant stands, and moi.StoragePricing gives the current rate."
+    a: "On MOI, the engine refuses the write and the interaction reverts. Nothing is billed afterwards; the grant has to exist before the write lands. moi.StorageMetric reports where a grant stands, and moi.StoragePricing gives the current rate."
   - q: "Do I get anything back if my logic frees state?"
     a: "Yes. StorageWithdraw releases unused bytes back into KMOI, returned to the sender, so a logic that cleans up after itself reclaims what it no longer uses. Only grant attributed to the sender is reclaimable; a deposit made on someone else's behalf cannot be withdrawn by the depositor."
   - q: "I have a dapp with existing users. What breaks when v0.12.0 lands?"
@@ -24,7 +24,7 @@ faq:
   - q: "js-moi-agent-registry v0.3.0-rc1 is a release candidate. Why move to it?"
     a: "It is the client library for MOI's agent registry, and v0.3.0-rc1 carries the registry Logic ID for the reset devnet and pins js-moi-sdk 0.8.0 as an exact peer dependency. Keeping v0.2.0 next to the new SDK fails at install with an ERESOLVE conflict."
   - q: "Can I set access policies on my assets or keys yet?"
-    a: "Not yet. The model defines resource types for assets, logics, storage and keys, but only storage is enforced in this release. A policy naming any other class is rejected at validation."
+    a: "Not yet. The model defines resource types for assets, logics, storage and keys, but go-moi v0.12.0 enforces only storage. A policy naming any other class is rejected at validation."
   - q: "I run a node. Can I upgrade one node at a time?"
     a: "No. Access control, storage costing and the new validator system object all change state-transition semantics, and access control adds interaction types older nodes cannot decode. Stop every node inside the agreed window, deploy v0.12.0 everywhere, restart bootnodes then guardians, and confirm net.Version answers 0.12.0 and net.Peers returns peers before reopening client traffic."
   - q: "Why does the Voyage faucet say USER DOESNT EXIST?"
@@ -38,7 +38,7 @@ Both land in **go-moi v0.12.0**, the reference implementation of the MOI protoco
 
 In the same window, **Voyage**, the network explorer and faucet, moved to wallet sign-in and changed how the faucet works, and the **MOI wallet extension** shipped twice — unrelated to the protocol changes, covered at the end.
 
-## What changed in this release?
+## What changed in go-moi v0.12.0?
 
 go-moi v0.12.0 makes storage a resource you buy and own, and puts writes to other accounts behind published policy.
 
@@ -105,7 +105,7 @@ Because on MOI it is writing to *your* account, not its own.
 
 This is the part that differs most from what you may be used to. On Ethereum a contract owns its storage, so authorization to write it is implicit; finer control is hand-written with `require(msg.sender == owner)`. MOI moves that state to the participant: the data a logic keeps about you, its **actor state**, lives on your account. A logic routinely writes to storage it does not own, so the protocol needs an explicit answer: may this logic write to this account, in this situation?
 
-The docs put it as a scheduling logic. Bob books his own time all day; he signed those interactions, so writes to his own account need no permission. His assistant Alice arranges meetings for him too, putting a write on Bob's account inside an interaction Bob never signed: a **foreign access**, and without a rule anyone could fill Bob's calendar. Before the write lands, the engine checks whether Bob's published policies authorise this logic driven by Alice; they do, so her write goes through. The same write driven by anyone else is denied.
+MOI's developer docs put it as a scheduling logic. Bob books his own time all day; he signed those interactions, so writes to his own account need no permission. His assistant Alice arranges meetings for him too, putting a write on Bob's account inside an interaction Bob never signed: a **foreign access**, and without a rule anyone could fill Bob's calendar. Before the write lands, the engine checks whether Bob's published policies authorise this logic driven by Alice; they do, so her write goes through. The same write driven by anyone else is denied.
 
 ### What does a policy contain?
 
@@ -136,7 +136,7 @@ await new Access(bobSigner)
   .send();
 ```
 
-The model defines resource types for assets, logics, storage and keys, but **only `storage` is enforced in this release** — a policy naming any other class is rejected at validation. `Scope` is reserved and unenforced too.
+The model defines resource types for assets, logics, storage and keys, but **go-moi v0.12.0 enforces only `storage`** — a policy naming any other class is rejected at validation. `Scope` is reserved and unenforced too.
 
 Cocolab, the local lab you run Coco logic in, now emulates the runtime's default-deny, so a logic that relied on writing other actors' state fails in the lab before failing on the network. You type the grant in Cocolab:
 
@@ -168,8 +168,8 @@ Most application code keeps working. Four changes in go-moi v0.12.0 touch the wi
 | 12 `TxLogicInteract`, 13 `TxLogicUpgrade` | 14 `IxLogicInteract`, 15 `IxLogicUpgrade` |
 | (new) | 2–3 account ops, 6–10 guardian ops, 16–20 storage and access ops |
 
-- **Asset methods need exact state qualifiers.** Every asset write is `dynamic`, every asset read is `static`, and the compiler enforces it.
-- **State naming caught up with the manifest in js-moi-sdk.** `PersistentState` is now `LogicState`; `EphemeralState` is now `ActorState`. Coco itself has used `state logic` and `state actor` since v0.6.0.
+- **Coco v0.9.0 asset methods need exact state qualifiers.** Every asset write is `dynamic`, every asset read is `static`, and the compiler enforces it.
+- **State naming caught up with the manifest in js-moi-sdk v0.8.0.** `PersistentState` is now `LogicState`; `EphemeralState` is now `ActorState`. Coco itself has used `state logic` and `state actor` since v0.6.0.
 - **Native asset standards have their own flows.** Create MAS0, MAS1 and MAS2 through `MAS0AssetLogic.create()`, `MAS1AssetLogic.create()` and `MAS2AssetLogic.create()` — there is no bare `AssetLogic`. `AssetFactory` is now for custom MASX assets, and its `create()` requires a manifest, the logic's compiled interface description.
 - **A logic can no longer load another logic's actor state.** The runtime raises an error.
 - **Return types changed** on `moi.LogicIDs`, `debug.Accounts` and `net.Peers`. They now return a unified identifier type, so parsers need updating.
@@ -178,7 +178,7 @@ vscode-coco v0.4.0 reads `[target.pisa] version` from the `coco.nut` beside the 
 
 `deriveAssetId(sender, standard)` and `deriveLogicId(sender)`, from js-moi-identifiers, give you an account ID before it exists, and Coco gained field shorthand in class literals (`Person{name, age}`).
 
-We reset only the devnet for this release: deployed logics and registered accounts there are gone, so redeploy and re-register.
+Only the devnet was reset for go-moi v0.12.0: deployed logics and registered accounts there are gone, so redeploy and re-register.
 
 ## What else landed at the account level?
 
@@ -223,13 +223,13 @@ Once it is running you will notice:
 
 ## What changed in Voyage and the wallet?
 
-Voyage shipped twice, and the second release changes how you get in.
+Voyage shipped twice in this window, v0.8.2 and v0.9.0, and v0.9.0 changes how you get in.
 
 **Sign in with your wallet.** Voyage v0.9.0 replaces the old sign-in (generate a MOI ID, log in with IOME, or import an existing ID) with the MOI wallet Chrome extension. You sign a short message; no transaction is sent and no fuel is spent. You can connect several wallet accounts to one Voyage account.
 
 **Register yourself as a participant.** Since v0.8.2, you can register on-chain from Voyage itself, with POLO-encoded or ordinary account details; the API rate-limits registrations and token transfers per day. The same release returns a participant's tesseracts with pagination, so Voyage pages through history instead of one unbounded response.
 
-**The faucet changed.** It used to create an account and fund it in one step; now it only sends tokens to accounts that already exist. If the account is not on-chain yet the API returns `USER DOESNT EXIST`, which the Voyage UI shows as a message about not being registered in the protocol. Register first, then use the faucet.
+**The faucet changed in Voyage v0.9.0.** It used to create an account and fund it in one step; now it only sends tokens to accounts that already exist. If the account is not on-chain yet the API returns `USER DOESNT EXIST`, which the Voyage UI shows as a message about not being registered in the protocol. Register first, then use the faucet.
 
 **Two wallet releases landed alongside.** v0.1.4 added the multi-account picker on Connect Wallet and a link to register your own wallet account. Addresses now truncate to `0x` plus the tag, then the first and last four characters of the fingerprint (`0x00…4cd9…da10`), with a suffix marking sub-accounts. The sign-interaction screen dropped sequence-number validation and stopped overriding a dapp-supplied `fuel_limit`; fuel is still estimated when the dapp omits one. v0.1.5 added error handling and validation in network configuration, and raised the participant registration amount in the encoded payload from 1k to 100k.
 
@@ -255,11 +255,11 @@ Everything here landed between 12 and 18 August 2026.
 **If you build on MOI**, in this order:
 
 1. Move to the new versions: `npm i js-moi-sdk@0.8.0`, and `npm i js-moi-agent-registry@0.3.0-rc1` if you use the registry. v0.3.0-rc1 is a release candidate; it pins `js-moi-sdk@0.8.0` as an exact peer dependency, so staying on v0.2.0 fails at install.
-2. Rename `PersistentState` and `EphemeralState`, and add `dynamic` and `static` qualifiers to custom asset logic. If anything you own decodes interaction op-codes, fix the mapping *before* it touches a v0.12.0 node.
+2. In js-moi-sdk v0.8.0, rename `PersistentState` and `EphemeralState`; in Coco v0.9.0, add `dynamic` and `static` qualifiers to custom asset logic. If anything you own decodes interaction op-codes, fix the mapping *before* it touches a v0.12.0 node.
 3. Bump `[target.pisa]` version to `"0.8.0"` in `coco.nut`.
 4. Run your logic in Cocolab under Coco v0.9.0; anything relying on a foreign actor-state write fails there first, where you want to find it.
 
-If you already have users, plan for the policy step and the grant behind it. Nothing is grandfathered: writes to a user's actor state in interactions they did not sign are denied until that user publishes a policy naming your logic, from their own account; you cannot publish it for them. Each write draws on a storage grant on the user's account — their own deposit or yours with `.for()`. The FAQ carries the per-user order.
+If you already have users, go-moi v0.12.0 means planning for the policy step and the grant behind it. Nothing is grandfathered: writes to a user's actor state in interactions they did not sign are denied until that user publishes a policy naming your logic, from their own account; you cannot publish it for them. Each write draws on a storage grant on the user's account — their own deposit or yours with `.for()`. The FAQ carries the per-user order.
 
 **If you run a node** — get the release announcement, schedule the stop, and follow the six steps above.
 
