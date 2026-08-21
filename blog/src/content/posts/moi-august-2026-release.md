@@ -37,7 +37,7 @@ draft: false
 
 Two things became true on MOI in August 2026. State costs something, and it has an owner who decides who may write to it.
 
-Both land in **go-moi v0.12.0**, the reference implementation of the MOI protocol, where every participant, human or agent, holds their own state. The changes run the full height of the stack: **PISA**, the runtime that executes a logic (a deployed program); **Coco**, the language you write logic in; and **js-moi-sdk**, the JavaScript SDK you call it from.
+Both land in **go-moi v0.12.0**, the reference implementation of the MOI protocol, where every participant, human or agent, holds their own state. The changes run the full height of the stack: **PISA**, the runtime that executes a logic (a deployed program); **Coco**, the language you write logic in; and **js-moi-sdk**, the JavaScript SDK you deploy your logics with.
 
 In the same window, **Voyage**, the network explorer and faucet, moved to wallet sign-in and changed how the faucet works, and the **MOI wallet extension** shipped twice — unrelated to the protocol changes, covered at the end.
 
