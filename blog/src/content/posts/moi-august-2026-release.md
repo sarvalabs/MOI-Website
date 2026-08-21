@@ -39,13 +39,15 @@ Two things became true on MOI in August 2026. State costs something, and it has 
 
 Both land in **go-moi v0.12.0**, the reference implementation of the MOI protocol, where every participant, human or agent, holds their own state. The changes run the full height of the stack: **PISA**, the runtime that executes a logic (a deployed program); **Coco**, the language you write logic in; and **js-moi-sdk**, the JavaScript SDK you deploy your logics with.
 
-In the same window, **Voyage**, the network explorer and faucet, moved to wallet sign-in and changed how the faucet works, and the **MOI wallet extension** shipped twice — unrelated to the protocol changes, covered at the end.
+In the same window, [**Voyage**](https://voyage.moi.technology), the network explorer and faucet, moved to wallet sign-in and changed how the faucet works, and the **MOI wallet extension** shipped twice — unrelated to the protocol changes, covered at the end.
 
 ## What changed in go-moi v0.12.0?
 
 go-moi v0.12.0 makes storage a resource you buy and own, and puts writes to other accounts behind published policy.
 
-Once a logic's state lives on *your* account rather than the logic's, which is what [the Participant Layer means in practice](https://blog.moi.technology/article/what-is-moi-network/), two questions other chains leave implicit need explicit answers: who pays for the space, and who may write into it. Storage costing answers the first, access control the second; both arrive as new interaction types (interactions are the network's transactions).
+Both exist because of the thing that separates MOI from Ethereum. On Ethereum, a contract owns every byte of state about its users. That settles two questions without anyone asking them: storage is paid for through gas by whoever sends the transaction, and who may write is whatever the contract's own code checks. You do not own your state there. You occupy a row in someone else's table, and your only protection is the code they wrote.
+
+On MOI, a logic's state about you lives on *your* account, which is what [the Participant Layer means in practice](https://blog.moi.technology/article/what-is-moi-network/). That puts your state in one place you control, and it lets you withdraw a logic's access to it with a single interaction instead of trusting each contract's hand-written checks. It also means the two questions Ethereum answers implicitly have to be answered explicitly, per participant: who pays for the space, and who may write into it. Storage costing answers the first, access control the second, and both arrive as new interaction types (interactions are the network's transactions).
 
 **Where each change lands, by layer and version**
 
@@ -212,10 +214,10 @@ Everything here landed between 12 and 18 August 2026.
 | `go-moi:v0.12.0` | 14 Aug | Storage costing, access control, read locks, validator system object, native asset logics, message compression. Protocol version 0.12.0; Go 1.24.6 |
 | `go-pisa:v0.8.0` | 13 Aug | `VOLPAY` and `VOLRES` opcodes, the `AccessControl` interface, metering per (account, payer), asset access levels |
 | `cocolang:v0.9.0` | 14 Aug | `payer` on `mutate`, `Actor()` queries, field shorthand, `grant storage_mutate` in Cocolab, asset state qualifiers — [release notes](https://cocolang.dev/docs/releases/#v090) · [docs](https://cocolang.dev/docs/book) |
-| `vscode-coco:v0.4.0` | 14 Aug | Coco 0.9.0 and PISA 0.8.0 support, the `payer` clause, actor validation — [changelog](https://github.com/sarvalabs/vscode-coco/blob/v0.4.0/CHANGELOG.md), and on the VS Code marketplace |
-| `js-moi-sdk:v0.8.0` | 15 Aug | Storage and access-policy operations, automatic funding on creation, ID derivation, MAS0/1/2 flows, state renames — [release notes](https://github.com/sarvalabs/js-moi-sdk/releases/tag/v0.8.0) |
+| `vscode-coco:v0.4.0` | 14 Aug | Coco 0.9.0 and PISA 0.8.0 support, the `payer` clause, actor validation — [changelog](https://github.com/sarvalabs/vscode-coco/blob/v0.4.0/CHANGELOG.md) · [VS Code marketplace](https://marketplace.visualstudio.com/items?itemName=sarvalabs.cocolang) |
+| `js-moi-sdk:v0.8.0` | 15 Aug | Storage and access-policy operations, automatic funding on creation, ID derivation, MAS0/1/2 flows, state renames — [release notes](https://github.com/sarvalabs/js-moi-sdk/releases/tag/v0.8.0) · [on npm](https://www.npmjs.com/package/js-moi-sdk) |
 | `js-moi-agent-registry:v0.3.0-rc1` | 16 Aug | New registry Logic ID for the reset devnet, `SendOptions` for fuel overrides; pins `js-moi-sdk@0.8.0` as an exact peer dependency — [on npm](https://www.npmjs.com/package/js-moi-agent-registry) |
-| `voyage:v0.9.0` · `voyage-api:v0.9.0` | 18 Aug | Wallet sign-in; faucet funds existing accounts only |
+| `voyage:v0.9.0` · `voyage-api:v0.9.0` | 18 Aug | Wallet sign-in; faucet funds existing accounts only — [voyage.moi.technology](https://voyage.moi.technology) |
 | `voyage:v0.8.2` · `voyage-api:v0.8.2` | 13 Aug | Participant registration with rate limits, tesseracts by participant with pagination, pending-interactions fix |
 | `moi-wallet-extension:v0.1.5` | 14 Aug | Error handling and validation in network configuration; registration amount in the encoded payload raised from 1k to 100k |
 | `moi-wallet-extension:v0.1.4` | 12 Aug | Multi-account picker on Connect Wallet, a self-registration link, and the new address-truncation format |
