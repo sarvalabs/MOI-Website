@@ -169,32 +169,6 @@ go-moi v0.12.0 also adds account-level features that are neither storage nor acc
 
 **Keys are enumerable.** `moi.AccountKeys` lists the keys on an account.
 
-## What do node operators need to do?
-
-Upgrade every node together. This one does not roll.
-
-Access control, storage costing and the new validator system object change state-transition semantics, and access control adds interaction types older nodes cannot decode; mixed versions will diverge.
-
-The window is network-wide, and go-moi is not a public repository, so what you need arrives with your network's release announcement: the window time; the announcement channel, where bootnode health is also posted; the coordinator's contact; the image reference or source access; the `config.json` and `genesis.json` published for your network (the devnet's shipped with its reset); which of your nodes are guardians, meaning nodes the network records as validators; and the expected sync signal and duration. With the announcement in hand, the six steps run start to finish; without it, stop and get it first.
-
-1. Close client traffic: RPC endpoints, load balancers, dapp writes. Then stop all nodes together, inside the agreed window.
-2. Take a cold backup of each stopped node's database, `config.json` and `genesis.json`, and keep the pre-0.12.0 binary or image with it — a restore needs the old build, which step 3 replaces. Never copy files out of a running node.
-3. Get the v0.12.0 build onto every node: pull the image named in the announcement (now multi-OS and multi-arch) or build from source with Go 1.24.6.
-4. Replace `genesis.json` wholesale with the file from the announcement. For `config.json`, diff the published file against the node's current one, keep the keys that are node-local (vault, paths, ports), and ask the coordinator about any key you cannot classify. There is no `ProtocolVersion` key; the version is compiled into the binary, and the node reads the files through `--config-path` and the consensus config's `genesis_path`.
-5. Restart bootnodes and wait until they report healthy: `net.Version` answers `0.12.0` and `Peer Connected` lines appear in the log. If the bootnodes are not yours, wait for the confirmation on the announcement channel. Then restart guardians, then any other nodes. Each node completes initial sync before joining consensus; watch for the sync signal from the announcement and budget its duration into the window.
-6. Verify each node the same way: `net.Version` answers `0.12.0` and `net.Peers` returns a non-empty array. Once v0.12.0 is up, `moi.Validators` confirms which nodes the network records as validators.
-
-Both are JSON-RPC calls against the node's endpoint (port 1600 by default); the [JSON-RPC reference](https://docs.moi.technology/docs/build/json-rpc) has the request shape. When both checks pass on every node, re-open the traffic you closed in step 1.
-
-If the window blows out across the network, the coordinator calls a restore: every node returns to its step-2 cold backup together, all-or-nothing for the same reason the upgrade is. If one node fails to sync while the rest run v0.12.0, do not restore its pre-0.12.0 backup next to live nodes; wipe its database and start it fresh on v0.12.0 to rebuild from the new genesis (the shipped flow itself starts nodes with `--clean-db`). If it still refuses, keep it down and escalate to the coordinator.
-
-Once it is running you will notice:
-
-- Consensus and syncer traffic is now compressed, most visible on large ICS (Interaction Consensus Set) clusters.
-- Read locks let accounts take part in a tesseract, a block on an account's own chain, with a latest-consistent-read guarantee instead of a full mutation, lightening the consensus hot path.
-- Validator data lives in a dedicated system object, readable through `moi.Validators`. Nothing migrates old records into it; the upgrade flow rebuilds the validator set from the new genesis file.
-- v0.12.0 randomises the liveness algorithm and fixes a slot-locking stall.
-
 ## What changed in Voyage and the wallet?
 
 Voyage shipped twice in this window, v0.8.2 and v0.9.0, and v0.9.0 changes how you get in.
@@ -234,8 +208,6 @@ Everything here landed between 12 and 18 August 2026.
 4. Run your logic in Cocolab under Coco v0.9.0; anything relying on a foreign actor-state write fails there first, where you want to find it.
 
 If you already have users, go-moi v0.12.0 means planning for the policy step and the grant behind it. Nothing is grandfathered: writes to a user's actor state in interactions they did not sign are denied until that user publishes a policy naming your logic, from their own account; you cannot publish it for them. Each write draws on a storage grant on the user's account: their own deposit, or one you made on their behalf, which you cannot later withdraw. The FAQ carries the per-user order.
-
-**If you run a node** — get the release announcement, schedule the stop, and follow the six steps above.
 
 **If you use Voyage** — sign in with your wallet, and register as a participant before asking the faucet for anything.
 
