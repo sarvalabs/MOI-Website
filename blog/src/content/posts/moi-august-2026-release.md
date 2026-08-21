@@ -57,8 +57,6 @@ Once a logic's state lives on *your* account rather than the logic's, which is w
 
 On MOI, you buy storage up front as a **storage grant**: a quota of bytes reserved on a target account, attributed to a specific participant, and paid in KMOI. A write with no grant behind it is not deferred or invoiced afterwards; the engine refuses it and the interaction reverts.
 
-![The storage grant lifecycle: KMOI becomes a grant on the target account, writes deduct bytes from it, withdrawal converts unused bytes back, and a write with no grant reverts](../../assets/moi-august-2026-release/storage-grant-lifecycle.svg)
-
 `StorageDeposit` converts KMOI into bytes of grant on a target account, and `StorageWithdraw` releases unused bytes back into KMOI, returned to the sender. In js-moi-sdk v0.8.0:
 
 ```js
@@ -100,8 +98,6 @@ The bundled fund covers the new account's own creation cost and nothing more; a 
 ## Why does a logic need permission to write my state?
 
 Because on MOI it is writing to *your* account, not its own.
-
-![Foreign access: a logic's write to your account is refused without a policy, and passes when the owner has published one naming resource, actions, caller and origin](../../assets/moi-august-2026-release/foreign-access.svg)
 
 This is the part that differs most from what you may be used to. On Ethereum a contract owns its storage, so authorization to write it is implicit; finer control is hand-written with `require(msg.sender == owner)`. MOI moves that state to the participant: the data a logic keeps about you, its **actor state**, lives on your account. A logic routinely writes to storage it does not own, so the protocol needs an explicit answer: may this logic write to this account, in this situation?
 
