@@ -10,11 +10,11 @@ author:
 tags: ["protocol", "agents", "native-assets", "release", "go-moi"]
 takeaways:
   - "go-moi v0.12.0: storage costing (StorageDeposit/StorageWithdraw), access control (AccessCreate/Update/Delete), renumbered op-codes. Coordinated upgrade to protocol version 0.12.0."
-  - "go-pisa v0.8.0: VOLPAY and VOLRES opcodes, the AccessControl hook, storage metering per (account, payer)."
+  - "go-pisa v0.8.0: VOLPAY and VOLRES opcodes, the AccessControl interface, storage metering per (account, payer)."
   - "cocolang v0.9.0: `payer` clause on `mutate`, `Actor()` queries, `grant storage_mutate` in Cocolab, exact state qualifiers on asset methods."
   - "vscode-coco v0.4.0: Coco 0.9.0 and PISA 0.8.0 support, with checks gated on the `[target.pisa]` version in `coco.nut`."
   - "js-moi-sdk v0.8.0: storage and access-policy builders, automatic funding on account creation, `LogicState`/`ActorState` renames, MAS0/1/2 create flows."
-  - "js-moi-agent-registry v0.3.0-rc1: registry Logic ID for the reset devnet; pins js-moi-sdk 0.8.0 as an exact peer dependency."
+  - "js-moi-agent-registry v0.3.0-rc1: a new registry Logic ID; pins js-moi-sdk 0.8.0 as an exact peer dependency."
   - "voyage v0.8.2 and v0.9.0: participant registration and paginated history, then wallet sign-in and a faucet that funds only existing accounts."
   - "moi-wallet-extension v0.1.4 and v0.1.5: multi-account picker and a new address format, then network-config validation and a 100k registration amount."
 faq:
@@ -25,7 +25,7 @@ faq:
   - q: "I have a dapp with existing users. What breaks when v0.12.0 lands?"
     a: "Writes to a user's actor state inside interactions someone else signed are foreign accesses, denied until that user publishes an access policy naming your logic. Writes inside interactions the user signed themselves are self-access and keep working with no policy. Nothing is grandfathered, and the policy interaction must be sent by the account it protects — you cannot publish it on a user's behalf. Each foreign write draws on a storage grant on the user's account, funded by the user's own StorageDeposit or by a deposit you make on their behalf, which you cannot later withdraw. Per user, the order is: register as a participant (the devnet reset removed existing accounts, so devnet users register again), put a grant on their account, then publish the policy naming your logic."
   - q: "js-moi-agent-registry v0.3.0-rc1 is a release candidate. Why move to it?"
-    a: "It is the client library for the MOI agent registry, and v0.3.0-rc1 carries the registry Logic ID for the reset devnet and pins js-moi-sdk 0.8.0 as an exact peer dependency. Keeping v0.2.0 next to the new SDK fails at install with an ERESOLVE conflict."
+    a: "It is the client library for the MOI agent registry, and v0.3.0-rc1 carries a new registry Logic ID and pins js-moi-sdk 0.8.0 as an exact peer dependency. Keeping v0.2.0 next to the new SDK fails at install with an ERESOLVE conflict."
   - q: "Can I set access policies on my assets or keys yet?"
     a: "Not yet. The model defines resource types for assets, logics, storage and keys, but go-moi v0.12.0 enforces only storage. A policy naming any other class is rejected at validation."
   - q: "I run a node. Can I upgrade one node at a time?"
@@ -56,7 +56,7 @@ On MOI, a logic's state about you lives on *your* account, which is what [the Pa
 | Layer | Storage costing | Access control |
 |---|---|---|
 | **go-moi** v0.12.0 | `StorageDeposit` / `StorageWithdraw` interactions, `moi.StorageMetric` and `moi.StoragePricing` RPCs | `AccessCreate` / `AccessUpdate` / `AccessDelete` interactions, `moi.AccessPolicy` and `moi.AccessPolicies` RPCs |
-| **PISA** v0.8.0 | `VOLPAY` and `VOLRES` opcodes, metering per (account, payer) | `AccessControl` hook |
+| **PISA** v0.8.0 | `VOLPAY` and `VOLRES` opcodes, metering per (account, payer) | `AccessControl` interface |
 | **Coco** v0.9.0 | `payer` clause on `mutate` | `grant storage_mutate` in Cocolab, `Actor()` queries |
 | **js-moi-sdk** v0.8.0 | Deposit and withdraw, automatic funding on creation | Policy create, update and delete |
 
@@ -66,7 +66,7 @@ A **storage grant** is how you pay for storage. Think of it as prepaid space: a 
 
 So before a logic can write state onto an account, there has to be enough unused grant there to hold the write. If there is not, the write is refused and the whole interaction reverts. Nothing is metered and billed afterwards. The grant is a precondition, not an invoice.
 
-Two interactions manage a grant. `StorageDeposit` turns KMOI into bytes of grant on a target account; how many bytes it buys depends on the network's current rate, which `moi.StoragePricing` reports. `StorageWithdraw` runs the other way, releasing bytes that are no longer in use and returning the KMOI to the sender. `moi.StorageMetric` shows where a grant stands: how much was granted and how much has been consumed. js-moi-sdk v0.8.0 has a builder for each; the [tutorials](https://docs.moi.technology/docs/build/tutorials) and the [JSON-RPC reference](https://docs.moi.technology/docs/build/json-rpc) carry the calls.
+Two interactions manage a grant. `StorageDeposit` turns KMOI into bytes of grant on a target account; how many bytes it buys depends on the network's current rate, which `moi.StoragePricing` reports. `StorageWithdraw` runs the other way, releasing bytes that are no longer in use and returning the KMOI to the sender. `moi.StorageMetric` shows where a grant stands: how much was granted and how much has been consumed. js-moi-sdk v0.8.0 has a builder for each; its [release notes](https://github.com/sarvalabs/js-moi-sdk/releases/tag/v0.8.0) list them, and the [developer docs](https://docs.moi.technology) are where the walkthroughs will live.
 
 Two things trip people up.
 
@@ -74,7 +74,7 @@ Two things trip people up.
 
 **Withdrawal is asymmetric.** A grant is attributed to a participant. Normally that is whoever deposited it, but you can deposit on someone else's behalf, and then the grant is theirs: only grant attributed to the sender can be withdrawn, so sponsoring a user is a gift you cannot take back.
 
-Under the hood, PISA v0.8.0 does the accounting with two opcodes, `VOLPAY` to charge a write against the grant and `VOLRES` to report what is left (`VOLRES` is a rename of `VOLAVL`, not a new opcode). From Coco, `Environment.StorageResult(account, payer)` replaces the removed `VolumeCapacity()`.
+Under the hood, PISA v0.8.0 meters storage per (account, payer). Two opcodes sit on top: `VOLPAY` sets the payer for a logic-state write, and `VOLRES` reports the volume added and released for an (account, payer) pair (`VOLRES` is a rename of `VOLAVL`, not a new opcode). From Coco, `Environment.StorageResult(account, payer)` replaces the removed `VolumeCapacity()`.
 
 ### Who pays when my logic writes?
 
@@ -113,7 +113,7 @@ The rule is an **access policy**. It lives on the account being written to, Bob'
 
 Caller and origin are each unrestricted or a fixed set of participants and logics. Constraining both is what lets Bob say *this logic, driven by Alice* rather than *this logic, driven by anyone*.
 
-Policies are published with `AccessCreate`, amended with `AccessUpdate` and removed with `AccessDelete`; `moi.AccessPolicy` reads one back and `moi.AccessPolicies` lists everything on an account. js-moi-sdk v0.8.0 wraps all five in a builder, documented in the [tutorials](https://docs.moi.technology/docs/build/tutorials).
+Policies are published with `AccessCreate`, amended with `AccessUpdate` and removed with `AccessDelete`; `moi.AccessPolicy` reads one back and `moi.AccessPolicies` lists everything on an account. js-moi-sdk v0.8.0 wraps the three writes in a builder and exposes the two reads as provider calls.
 
 Three things matter in practice.
 
@@ -137,7 +137,7 @@ Most application code keeps working. What does not, by package:
 - **Five asset operations fold into one.** Transfer, approve, revoke, mint and burn now travel as a single `IxAssetAction` carrying a callsite string and calldata encoded in POLO, the network's wire encoding. The callsite set is wider: `Lockup`, `Release` and `MintWithMetadata` ship too.
 - **`TxFuelSupply` is dropped**, with no successor.
 - **`moi.Registry` is removed.** `moi.Deeds` is new, and returns `{asset_id, asset_info}` entries for an account.
-- **Return types changed** on `moi.LogicIDs`, `debug.Accounts` and `net.Peers`. They now return a unified identifier type, so parsers need updating.
+- **Return types changed** on `moi.LogicIDs`, `debug.Accounts` and `net.Peers`. The first two now return `identifiers.Identifier` and `net.Peers` returns `identifiers.KramaID`, all from the new identifiers package, so parsers need updating.
 
 **Interaction op-codes, go-moi v0.11.3 → v0.12.0**
 
@@ -169,14 +169,14 @@ Most application code keeps working. What does not, by package:
 
 ### js-moi-agent-registry v0.3.0-rc1
 
-- **A release candidate, and what npm serves as latest.** It carries the registry Logic ID for the reset devnet, which older versions cannot find, and pins `js-moi-sdk@0.8.0` as an exact peer dependency, so staying on v0.2.0 beside the new SDK fails at install. `SendOptions` adds fuel overrides on write calls.
+- **A release candidate, and what npm serves as latest.** It carries a new registry Logic ID, which older versions do not have, and pins `js-moi-sdk@0.8.0` as an exact peer dependency, so staying on v0.2.0 beside the new SDK fails at install. `SendOptions` adds fuel overrides on write calls.
 
 ### vscode-coco v0.4.0
 
 - **Checks are gated on your target.** The extension reads `[target.pisa] version` from the `coco.nut` beside the file and gates every version-dependent check on it, reporting `VolumeCapacity()` as removed on a 0.8.0 target while accepting it on 0.7.1.
-- **State qualifiers are inferred.** An omitted qualifier means `pure`, not `static`; the extension infers what a callable's body needs, so a mismatch surfaces as a warning in the editor rather than at runtime.
+- **State qualifiers are inferred.** An omitted qualifier means `pure`, not `static`; the extension infers what a callable's body needs, so a mismatch surfaces as a diagnostic in the editor rather than at runtime.
 
-Only the devnet was reset for go-moi v0.12.0: deployed logics and registered accounts there are gone, so redeploy and re-register.
+The devnet was reset for go-moi v0.12.0: deployed logics and registered accounts there are gone, so redeploy and re-register.
 
 ## What else landed at the account level?
 
@@ -211,7 +211,7 @@ Everything here landed between 12 and 18 August 2026.
 | `cocolang:v0.9.0` | 14 Aug | `payer` on `mutate`, `Actor()` queries, field shorthand, `grant storage_mutate` in Cocolab, asset state qualifiers — [release notes](https://cocolang.dev/docs/releases/#v090) · [docs](https://cocolang.dev/docs/book) |
 | `vscode-coco:v0.4.0` | 14 Aug | Coco 0.9.0 and PISA 0.8.0 support, the `payer` clause, actor validation — [changelog](https://github.com/sarvalabs/vscode-coco/blob/v0.4.0/CHANGELOG.md) · [VS Code marketplace](https://marketplace.visualstudio.com/items?itemName=sarvalabs.cocolang) |
 | `js-moi-sdk:v0.8.0` | 15 Aug | Storage and access-policy operations, automatic funding on creation, account IDs before creation, MAS0/1/2 flows, state renames — [release notes](https://github.com/sarvalabs/js-moi-sdk/releases/tag/v0.8.0) · [on npm](https://www.npmjs.com/package/js-moi-sdk) |
-| `js-moi-agent-registry:v0.3.0-rc1` | 16 Aug | New registry Logic ID for the reset devnet, `SendOptions` for fuel overrides; pins `js-moi-sdk@0.8.0` as an exact peer dependency — [on npm](https://www.npmjs.com/package/js-moi-agent-registry) |
+| `js-moi-agent-registry:v0.3.0-rc1` | 16 Aug | New registry Logic ID, `SendOptions` for fuel overrides; pins `js-moi-sdk@0.8.0` as an exact peer dependency — [on npm](https://www.npmjs.com/package/js-moi-agent-registry) |
 | `voyage:v0.9.0` · `voyage-api:v0.9.0` | 18 Aug | Wallet sign-in; faucet funds existing accounts only — [voyage.moi.technology](https://voyage.moi.technology) |
 | `voyage:v0.8.2` · `voyage-api:v0.8.2` | 13 Aug | Participant registration with rate limits, tesseracts by participant with pagination, pending-interactions fix |
 | `moi-wallet-extension:v0.1.5` | 14 Aug | Error handling and validation in network configuration; registration amount in the encoded payload raised from 1k to 100k |
