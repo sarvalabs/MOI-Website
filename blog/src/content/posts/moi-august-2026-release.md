@@ -60,9 +60,11 @@ On MOI, a logic's state about you lives on *your* account, which is what [the Pa
 
 ## How does paying for storage work?
 
-On MOI, you buy storage before you use it. A **storage grant** is a prepaid quota of bytes on an account, bought with KMOI. Before a logic can write state onto an account, there has to be enough unused grant there to hold the write.
+Start with what storage is. When a logic runs, it leaves state behind: a balance, a calendar entry, a setting, a record of what happened. That state has to survive after the interaction finishes, and the network has to keep it for as long as it exists. On MOI it sits on an account: the logic's own account for state that belongs to the logic, your account for state that is about you. Those persisted bytes are storage. Executing code is a one-off cost; keeping bytes around is an ongoing one, which is why MOI prices it separately.
 
-If there is not, the write is refused and the whole interaction reverts. Nothing is metered and billed afterwards. The grant is a precondition, not an invoice.
+A **storage grant** is how you pay for it. Think of it as prepaid space: a number of bytes reserved on an account, bought with KMOI before anything is written. Writes consume the grant byte by byte, and whatever you do not use you can release and get back. The grant belongs to an account, where the bytes live, and is attributed to a participant, who paid for it.
+
+So before a logic can write state onto an account, there has to be enough unused grant there to hold the write. If there is not, the write is refused and the whole interaction reverts. Nothing is metered and billed afterwards. The grant is a precondition, not an invoice.
 
 Two interactions manage a grant. `StorageDeposit` turns KMOI into bytes of grant on a target account; how many bytes it buys depends on the network's current rate, which `moi.StoragePricing` reports. `StorageWithdraw` runs the other way, releasing bytes that are no longer in use and returning the KMOI to the sender. `moi.StorageMetric` shows where a grant stands: how much was granted and how much has been consumed. js-moi-sdk v0.8.0 has a builder for each; the [tutorials](https://docs.moi.technology/docs/build/tutorials) and the [JSON-RPC reference](https://docs.moi.technology/docs/build/json-rpc) carry the calls.
 
