@@ -1,5 +1,7 @@
-/** PDF asset (file still named MOILitePaper.pdf in /public) */
-export const WHITEPAPER_URL = "/MOILitePaper.pdf";
+/** White paper PDF (MOI Foundations v2.1) */
+export const WHITEPAPER_URL = "/papers/moi-white-paper.pdf";
+/** Litepaper PDF (The Participant Layer of the Internet) */
+export const LITEPAPER_URL = "/papers/moi-lite-paper.pdf";
 
 export const WHITEPAPER_SITE_URL = "https://moi.technology/whitepaper";
 export const NAV_H = 72;

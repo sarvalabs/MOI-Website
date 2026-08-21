@@ -579,6 +579,20 @@ export default function HomePage() {
                 <Link to="/why-moi" className="hero-btn hero-btn-ghost">
                   Read why we built MOI <span aria-hidden="true">→</span>
                 </Link>
+                <a
+                  href="/papers/moi-white-paper.pdf"
+                  download="MOI-White-Paper.pdf"
+                  className="hero-btn hero-btn-ghost"
+                >
+                  White paper <span aria-hidden="true">↓</span>
+                </a>
+                <a
+                  href="/papers/moi-lite-paper.pdf"
+                  download="MOI-Lite-Paper.pdf"
+                  className="hero-btn hero-btn-ghost"
+                >
+                  Litepaper <span aria-hidden="true">↓</span>
+                </a>
               </div>
             </div>
 
