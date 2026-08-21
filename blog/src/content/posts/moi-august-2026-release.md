@@ -136,7 +136,7 @@ Most application code keeps working. What does not, by package:
 - **Interaction op-codes were renumbered.** `IxOpType` is an integer on the wire and the values were reordered; only `0`, `1` and `4` kept their meaning. A client that decodes interactions by numeric op-code reads wrong values with no error to say so. The full mapping is below.
 - **Five asset operations fold into one.** Transfer, approve, revoke, mint and burn now travel as a single `IxAssetAction` carrying a callsite string and calldata encoded in POLO, the network's wire encoding. The callsite set is wider: `Lockup`, `Release` and `MintWithMetadata` ship too.
 - **`TxFuelSupply` is dropped**, with no successor.
-- **`moi.Registry` is renamed `moi.Deeds`.** Same `{asset_id, asset_info}` shape, still the assets an account has created: a rename in your client, not a removal.
+- **`moi.Registry` is removed.** `moi.Deeds` is new, and returns `{asset_id, asset_info}` entries for an account.
 - **Return types changed** on `moi.LogicIDs`, `debug.Accounts` and `net.Peers`. They now return a unified identifier type, so parsers need updating.
 
 **Interaction op-codes, go-moi v0.11.3 → v0.12.0**
@@ -163,9 +163,9 @@ Most application code keeps working. What does not, by package:
 ### js-moi-sdk v0.8.0
 
 - **State naming caught up with the manifest.** `PersistentState` is now `LogicState`; `EphemeralState` is now `ActorState`. Coco itself has used `state logic` and `state actor` since v0.6.0.
-- **Native asset standards have their own flows.** Create MAS0, MAS1 and MAS2 through `MAS0AssetLogic.create()`, `MAS1AssetLogic.create()` and `MAS2AssetLogic.create()` — there is no bare `AssetLogic`. `AssetFactory` is now for custom MASX assets, and its `create()` requires a manifest, the logic's compiled interface description.
+- **Native asset standards have their own flows.** Create MAS0, MAS1 and MAS2 through their respective asset logic's `create()` method. `AssetFactory` is now for custom MASX assets, and its `create()` requires a manifest, the logic's compiled interface description.
 - **New accounts are funded automatically** on creation, as covered above, with the amount tunable through `RoutineOption.storageFund`.
-- **IDs before creation.** `deriveAssetId(sender, standard)` and `deriveLogicId(sender)`, from js-moi-identifiers, give you an account ID before it exists.
+- **IDs before creation.** The SDK can now give you an asset or logic account ID before the account exists, from the sender and, for assets, the standard.
 
 ### js-moi-agent-registry v0.3.0-rc1
 
@@ -184,7 +184,7 @@ go-moi v0.12.0 also adds account-level features that are neither storage nor acc
 
 **Participant variants got first-class support.** `AccountInherit` lets a variant account (a sub-account under a participant) inherit context from its parent, and `AccountConfigure` is the separate interaction for adding and revoking keys. `moi.SubAccountCount` counts the variants under an account, and participant-create is now rejected when the target is itself a variant.
 
-**Asset holdings and approvals became inspectable.** `moi.Lockups` returns an account's asset lockups, `moi.Mandates` returns asset approvals *and their expiry*, and `moi.Deeds` lists the assets an account has created.
+**Asset holdings and approvals became inspectable.** `moi.Lockups` returns an account's asset lockups, `moi.Mandates` returns asset approvals *and their expiry*, and `moi.Deeds` returns an account's asset deed records.
 
 **Keys are enumerable.** `moi.AccountKeys` lists the keys on an account.
 
@@ -210,7 +210,7 @@ Everything here landed between 12 and 18 August 2026.
 | `go-pisa:v0.8.0` | 13 Aug | `VOLPAY` and `VOLRES` opcodes, the `AccessControl` interface, metering per (account, payer), asset access levels |
 | `cocolang:v0.9.0` | 14 Aug | `payer` on `mutate`, `Actor()` queries, field shorthand, `grant storage_mutate` in Cocolab, asset state qualifiers — [release notes](https://cocolang.dev/docs/releases/#v090) · [docs](https://cocolang.dev/docs/book) |
 | `vscode-coco:v0.4.0` | 14 Aug | Coco 0.9.0 and PISA 0.8.0 support, the `payer` clause, actor validation — [changelog](https://github.com/sarvalabs/vscode-coco/blob/v0.4.0/CHANGELOG.md) · [VS Code marketplace](https://marketplace.visualstudio.com/items?itemName=sarvalabs.cocolang) |
-| `js-moi-sdk:v0.8.0` | 15 Aug | Storage and access-policy operations, automatic funding on creation, ID derivation, MAS0/1/2 flows, state renames — [release notes](https://github.com/sarvalabs/js-moi-sdk/releases/tag/v0.8.0) · [on npm](https://www.npmjs.com/package/js-moi-sdk) |
+| `js-moi-sdk:v0.8.0` | 15 Aug | Storage and access-policy operations, automatic funding on creation, account IDs before creation, MAS0/1/2 flows, state renames — [release notes](https://github.com/sarvalabs/js-moi-sdk/releases/tag/v0.8.0) · [on npm](https://www.npmjs.com/package/js-moi-sdk) |
 | `js-moi-agent-registry:v0.3.0-rc1` | 16 Aug | New registry Logic ID for the reset devnet, `SendOptions` for fuel overrides; pins `js-moi-sdk@0.8.0` as an exact peer dependency — [on npm](https://www.npmjs.com/package/js-moi-agent-registry) |
 | `voyage:v0.9.0` · `voyage-api:v0.9.0` | 18 Aug | Wallet sign-in; faucet funds existing accounts only — [voyage.moi.technology](https://voyage.moi.technology) |
 | `voyage:v0.8.2` · `voyage-api:v0.8.2` | 13 Aug | Participant registration with rate limits, tesseracts by participant with pagination, pending-interactions fix |
