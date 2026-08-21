@@ -45,7 +45,9 @@ In the same window, [**Voyage**](https://voyage.moi.technology), the network exp
 
 go-moi v0.12.0 makes storage a resource you buy and own, and puts writes to other accounts behind published policy.
 
-Both exist because of the thing that separates MOI from Ethereum. On Ethereum, a contract owns every byte of state about its users. That settles two questions without anyone asking them: storage is paid for through gas by whoever sends the transaction, and who may write is whatever the contract's own code checks. You do not own your state there. You occupy a row in someone else's table, and your only protection is the code they wrote.
+Start with what storage is. When a logic runs, it leaves state behind: a balance, a calendar entry, a setting, a record of what happened. That state has to survive after the interaction finishes, and the network has to keep it for as long as it exists. On MOI it sits on an account: the logic's own account for state that belongs to the logic, your account for state that is about you. Those persisted bytes are storage. Executing code is a one-off cost; keeping bytes around is an ongoing one, which is why MOI prices it separately.
+
+Both changes exist because of the thing that separates MOI from Ethereum. On Ethereum, a contract owns every byte of state about its users. That settles two questions without anyone asking them: storage is paid for through gas by whoever sends the transaction, and who may write is whatever the contract's own code checks. You do not own your state there. You occupy a row in someone else's table, and your only protection is the code they wrote.
 
 On MOI, a logic's state about you lives on *your* account, which is what [the Participant Layer means in practice](https://blog.moi.technology/article/what-is-moi-network/). That puts your state in one place you control, and it lets you withdraw a logic's access to it with a single interaction instead of trusting each contract's hand-written checks. It also means the two questions Ethereum answers implicitly have to be answered explicitly, per participant: who pays for the space, and who may write into it. Storage costing answers the first, access control the second, and both arrive as new interaction types (interactions are the network's transactions).
 
@@ -60,9 +62,7 @@ On MOI, a logic's state about you lives on *your* account, which is what [the Pa
 
 ## How does paying for storage work?
 
-Start with what storage is. When a logic runs, it leaves state behind: a balance, a calendar entry, a setting, a record of what happened. That state has to survive after the interaction finishes, and the network has to keep it for as long as it exists. On MOI it sits on an account: the logic's own account for state that belongs to the logic, your account for state that is about you. Those persisted bytes are storage. Executing code is a one-off cost; keeping bytes around is an ongoing one, which is why MOI prices it separately.
-
-A **storage grant** is how you pay for it. Think of it as prepaid space: a number of bytes reserved on an account, bought with KMOI before anything is written. Writes consume the grant byte by byte, and whatever you do not use you can release and get back. The grant belongs to an account, where the bytes live, and is attributed to a participant, who paid for it.
+A **storage grant** is how you pay for storage. Think of it as prepaid space: a number of bytes reserved on an account, bought with KMOI before anything is written. Writes consume the grant byte by byte, and whatever you do not use you can release and get back. The grant belongs to an account, where the bytes live, and is attributed to a participant, who paid for it.
 
 So before a logic can write state onto an account, there has to be enough unused grant there to hold the write. If there is not, the write is refused and the whole interaction reverts. Nothing is metered and billed afterwards. The grant is a precondition, not an invoice.
 
