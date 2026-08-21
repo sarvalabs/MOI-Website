@@ -129,12 +129,15 @@ Neither change is free for existing code: writes that assumed storage was nobody
 
 ## What do developers need to change?
 
-Most application code keeps working. Four changes in go-moi v0.12.0 touch the wire format:
+Most application code keeps working. What does not, by package:
 
-- **go-moi v0.12.0 renumbered the interaction op-codes.** `IxOpType` is an integer on the wire and the values were reordered; only `0`, `1` and `4` kept their meaning. A client that decodes interactions by numeric op-code reads wrong values with no error to say so.
+### go-moi v0.12.0
+
+- **Interaction op-codes were renumbered.** `IxOpType` is an integer on the wire and the values were reordered; only `0`, `1` and `4` kept their meaning. A client that decodes interactions by numeric op-code reads wrong values with no error to say so. The full mapping is below.
 - **Five asset operations fold into one.** Transfer, approve, revoke, mint and burn now travel as a single `IxAssetAction` carrying a callsite string and calldata encoded in POLO, the network's wire encoding. The callsite set is wider: `Lockup`, `Release` and `MintWithMetadata` ship too.
 - **`TxFuelSupply` is dropped**, with no successor.
 - **`moi.Registry` is renamed `moi.Deeds`.** Same `{asset_id, asset_info}` shape, still the assets an account has created: a rename in your client, not a removal.
+- **Return types changed** on `moi.LogicIDs`, `debug.Accounts` and `net.Peers`. They now return a unified identifier type, so parsers need updating.
 
 **Interaction op-codes, go-moi v0.11.3 → v0.12.0**
 
@@ -147,15 +150,31 @@ Most application code keeps working. Four changes in go-moi v0.12.0 touch the wi
 | 12 `TxLogicInteract`, 13 `TxLogicUpgrade` | 14 `IxLogicInteract`, 15 `IxLogicUpgrade` |
 | (new) | 2–3 account ops, 6–10 guardian ops, 16–20 storage and access ops |
 
-- **Coco v0.9.0 asset methods need exact state qualifiers.** Every asset write is `dynamic`, every asset read is `static`, and the compiler enforces it.
-- **State naming caught up with the manifest in js-moi-sdk v0.8.0.** `PersistentState` is now `LogicState`; `EphemeralState` is now `ActorState`. Coco itself has used `state logic` and `state actor` since v0.6.0.
+### PISA v0.8.0
+
+- **A logic can no longer load another logic's actor state.** The runtime raises `ExceptLogicActorState`. The storage payer and access-control changes described above also live here.
+
+### Coco v0.9.0
+
+- **Asset methods need exact state qualifiers.** Every asset write is `dynamic`, every asset read is `static`, and the compiler enforces it. Asset logic written for 0.8.2 needs the qualifiers added.
+- **`payer` on `mutate`** is new, as covered above; nothing breaks if you leave it out, since `payer Sender` is the default.
+- **Field shorthand in class literals**: `Person{name, age}` instead of `Person{name: name, age: age}`.
+
+### js-moi-sdk v0.8.0
+
+- **State naming caught up with the manifest.** `PersistentState` is now `LogicState`; `EphemeralState` is now `ActorState`. Coco itself has used `state logic` and `state actor` since v0.6.0.
 - **Native asset standards have their own flows.** Create MAS0, MAS1 and MAS2 through `MAS0AssetLogic.create()`, `MAS1AssetLogic.create()` and `MAS2AssetLogic.create()` — there is no bare `AssetLogic`. `AssetFactory` is now for custom MASX assets, and its `create()` requires a manifest, the logic's compiled interface description.
-- **A logic can no longer load another logic's actor state.** The runtime raises an error.
-- **Return types changed** on `moi.LogicIDs`, `debug.Accounts` and `net.Peers`. They now return a unified identifier type, so parsers need updating.
+- **New accounts are funded automatically** on creation, as covered above, with the amount tunable through `RoutineOption.storageFund`.
+- **IDs before creation.** `deriveAssetId(sender, standard)` and `deriveLogicId(sender)`, from js-moi-identifiers, give you an account ID before it exists.
 
-vscode-coco v0.4.0 reads `[target.pisa] version` from the `coco.nut` beside the file and gates every version-dependent check on it, reporting `VolumeCapacity()` as removed on a 0.8.0 target while accepting it on 0.7.1. The same checks cover state qualifiers: an omitted qualifier means `pure`, not `static`, and the extension infers what a callable's body needs, so a mismatch surfaces as a warning in the editor rather than at runtime.
+### js-moi-agent-registry v0.3.0-rc1
 
-`deriveAssetId(sender, standard)` and `deriveLogicId(sender)`, from js-moi-identifiers, give you an account ID before it exists, and Coco gained field shorthand in class literals (`Person{name, age}`).
+- **A release candidate, and what npm serves as latest.** It carries the registry Logic ID for the reset devnet, which older versions cannot find, and pins `js-moi-sdk@0.8.0` as an exact peer dependency, so staying on v0.2.0 beside the new SDK fails at install. `SendOptions` adds fuel overrides on write calls.
+
+### vscode-coco v0.4.0
+
+- **Checks are gated on your target.** The extension reads `[target.pisa] version` from the `coco.nut` beside the file and gates every version-dependent check on it, reporting `VolumeCapacity()` as removed on a 0.8.0 target while accepting it on 0.7.1.
+- **State qualifiers are inferred.** An omitted qualifier means `pure`, not `static`; the extension infers what a callable's body needs, so a mismatch surfaces as a warning in the editor rather than at runtime.
 
 Only the devnet was reset for go-moi v0.12.0: deployed logics and registered accounts there are gone, so redeploy and re-register.
 
