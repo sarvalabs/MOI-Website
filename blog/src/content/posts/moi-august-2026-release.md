@@ -58,9 +58,13 @@ Once a logic's state lives on *your* account rather than the logic's, which is w
 
 ## How does paying for storage work?
 
-On MOI, you buy storage up front as a **storage grant**: a quota of bytes reserved on a target account, attributed to a specific participant, and paid in KMOI. A write with no grant behind it is not deferred or invoiced afterwards; the engine refuses it and the interaction reverts.
+On MOI, you buy storage before you use it. A **storage grant** is a quota of bytes reserved on a target account, attributed to a specific participant, and paid for in KMOI.
 
-`StorageDeposit` converts KMOI into bytes of grant on a target account, and `StorageWithdraw` releases unused bytes back into KMOI, returned to the sender. In js-moi-sdk v0.8.0:
+The order matters. Storage is not metered as you go and invoiced later. If a write arrives with no grant behind it, the engine refuses it and the whole interaction reverts.
+
+Two interactions manage a grant. `StorageDeposit` converts KMOI into bytes of grant on a target account. `StorageWithdraw` runs the other way: it releases bytes that are no longer in use and returns the KMOI to the sender.
+
+In js-moi-sdk v0.8.0, a deposit is a short builder chain:
 
 ```js
 import { StorageDeposit } from "js-moi-sdk";
@@ -68,26 +72,28 @@ import { StorageDeposit } from "js-moi-sdk";
 await new StorageDeposit(signer).target(account).amount(5000).send();
 ```
 
-`.amount(5000)` is KMOI, not bytes; the grant it buys follows `moi.StoragePricing`'s rate. `.for(participant)` credits someone other than the signer, and defaults to the signer.
+Three things about that call. `.amount()` is denominated in KMOI, not bytes; how many bytes it buys depends on the network's current rate, which `moi.StoragePricing` reports. `.target()` is the account the grant lands on. And the grant is attributed to the signer unless you say otherwise: `.for(participant)` credits someone else.
 
-`moi.StorageMetric` reports where a grant stands. Inside PISA, `VOLPAY` charges a write against a grant and `VOLRES`, a rename of `VOLAVL`, reports what is left. From Coco, `Environment.StorageResult(account, payer)` replaces the removed `VolumeCapacity()`. The grant is separate from fuel, the per-execution cost of an interaction.
+Once a grant exists, `moi.StorageMetric` tells you where it stands: how much was granted and how much has been consumed.
 
-A logic that frees state reclaims the bytes behind it.
+A logic that frees state reclaims the bytes behind it, and `StorageWithdraw` turns unused grant back into KMOI. One asymmetry to keep in mind: only grant attributed to the sender can be withdrawn. If you deposited on someone else's behalf with `.for()`, that grant is theirs, and you cannot take it back.
 
-Withdrawal is asymmetric: only grant attributed to the sender can be withdrawn, and the depositor cannot take back a `.for()` deposit.
+Under the hood, PISA does the accounting. `VOLPAY` charges a write against the grant and `VOLRES` reports what is left (`VOLRES` is a rename of `VOLAVL`, not a new opcode). From Coco, `Environment.StorageResult(account, payer)` replaces the removed `VolumeCapacity()`. None of this touches fuel, the per-execution cost of an interaction; the grant is a separate dimension.
 
 ### Who pays when my logic writes?
 
-Whoever sent the interaction, unless the logic says otherwise. Coco v0.9.0 adds a `payer` clause on `mutate`:
+By default, the participant who sent the interaction. Coco v0.9.0 lets a logic change that with a `payer` clause on `mutate`:
 
 ```coco
 mutate name -> MyModule.Logic.name payer Logic            // the logic absorbs its own setup cost
 mutate cfg  -> MyModule.Logic.config payer Actor(sponsor) // sponsor: a participant who signed this interaction
 ```
 
-`payer Sender` is the default, `payer Logic` makes the logic carry the cost, and `payer Actor(<id>)` bills a named participant, who must have signed the interaction. If not, execution raises `payer has to sign the transaction`, the interaction reverts, and fuel already spent stays spent. The clause applies to logic state only.
+The clause takes one of three forms. `payer Sender` is the default and bills whoever sent the interaction. `payer Logic` makes the logic carry the cost itself, which is how a logic absorbs its own setup. `payer Actor(<id>)` bills a named participant instead.
 
-**js-moi-sdk v0.8.0 funds new asset and logic accounts automatically**, with the amount tunable through `RoutineOption.storageFund` and a fallback of 1,000,000 KMOI, a flat default rather than a computed cost. The MAS0 create signature (first of the native asset standards) shows it:
+That named participant has to have signed the interaction. If they have not, execution raises `payer has to sign the transaction`, the interaction reverts, and fuel already spent stays spent. The clause applies to logic state only.
+
+Creating an account is the one case the SDK handles for you. **js-moi-sdk v0.8.0 funds new asset and logic accounts automatically.** The amount is tunable through `RoutineOption.storageFund` and falls back to 1,000,000 KMOI, a flat default rather than a computed cost. You can see it in the create signature for MAS0, the first of the native asset standards:
 
 ```js
 // v0.7.x
@@ -96,7 +102,7 @@ MAS0AssetLogic.create(signer, symbol, supply, manager, enableEvents);
 MAS0AssetLogic.create(signer, symbol, supply, manager, enableEvents, option);
 ```
 
-The bundled fund covers the new account's own creation cost and nothing more; a deploy routine that also writes logic state still needs `payer Logic`, or a `StorageDeposit` grant already in place.
+Read that fund narrowly. It covers the new account's own creation cost and nothing more. A deploy routine that also writes logic state still needs `payer Logic`, or a `StorageDeposit` grant already in place.
 
 ## Why does a logic need permission to write my state?
 
