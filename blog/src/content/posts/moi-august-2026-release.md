@@ -9,11 +9,14 @@ author:
   url: "https://sarvalabs.com"
 tags: ["protocol", "agents", "native-assets", "release", "go-moi"]
 takeaways:
-  - "On MOI, state is bought up front as a storage grant, not billed per interaction. A write with no grant behind it is refused and the interaction reverts. Unused bytes convert back to KMOI, but only grant attributed to the sender is reclaimable — a deposit made on someone else's behalf cannot be withdrawn by the depositor."
-  - "On MOI, a logic writing to an account that neither sent the interaction nor is the logic itself is a foreign access, denied unless that account published a policy allowing it."
-  - "MOI access policies are defined over assets, logics, storage and keys, but go-moi v0.12.0 enforces only the storage dimension. The rest are reserved."
-  - "go-moi v0.12.0 renumbered the interaction op-codes. Only 0, 1 and 4 kept their meaning, so any indexer or custom client that decodes by numeric op-code is wrong until updated."
-  - "go-moi v0.12.0 is a coordinated upgrade. Nodes must stop together — mixed versions cannot decode each other's interactions and will diverge."
+  - "go-moi v0.12.0: storage costing (StorageDeposit/StorageWithdraw), access control (AccessCreate/Update/Delete), renumbered op-codes. Coordinated upgrade to protocol version 0.12.0."
+  - "go-pisa v0.8.0: VOLPAY and VOLRES opcodes, the AccessControl hook, storage metering per (account, payer)."
+  - "cocolang v0.9.0: `payer` clause on `mutate`, `Actor()` queries, `grant storage_mutate` in Cocolab, exact state qualifiers on asset methods."
+  - "vscode-coco v0.4.0: Coco 0.9.0 and PISA 0.8.0 support, with checks gated on the `[target.pisa]` version in `coco.nut`."
+  - "js-moi-sdk v0.8.0: storage and access-policy builders, automatic funding on account creation, `LogicState`/`ActorState` renames, MAS0/1/2 create flows."
+  - "js-moi-agent-registry v0.3.0-rc1: registry Logic ID for the reset devnet; pins js-moi-sdk 0.8.0 as an exact peer dependency."
+  - "voyage v0.8.2 and v0.9.0: participant registration and paginated history, then wallet sign-in and a faucet that funds only existing accounts."
+  - "moi-wallet-extension v0.1.4 and v0.1.5: multi-account picker and a new address format, then network-config validation and a 100k registration amount."
 faq:
   - q: "What happens if a logic writes state and there is no storage grant?"
     a: "On MOI, the engine refuses the write and the interaction reverts. Nothing is billed afterwards; the grant has to exist before the write lands. moi.StorageMetric reports where a grant stands, and moi.StoragePricing gives the current rate."
