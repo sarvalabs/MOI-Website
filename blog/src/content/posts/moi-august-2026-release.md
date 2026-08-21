@@ -3,7 +3,6 @@ title: "MOI August 2026 Release: storage costing and access control"
 summary: "MOI's August 2026 release: state is bought up front as a storage grant, foreign writes need a policy you publish, and the faucet funds only existing accounts."
 date: 2026-08-21
 updated: 2026-08-21
-cover: "/covers/moi-august-2026-release.svg"
 author:
   name: "Sarva Labs"
   role: "Engineering"
