@@ -500,7 +500,7 @@ export default function HowItWorksPage() {
             <div ref={cTitleRef} className="canvas-title" />
             <div className="canvas-cta-row">
               <a href="https://docs.moi.technology" target="_blank" rel="noopener noreferrer" className="canvas-cta-primary">Explore the network</a>
-              <a href="/MOILitePaper.pdf" className="canvas-cta-secondary">Read the whitepaper</a>
+              <a href="/papers/moi-white-paper.pdf" className="canvas-cta-secondary">Read the white paper</a>
             </div>
           </div>
         </div>
