@@ -1,0 +1,109 @@
+name: Prepare social copy
+
+# The only automatic half of distribution, and it sends nothing: when a post
+# lands on main this opens a pull request containing the copy file for it, one
+# editable block per channel. Sending is a separate, manual workflow — so a post
+# can ship, be corrected, and ship again without anything going out in between.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'blog/src/content/posts/**.md'
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Post slug (blank = every published post without a copy file)'
+        required: false
+      force:
+        description: 'Overwrite an existing copy file'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Work out which posts are new
+        id: find
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "${{ inputs.slug }}" ]; then
+              echo "args=${{ inputs.slug }}" >> "$GITHUB_OUTPUT"
+            else
+              echo "args=--all" >> "$GITHUB_OUTPUT"
+            fi
+            exit 0
+          fi
+
+          BEFORE="${{ github.event.before }}"
+          # All-zeros on a branch's first push; fall back to the single commit.
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            RANGE="${{ github.sha }}^!"
+          else
+            RANGE="$BEFORE ${{ github.sha }}"
+          fi
+
+          SLUGS=$(git diff --name-status --diff-filter=A $RANGE \
+            -- 'blog/src/content/posts/*.md' \
+            | awk '{print $2}' | xargs -r -n1 basename | sed 's/\.md$//' | tr '\n' ' ')
+
+          echo "args=$SLUGS" >> "$GITHUB_OUTPUT"
+          echo "Newly added: ${SLUGS:-(none)}"
+
+      - name: Generate the copy files
+        if: steps.find.outputs.args != ''
+        id: gen
+        run: |
+          FORCE=""
+          [ "${{ inputs.force }}" = "true" ] && FORCE="--force"
+          node scripts/social-init.js ${{ steps.find.outputs.args }} $FORCE
+
+      - name: Open a pull request
+        if: steps.gen.outputs.created != '0' && steps.gen.outputs.created != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          SLUGS="${{ steps.gen.outputs.slugs }}"
+          FIRST=$(echo $SLUGS | awk '{print $1}')
+          BRANCH="social/$FIRST-${{ github.run_id }}"
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add social/
+          git commit -m "social: copy for $SLUGS
+
+          Seeded from each post's own title and summary. It is a starting point,
+          not a draft to ship — rewrite the hooks before distributing."
+          git push -u origin "$BRANCH"
+
+          {
+            echo "Copy files for: \`$SLUGS\`"
+            echo ""
+            echo "Each block is one channel, seeded from the post's title and summary."
+            echo "**Rewrite them before merging** — text generated from a summary field"
+            echo "reads generated, which is the wrong signal for this audience."
+            echo ""
+            echo "\`{{link}}\` becomes that channel's tagged URL so GA4 can tell the"
+            echo "channels apart. Move it anywhere; delete it and the link is appended."
+            echo ""
+            echo "Nothing sends when this merges. To send:"
+            echo "**Actions → Distribute a post → Run workflow**, with a dry run first."
+          } > body.md
+
+          gh pr create --title "social: copy for $FIRST" --body-file body.md --base main --head "$BRANCH"
