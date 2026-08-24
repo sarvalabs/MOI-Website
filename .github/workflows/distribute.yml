@@ -1,0 +1,103 @@
+name: Distribute new blog posts
+
+# Fires when a post file is added to main. Announces to Discord and Telegram,
+# queues Buffer drafts for X and LinkedIn, and opens an issue holding the tagged
+# links so the manual channels have a record.
+#
+# Only *added* files count. Editing a published post does not re-announce it.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'blog/src/content/posts/**.md'
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Post slug to distribute (filename without .md)'
+        required: true
+      dry_run:
+        description: 'Print what would be sent, send nothing'
+        type: boolean
+        default: false
+
+jobs:
+  distribute:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Find newly added posts
+        id: find
+        run: |
+          if [ -n "${{ inputs.slug }}" ]; then
+            echo "slugs=${{ inputs.slug }}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          BEFORE="${{ github.event.before }}"
+          # All-zeros on a branch's first push; fall back to the single commit.
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            RANGE="${{ github.sha }}^!"
+          else
+            RANGE="$BEFORE ${{ github.sha }}"
+          fi
+
+          SLUGS=$(git diff --name-status --diff-filter=A $RANGE \
+            -- 'blog/src/content/posts/*.md' \
+            | awk '{print $2}' | xargs -r -n1 basename | sed 's/\.md$//' | tr '\n' ' ')
+
+          echo "slugs=$SLUGS" >> "$GITHUB_OUTPUT"
+          echo "Newly added: ${SLUGS:-(none)}"
+
+      - name: Distribute
+        if: steps.find.outputs.slugs != ''
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          BUFFER_ACCESS_TOKEN: ${{ secrets.BUFFER_ACCESS_TOKEN }}
+          BUFFER_CHANNEL_X: ${{ secrets.BUFFER_CHANNEL_X }}
+          BUFFER_CHANNEL_LINKEDIN: ${{ secrets.BUFFER_CHANNEL_LINKEDIN }}
+        run: |
+          FLAGS=""
+          [ "${{ inputs.dry_run }}" = "true" ] && FLAGS="--dry-run"
+          for slug in ${{ steps.find.outputs.slugs }}; do
+            node scripts/distribute.js "$slug" $FLAGS
+          done
+
+      - name: Open the distribution checklist
+        if: steps.find.outputs.slugs != '' && inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for slug in ${{ steps.find.outputs.slugs }}; do
+            {
+              echo "Discord and Telegram have gone out automatically. X and LinkedIn are"
+              echo "waiting in Buffer as drafts — rewrite the hook before approving."
+              echo ""
+              node scripts/share-links.js "$slug" --md
+              echo ""
+              echo "- [ ] Preview card checked (LinkedIn Post Inspector)"
+              echo "- [ ] Newsletter sent"
+              echo "- [ ] Day 7 follow-up posted"
+            } > body.md
+            gh issue create \
+              --title "Distribute: $slug" \
+              --body-file body.md \
+              --label distribution 2>/dev/null \
+            || gh issue create --title "Distribute: $slug" --body-file body.md
+          done
