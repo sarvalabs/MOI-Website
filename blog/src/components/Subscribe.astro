@@ -1,0 +1,161 @@
+---
+// Mailchimp signup, posting straight to their hosted endpoint.
+//
+// Deliberately not the embed Mailchimp hands you. That version pulls in a
+// stylesheet, jQuery, mc-validate.js and ~600 lines of SMS country-code
+// handling for a phone field this audience does not even have enabled — to
+// collect one email address. The form below is the same POST with none of it,
+// so it inherits the blog's type and colour instead of fighting them.
+//
+// Two things from the original that must stay:
+//   - the `b_<user>_<audience>` input is Mailchimp's honeypot. Bots fill every
+//     field they find; a submission with this one non-empty is discarded. It is
+//     hidden off-screen rather than with `display: none`, which is what makes it
+//     invisible to people while still being found by bots.
+//   - `target="_blank"`, so Mailchimp's confirmation page opens in a new tab
+//     rather than navigating the reader out of the article they are reading.
+
+const ACTION =
+  'https://technology.us5.list-manage.com/subscribe/post?u=5e0c585d54cd6a99ab449871d&id=b599b2bb66&f_id=00fa42edf0';
+const HONEYPOT = 'b_5e0c585d54cd6a99ab449871d_b599b2bb66';
+
+const { heading = 'Get new posts by email', blurb } = Astro.props;
+---
+
+<section class="subscribe" aria-labelledby="subscribe-heading">
+  <div class="copy">
+    <h2 id="subscribe-heading">{heading}</h2>
+    <p>
+      {blurb ??
+        'Protocol releases, research, and engineering write-ups from Sarva Labs. One email per post, nothing else.'}
+    </p>
+  </div>
+
+  <form action={ACTION} method="post" target="_blank" class="form">
+    <label class="sr-only" for="subscribe-email">Email address</label>
+    <input
+      type="email"
+      name="EMAIL"
+      id="subscribe-email"
+      required
+      autocomplete="email"
+      placeholder="you@example.com"
+    />
+
+    <!-- Honeypot: hidden from people, irresistible to bots. Do not remove. -->
+    <div aria-hidden="true" class="sr-only">
+      <input type="text" name={HONEYPOT} tabindex="-1" value="" autocomplete="off" />
+    </div>
+
+    <button type="submit" name="subscribe">Subscribe</button>
+  </form>
+</section>
+
+<style>
+  .subscribe {
+    margin: 64px 0 8px;
+    padding: 32px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .subscribe h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .subscribe p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 52ch;
+  }
+
+  .form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  input[type='email'] {
+    flex: 1 1 260px;
+    min-width: 0;
+    padding: 13px 16px;
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+
+  input[type='email']::placeholder {
+    color: rgba(10, 5, 26, 0.38);
+  }
+
+  input[type='email']:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--moi-main);
+    outline-offset: 2px;
+  }
+
+  button {
+    flex: 0 0 auto;
+    padding: 13px 26px;
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--moi-main);
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  button:hover {
+    background: var(--moi-dark);
+  }
+
+  /* Once the button has wrapped onto its own line there is no reason for it to
+     be narrower than the field above it. */
+  @media (max-width: 520px) {
+    button {
+      flex: 1 1 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    button {
+      transition: none;
+    }
+  }
+
+  /* Visually hidden, still reachable by screen readers — and still filled in by
+     bots, which is the point for the honeypot. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
