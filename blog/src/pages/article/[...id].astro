@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base, { NAV_TOPICS } from '../../layouts/Base.astro';
+import Subscribe from '../../components/Subscribe.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -112,6 +113,8 @@ const jsonLd = [
         </section>
       )
     }
+
+    <Subscribe />
   </article>
 </Base>
 
