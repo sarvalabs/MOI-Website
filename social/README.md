@@ -59,9 +59,16 @@ appended to the end rather than lost.
 | `linkedin` | Queued in Buffer as a draft | 3000 |
 
 Discord and Telegram are announcement channels, where a bot posting is expected.
-X and LinkedIn are not, so those arrive as Buffer drafts for a person to approve
-— and Buffer's own per-channel approval setting, not this code, is what
-guarantees nothing publishes unreviewed.
+X and LinkedIn are not, so those arrive as Buffer drafts for a person to approve.
+
+The draft state is set on the API call itself (`saveToDraft: true`), not left to
+Buffer's per-channel approval toggle — so a setting changed in Buffer's UI
+cannot turn queued posts into scheduled ones behind your back.
+
+Setting `BUFFER_MODE=now` publishes immediately instead. It is an environment
+flag rather than a workflow input on purpose: posting straight to a timeline is
+a decision to make once, deliberately, not one to pick from a dropdown while
+sending.
 
 X's limit is measured the way X measures it: every URL counts as 23 characters
 however long it is. Over-length copy is refused rather than truncated.
