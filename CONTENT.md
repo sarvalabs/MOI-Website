@@ -6,6 +6,13 @@
 2. Add frontmatter at the top with required fields (see schema below)
 3. Write your article in Markdown
 4. Merge to `main` → CI builds the blog and ships it to the VM
+5. A pull request opens with the social copy for the post — rewrite it and merge
+6. Run **Actions → Distribute a post** when you want it sent
+
+Publishing and distributing are separate on purpose: a post can ship, be
+corrected, and ship again without anything reaching an audience in between. See
+[`social/README.md`](social/README.md) for the copy format, the channels, and
+the secrets each one needs.
 
 The frontmatter contract below is enforced at build time by
 `blog/src/content.config.ts`; a post that violates it fails the build rather
