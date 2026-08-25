@@ -1,10 +1,12 @@
 // Lists your Buffer channels and their IDs, so BUFFER_CHANNEL_X and
-// BUFFER_CHANNEL_LINKEDIN can be copied rather than guessed.
+// BUFFER_CHANNEL_LINKEDIN can be copied rather than guessed. Buffer surfaces
+// these nowhere in its web UI — the API is the only route.
 //
 //   BUFFER_ACCESS_TOKEN=... node scripts/buffer-channels.js
 //
-// Run once during setup. The IDs do not change unless a channel is
-// disconnected and reconnected.
+// Two shapes here are easy to get wrong and were, first time round:
+// organizations hangs off `account` rather than being a root field, and
+// channels(input:) types organizationId as OrganizationId!, not String!.
 
 const token = process.env.BUFFER_ACCESS_TOKEN;
 if (!token) {
@@ -26,53 +28,61 @@ async function gql(query, variables = {}) {
   return body.data;
 }
 
-// The documented channels query takes an organizationId, so find that first.
-// Falls back to a bare channels query in case the account exposes one.
-async function channels() {
-  try {
-    const d = await gql('{ account { organizations { id name } } }');
-    const orgs = d?.account?.organizations ?? [];
-    if (!orgs.length) throw new Error('no organisations on this account');
-    const out = [];
-    for (const org of orgs) {
-      const c = await gql(
-        'query($id: String!) { channels(input: { organizationId: $id }) { id name service } }',
-        { id: org.id }
-      );
-      out.push({ org, list: c?.channels ?? [] });
-    }
-    return out;
-  } catch {
-    const c = await gql('{ channels { id name service } }');
-    return [{ org: { name: '(default)' }, list: c?.channels ?? [] }];
-  }
-}
+const SECRET_FOR = {
+  twitter: 'BUFFER_CHANNEL_X',
+  x: 'BUFFER_CHANNEL_X',
+  linkedin: 'BUFFER_CHANNEL_LINKEDIN',
+};
 
-let groups;
 try {
-  groups = await channels();
+  const { account } = await gql('{ account { organizations { id name } } }');
+  const orgs = account?.organizations ?? [];
+
+  if (!orgs.length) {
+    console.error('\nNo organisations on this account.\n');
+    process.exit(1);
+  }
+
+  let found = 0;
+
+  for (const org of orgs) {
+    const { channels } = await gql(
+      `query($id: OrganizationId!) {
+         channels(input: { organizationId: $id }) { id name service displayName isDisconnected }
+       }`,
+      { id: org.id }
+    );
+
+    console.log(`\n${org.name || org.id}`);
+    const list = channels ?? [];
+
+    if (!list.length) {
+      console.log('  (nothing connected — connect X and the LinkedIn page in Buffer first)');
+      continue;
+    }
+
+    for (const ch of list) {
+      const secret = SECRET_FOR[String(ch.service).toLowerCase()];
+      const label = ch.displayName || ch.name || '';
+      const warn = ch.isDisconnected ? '  [disconnected]' : '';
+      if (secret) found++;
+      console.log(
+        `  ${String(ch.service).padEnd(10)} ${ch.id}  ${label}${secret ? `   -> ${secret}` : ''}${warn}`
+      );
+    }
+  }
+
+  console.log(
+    found
+      ? `
+Set them:
+
+  gh secret set BUFFER_CHANNEL_X --repo sarvalabs/MOI-Website
+  gh secret set BUFFER_CHANNEL_LINKEDIN --repo sarvalabs/MOI-Website
+`
+      : '\nNo X or LinkedIn channel found. Connect them in Buffer, then re-run.\n'
+  );
 } catch (err) {
   console.error(`\nBuffer: ${err.message}\n`);
   process.exit(1);
 }
-
-const wanted = { twitter: 'BUFFER_CHANNEL_X', x: 'BUFFER_CHANNEL_X', linkedin: 'BUFFER_CHANNEL_LINKEDIN' };
-
-for (const { org, list } of groups) {
-  console.log(`\n${org.name}`);
-  if (!list.length) {
-    console.log('  (no channels connected — connect X and the LinkedIn page first)');
-    continue;
-  }
-  for (const ch of list) {
-    const secret = wanted[String(ch.service).toLowerCase()];
-    console.log(`  ${String(ch.service).padEnd(10)} ${ch.id}  ${ch.name}${secret ? `   -> ${secret}` : ''}`);
-  }
-}
-
-console.log(`
-Set the two you need:
-
-  gh secret set BUFFER_CHANNEL_X --repo sarvalabs/MOI-Website
-  gh secret set BUFFER_CHANNEL_LINKEDIN --repo sarvalabs/MOI-Website
-`);
