@@ -48,7 +48,14 @@ async function channels() {
   }
 }
 
-const groups = await channels();
+let groups;
+try {
+  groups = await channels();
+} catch (err) {
+  console.error(`\nBuffer: ${err.message}\n`);
+  process.exit(1);
+}
+
 const wanted = { twitter: 'BUFFER_CHANNEL_X', x: 'BUFFER_CHANNEL_X', linkedin: 'BUFFER_CHANNEL_LINKEDIN' };
 
 for (const { org, list } of groups) {
