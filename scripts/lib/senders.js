@@ -59,10 +59,16 @@ export async function sendTelegram(copy) {
 const BUFFER_API = 'https://api.buffer.com';
 
 const CREATE_POST = `
-  mutation CreatePost($input: PostInput!) {
+  mutation CreatePost($input: CreatePostInput!) {
     createPost(input: $input) {
+      __typename
       ... on PostActionSuccess { post { id } }
-      ... on MutationError { message }
+      ... on NotFoundError      { message }
+      ... on UnauthorizedError  { message }
+      ... on InvalidInputError  { message }
+      ... on LimitReachedError  { message }
+      ... on UnexpectedError    { message }
+      ... on RestProxyError     { message code }
     }
   }
 `;
@@ -92,9 +98,17 @@ export async function sendBuffer(copy, channel) {
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(`Buffer ${res.status}`);
   if (body.errors?.length) throw new Error(`Buffer: ${body.errors[0].message}`);
+
+  // createPost returns a union: one success type and six error types, all of
+  // which carry a message. Reading __typename rather than sniffing for fields
+  // means a new error type shows up as itself instead of as a silent success.
   const result = body.data?.createPost;
-  if (result?.message) throw new Error(`Buffer: ${result.message}`);
-  const id = result?.post?.id ?? 'no id returned';
+  if (!result) throw new Error('Buffer returned no result');
+  if (result.__typename !== 'PostActionSuccess') {
+    throw new Error(`Buffer ${result.__typename}: ${result.message ?? 'no message'}`);
+  }
+
+  const id = result.post?.id ?? 'no id returned';
   return publishNow ? `published (${id})` : `draft (${id})`;
 }
 
