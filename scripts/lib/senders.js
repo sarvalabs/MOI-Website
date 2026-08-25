@@ -45,10 +45,16 @@ export async function sendTelegram(copy) {
 }
 
 // --- Buffer ----------------------------------------------------------------
-// createPost with mode addToQueue places the post in the channel's queue. What
-// stops it publishing on its own is the channel's approval setting in Buffer,
-// not this call — that setting is the safeguard, and it belongs there because
-// it survives anyone changing this code.
+// saveToDraft is what keeps these unpublished, and it is set on the call rather
+// than left to Buffer's per-channel approval setting. Relying on that setting
+// meant the safeguard lived somewhere this repo cannot see or verify, and one
+// toggle in Buffer's UI would have turned every queued post into a scheduled
+// one. Now the call itself says draft.
+//
+// BUFFER_MODE=now opts into publishing immediately (ShareMode.shareNow). It is
+// deliberately an environment flag rather than a workflow input: auto-posting
+// generated copy is a decision worth making once, on purpose, not something to
+// pick from a dropdown while sending.
 
 const BUFFER_API = 'https://api.buffer.com';
 
@@ -63,13 +69,22 @@ const CREATE_POST = `
 
 export async function sendBuffer(copy, channel) {
   const channelId = process.env[channel.channelEnv];
+  const publishNow = process.env.BUFFER_MODE === 'now';
   const res = await fetch(BUFFER_API, {
     method: 'POST',
     headers: { ...json, Authorization: `Bearer ${process.env.BUFFER_ACCESS_TOKEN}` },
     body: JSON.stringify({
       query: CREATE_POST,
       variables: {
-        input: { text: copy, channelId, schedulingType: 'automatic', mode: 'addToQueue' },
+        input: publishNow
+          ? { text: copy, channelId, schedulingType: 'automatic', mode: 'shareNow' }
+          : {
+              text: copy,
+              channelId,
+              schedulingType: 'automatic',
+              mode: 'addToQueue',
+              saveToDraft: true,
+            },
       },
     }),
   });
@@ -79,7 +94,8 @@ export async function sendBuffer(copy, channel) {
   if (body.errors?.length) throw new Error(`Buffer: ${body.errors[0].message}`);
   const result = body.data?.createPost;
   if (result?.message) throw new Error(`Buffer: ${result.message}`);
-  return `queued (${result?.post?.id ?? 'no id returned'})`;
+  const id = result?.post?.id ?? 'no id returned';
+  return publishNow ? `published (${id})` : `draft (${id})`;
 }
 
 export function senderFor(channel) {
