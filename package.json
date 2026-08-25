@@ -14,7 +14,8 @@
     "ingest:clear": "node scripts/ingest.js --clear",
     "social:init": "node scripts/social-init.js",
     "social:links": "node scripts/share-links.js",
-    "distribute": "node scripts/distribute.js"
+    "distribute": "node scripts/distribute.js",
+    "buffer:channels": "node scripts/buffer-channels.js"
   },
   "dependencies": {
     "@fontsource/fraunces": "^5.2.9",
