@@ -42,6 +42,11 @@ jobs:
         id: find
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -z "${{ inputs.slug }}" ] && [ "${{ inputs.force }}" = "true" ]; then
+              echo "::error::Ticking force with no slug means --all --force, which would" \
+                   "overwrite the copy for every published post. Name a slug."
+              exit 1
+            fi
             if [ -n "${{ inputs.slug }}" ]; then
               echo "args=${{ inputs.slug }}" >> "$GITHUB_OUTPUT"
             else
