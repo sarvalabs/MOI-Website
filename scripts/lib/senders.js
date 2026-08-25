@@ -45,57 +45,75 @@ export async function sendTelegram(copy) {
 }
 
 // --- Buffer ----------------------------------------------------------------
-// saveToDraft is what keeps these unpublished, and it is set on the call rather
-// than left to Buffer's per-channel approval setting. Relying on that setting
-// meant the safeguard lived somewhere this repo cannot see or verify, and one
-// toggle in Buffer's UI would have turned every queued post into a scheduled
-// one. Now the call itself says draft.
+// These never publish. saveToDraft is set on the call, so the guarantee travels
+// with the request rather than depending on Buffer's per-channel approval
+// toggle — a setting this repo cannot see, cannot verify, and that one click in
+// Buffer's UI would remove.
 //
-// BUFFER_MODE=now opts into publishing immediately (ShareMode.shareNow). It is
-// deliberately an environment flag rather than a workflow input: auto-posting
-// generated copy is a decision worth making once, on purpose, not something to
-// pick from a dropdown while sending.
+// Buffer's ShareMode also offers shareNow and shareNext, which post
+// immediately. Neither is reachable from here, and that is deliberate: an
+// environment flag or a workflow input would mean a stray value could publish
+// unreviewed copy to a live timeline. Turning that on should cost a code
+// change and a pull request, which is the amount of friction the decision
+// deserves.
 
 const BUFFER_API = 'https://api.buffer.com';
 
 const CREATE_POST = `
-  mutation CreatePost($input: PostInput!) {
+  mutation CreatePost($input: CreatePostInput!) {
     createPost(input: $input) {
+      __typename
       ... on PostActionSuccess { post { id } }
-      ... on MutationError { message }
+      ... on NotFoundError      { message }
+      ... on UnauthorizedError  { message }
+      ... on InvalidInputError  { message }
+      ... on LimitReachedError  { message }
+      ... on UnexpectedError    { message }
+      ... on RestProxyError     { message code }
     }
   }
 `;
 
 export async function sendBuffer(copy, channel) {
   const channelId = process.env[channel.channelEnv];
-  const publishNow = process.env.BUFFER_MODE === 'now';
+
+  // Built once, here, so there is exactly one place a post's fate is decided.
+  const input = {
+    text: copy,
+    channelId,
+    schedulingType: 'automatic',
+    mode: 'addToQueue',
+    saveToDraft: true,
+  };
+
+  // Belt and braces: if a refactor ever drops saveToDraft or reaches for a
+  // publishing mode, fail loudly here rather than quietly posting.
+  if (input.saveToDraft !== true || input.mode !== 'addToQueue') {
+    throw new Error('Refusing to send: Buffer posts must be drafts.');
+  }
   const res = await fetch(BUFFER_API, {
     method: 'POST',
     headers: { ...json, Authorization: `Bearer ${process.env.BUFFER_ACCESS_TOKEN}` },
     body: JSON.stringify({
       query: CREATE_POST,
-      variables: {
-        input: publishNow
-          ? { text: copy, channelId, schedulingType: 'automatic', mode: 'shareNow' }
-          : {
-              text: copy,
-              channelId,
-              schedulingType: 'automatic',
-              mode: 'addToQueue',
-              saveToDraft: true,
-            },
-      },
+      variables: { input },
     }),
   });
 
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(`Buffer ${res.status}`);
   if (body.errors?.length) throw new Error(`Buffer: ${body.errors[0].message}`);
+
+  // createPost returns a union: one success type and six error types, all of
+  // which carry a message. Reading __typename rather than sniffing for fields
+  // means a new error type shows up as itself instead of as a silent success.
   const result = body.data?.createPost;
-  if (result?.message) throw new Error(`Buffer: ${result.message}`);
-  const id = result?.post?.id ?? 'no id returned';
-  return publishNow ? `published (${id})` : `draft (${id})`;
+  if (!result) throw new Error('Buffer returned no result');
+  if (result.__typename !== 'PostActionSuccess') {
+    throw new Error(`Buffer ${result.__typename}: ${result.message ?? 'no message'}`);
+  }
+
+  return `draft (${result.post?.id ?? 'no id returned'})`;
 }
 
 export function senderFor(channel) {
