@@ -11,7 +11,7 @@ takeaways:
   - "Import the same seed phrase you already used and nothing about your account changes."
   - "Voyage identifies you by your moi_id, which is derived from your wallet, not from a login record."
   - "The browser extension approves through a popup on your computer; the mobile app approves by scanning a QR code."
-  - "Five steps: install, import, open Voyage, pick extension or mobile, sign."
+  - "If you signed in the old way, through the IOME widget, you need that account's seed phrase before you can start."
   - "Voyage will never ask you for your seed phrase. Only ever type it into MOI Wallet itself."
   - "The faucet no longer creates accounts. Register on chain first, then fund."
   - "The network is now called Devnet in the selector and in URLs. Old links containing babylon will not resolve."
@@ -34,6 +34,10 @@ faq:
     a: "The faucet stopped creating accounts. It only funds accounts that already exist on chain, so register as a participant first and then use the faucet."
   - q: "My old Voyage bookmark stopped working."
     a: "The network was renamed from babylon to Devnet in the selector and in URL parameters. Update any saved link that still carries the old value."
+  - q: "I logged in to Voyage the old way. Does this apply to me?"
+    a: "Yes. The old login went through an embedded IOME widget rather than a wallet. That path is being retired, so you migrate by importing the seed phrase for that account into MOI Wallet."
+  - q: "I do not have the seed phrase for my old Voyage account."
+    a: "You cannot migrate without it, because it is what proves the account is yours. Ask in Discord before doing anything else, and do not create a new wallet hoping it will reconnect to your old account. It will not."
   - q: "Voyage is asking for my seed phrase. Should I enter it?"
     a: "No. Voyage never asks for a seed phrase, and neither does any part of this migration outside MOI Wallet itself. Treat any page that asks as a phishing attempt."
 draft: false
@@ -62,6 +66,18 @@ Five steps.
 5. Select the account you want to use, then click **Sign & Authenticate**.
 
 That is the whole migration. There is no separate account transfer and nothing to file.
+
+## What if you signed in the old way?
+
+Then step 2 is the one that matters, and it is worth checking before you start anything else.
+
+Voyage's previous login ran through an embedded IOME widget. You signed in to Voyage and Voyage handed you an account. Wallet authentication inverts that: you bring the account, and Voyage checks that you hold its key.
+
+The account itself has not changed. What changes is where the key lives. Migrating means taking the seed phrase for that account and importing it into MOI Wallet, after which Voyage recognises you exactly as before.
+
+So the question to answer first is whether you have that seed phrase to hand. If you do, the five steps above are the whole job.
+
+If you do not, stop and ask in Discord before going further. You cannot migrate without it, because the seed phrase is the only thing that proves the account is yours. In particular, do not create a fresh wallet and hope it reconnects to your old account. It will not. A new wallet is a new key, a new `moi_id`, and a new participant as far as the protocol is concerned.
 
 ## Will you lose your account?
 
