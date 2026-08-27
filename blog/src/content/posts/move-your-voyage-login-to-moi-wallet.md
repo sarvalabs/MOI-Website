@@ -11,7 +11,7 @@ takeaways:
   - "Import the same seed phrase you already used and nothing about your account changes."
   - "Voyage identifies you by your moi_id, which is derived from your wallet, not from a login record."
   - "The browser extension approves through a popup on your computer; the mobile app approves by scanning a QR code."
-  - "If you signed in the old way, through the IOME widget, you need that account's seed phrase before you can start."
+  - "Voyage previously offered Login with IOMe, Generate MOI ID and Import MOI ID. All three are gone, and all three migrate the same way."
   - "Voyage will never ask you for your seed phrase. Only ever type it into MOI Wallet itself."
   - "The faucet no longer creates accounts. Register on chain first, then fund."
   - "The network is now called Devnet in the selector and in URLs. Old links containing babylon will not resolve."
@@ -35,9 +35,11 @@ faq:
   - q: "My old Voyage bookmark stopped working."
     a: "The network was renamed from babylon to Devnet in the selector and in URL parameters. Update any saved link that still carries the old value."
   - q: "I logged in to Voyage the old way. Does this apply to me?"
-    a: "Yes. The old login went through an embedded IOME widget rather than a wallet. That path is being retired, so you migrate by importing the seed phrase for that account into MOI Wallet. The steps are at https://voyage-docs.moi.technology/docs/wallet-authentication/"
-  - q: "I do not have the seed phrase for my old Voyage account."
-    a: "You cannot migrate without it, because it is what proves the account is yours. Ask in Discord before doing anything else, and do not create a new wallet hoping it will reconnect to your old account. It will not."
+    a: "Yes. Voyage previously offered Login with IOMe, Generate MOI ID and Import MOI ID. All three have been removed. Your account is still tied to its original moi_id, so you migrate by importing that account's seed phrase into MOI Wallet. Steps: https://voyage-docs.moi.technology/docs/wallet-authentication/"
+  - q: "I used Login with IOMe and do not have my seed phrase."
+    a: "IOMe still holds it. Sign in at iome.ai, open Settings from the profile menu, find Security Recovery Phrase and click copy seedphrase, then confirm with your IOMe password. The full guide is at https://voyage-docs.moi.technology/docs/wallet-authentication/iome-seed-phrase-recovery"
+  - q: "Can I just make a new wallet instead?"
+    a: "Not if you want your old account. A new wallet is a new key and a new moi_id, which the protocol treats as a different participant. You would be starting fresh rather than migrating."
   - q: "Voyage is asking for my seed phrase. Should I enter it?"
     a: "No. Voyage never asks for a seed phrase, and neither does any part of this migration outside MOI Wallet itself. Treat any page that asks as a phishing attempt."
 draft: false
@@ -69,15 +71,25 @@ That is the whole migration. There is no separate account transfer and nothing t
 
 ## What if you signed in the old way?
 
-Then step 2 is the one that matters, and it is worth checking before you start anything else.
+Voyage used to offer three ways in: **Login with IOMe**, **Generate MOI ID**, and **Import MOI ID**. All three have been removed, and all three migrate the same way.
 
-Voyage's previous login ran through an embedded IOME widget. You signed in to Voyage and Voyage handed you an account. Wallet authentication inverts that: you bring the account, and Voyage checks that you hold its key.
+Whichever you used, your account is still tied to its original `moi_id`. Nothing was reset. The only thing that changes is where the key lives: Voyage used to hold it on your behalf, and now you hold it yourself.
 
-The account itself has not changed. What changes is where the key lives. Migrating means taking the seed phrase for that account and importing it into MOI Wallet, after which Voyage recognises you exactly as before.
+So the question to answer first is whether you have that account's seed phrase. If you do, the five steps above are the whole job.
 
-So the question to answer first is whether you have that seed phrase to hand. If you do, the five steps above are the whole job.
+### If you used Login with IOMe and do not have the seed phrase
 
-If you do not, stop and ask in [Discord](https://discord.gg/5gG6efFN4s) before going further. You cannot migrate without it, because the seed phrase is the only thing that proves the account is yours. In particular, do not create a fresh wallet and hope it reconnects to your old account. It will not. A new wallet is a new key, a new `moi_id`, and a new participant as far as the protocol is concerned.
+IOMe is an identity platform, and it still holds your recovery phrase. You can get it back:
+
+1. Sign in at [iome.ai](https://iome.ai/login/).
+2. Open the profile menu in the top-right and choose **Settings**.
+3. Find **Security Recovery Phrase** and click **copy seedphrase**.
+4. Enter your IOMe password to confirm, then submit.
+5. Store the phrase somewhere private, then import it into MOI Wallet.
+
+The full walkthrough is in the [IOMe seed phrase recovery guide](https://voyage-docs.moi.technology/docs/wallet-authentication/iome-seed-phrase-recovery).
+
+Whatever you do, do not create a fresh wallet and hope it reconnects to your old account. It will not. A new wallet is a new key, a new `moi_id`, and a new participant as far as the protocol is concerned.
 
 ## Will you lose your account?
 
