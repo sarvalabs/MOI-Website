@@ -35,7 +35,7 @@ faq:
   - q: "My old Voyage bookmark stopped working."
     a: "The network was renamed from babylon to Devnet in the selector and in URL parameters. Update any saved link that still carries the old value."
   - q: "I logged in to Voyage the old way. Does this apply to me?"
-    a: "Yes. The old login went through an embedded IOME widget rather than a wallet. That path is being retired, so you migrate by importing the seed phrase for that account into MOI Wallet."
+    a: "Yes. The old login went through an embedded IOME widget rather than a wallet. That path is being retired, so you migrate by importing the seed phrase for that account into MOI Wallet. The steps are at https://voyage-docs.moi.technology/docs/wallet-authentication/"
   - q: "I do not have the seed phrase for my old Voyage account."
     a: "You cannot migrate without it, because it is what proves the account is yours. Ask in Discord before doing anything else, and do not create a new wallet hoping it will reconnect to your old account. It will not."
   - q: "Voyage is asking for my seed phrase. Should I enter it?"
@@ -43,7 +43,7 @@ faq:
 draft: false
 ---
 
-**Voyage signs you in with MOI Wallet now.** The login it used before has been replaced by wallet authentication, which means you prove who you are by signing a challenge with a key you hold rather than by handing Voyage a credential it stores.
+**[Voyage](https://voyage.moi.technology) signs you in with MOI Wallet now.** The login it used before has been replaced by wallet authentication, which means you prove who you are by signing a challenge with a key you hold rather than by handing Voyage a credential it stores.
 
 If you already use Voyage, the move takes about two minutes and your account comes with you.
 
@@ -59,13 +59,13 @@ The identifier that ties this together is your `moi_id`, the address of your par
 
 Five steps.
 
-1. Install MOI Wallet on your device, either the browser extension or the mobile app.
+1. Install MOI Wallet on your device, either the [browser extension](https://chromewebstore.google.com/detail/moi-wallet/abjpinodmdoipbdlihecmhjflebogjil) or the mobile app.
 2. In MOI Wallet, choose **Import an existing wallet** and enter your seed phrase.
 3. Open Voyage and click **Login**.
 4. In the login modal, choose **Browser extension** or **Mobile wallet**.
 5. Select the account you want to use, then click **Sign & Authenticate**.
 
-That is the whole migration. There is no separate account transfer and nothing to file.
+That is the whole migration. There is no separate account transfer and nothing to file. The same five steps are in the [Voyage wallet authentication docs](https://voyage-docs.moi.technology/docs/wallet-authentication/), with screenshots.
 
 ## What if you signed in the old way?
 
@@ -77,7 +77,7 @@ The account itself has not changed. What changes is where the key lives. Migrati
 
 So the question to answer first is whether you have that seed phrase to hand. If you do, the five steps above are the whole job.
 
-If you do not, stop and ask in Discord before going further. You cannot migrate without it, because the seed phrase is the only thing that proves the account is yours. In particular, do not create a fresh wallet and hope it reconnects to your old account. It will not. A new wallet is a new key, a new `moi_id`, and a new participant as far as the protocol is concerned.
+If you do not, stop and ask in [Discord](https://discord.gg/5gG6efFN4s) before going further. You cannot migrate without it, because the seed phrase is the only thing that proves the account is yours. In particular, do not create a fresh wallet and hope it reconnects to your old account. It will not. A new wallet is a new key, a new `moi_id`, and a new participant as far as the protocol is concerned.
 
 ## Will you lose your account?
 
@@ -113,7 +113,7 @@ Two things that will look like bugs if you have not heard about them.
 
 **The faucet no longer creates accounts.** It funds accounts that already exist on chain. If you try to fund an address that was never registered, you get an error telling you the account does not exist. Register as a participant first, then use the faucet.
 
-**The network is now called Devnet.** It was called babylon, in the network selector and in URL parameters. Any bookmark or shared link still carrying the old value will not resolve to the right place.
+**The network is now called Devnet.** Both changes shipped alongside [the August release](https://blog.moi.technology/article/moi-august-2026-release/). It was called babylon, in the network selector and in URL parameters. Any bookmark or shared link still carrying the old value will not resolve to the right place.
 
 ## What if something goes wrong?
 
@@ -127,7 +127,7 @@ Four things account for almost every failed migration. Work through them in orde
 
 - **The faucet says your account does not exist.** It is not a migration problem. The faucet stopped creating accounts and only funds ones already registered on chain. Register as a participant first, then come back to it.
 
-If none of that resolves it, ask in Discord rather than retrying against a page you are unsure about. Nothing here is fixed by entering your seed phrase somewhere new.
+If none of that resolves it, ask in [Discord](https://discord.gg/5gG6efFN4s) rather than retrying against a page you are unsure about. Nothing here is fixed by entering your seed phrase somewhere new.
 
 ## Key takeaways, recap
 
