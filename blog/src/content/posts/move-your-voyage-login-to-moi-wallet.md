@@ -117,11 +117,17 @@ Two things that will look like bugs if you have not heard about them.
 
 ## What if something goes wrong?
 
-Work through it in this order.
+Four things account for almost every failed migration. Work through them in order.
 
-Empty account after signing in usually means the wrong seed phrase, so check that first. A signature that will not verify usually means the wrong account was selected in the modal, since a wallet holding several accounts offers all of them. If the mobile QR code does not connect, the usual cause is Voyage rather than your wallet: WalletConnect arrived on the Voyage side in v0.9.1, and the mobile app has supported it since v1.1.0.
+- **You signed in and the account is empty.** The seed phrase is wrong. Nothing has been lost, you are simply signed in as a participant Voyage has never seen. Log out, check the phrase against the account you had before, and import again.
 
-If none of that resolves it, ask in Discord rather than retrying against a page you are unsure about.
+- **The signature will not verify.** The wrong account was selected. A wallet holding several accounts offers all of them in the modal, and only one of them is the account Voyage knows you by. Go back a step and pick a different one.
+
+- **The mobile QR code will not connect.** This is usually Voyage rather than your wallet. WalletConnect arrived on the Voyage side in v0.9.1, and the mobile app has supported it since v1.1.0, so a stale Voyage tab is the more likely culprit. Reload it and generate a fresh code.
+
+- **The faucet says your account does not exist.** It is not a migration problem. The faucet stopped creating accounts and only funds ones already registered on chain. Register as a participant first, then come back to it.
+
+If none of that resolves it, ask in Discord rather than retrying against a page you are unsure about. Nothing here is fixed by entering your seed phrase somewhere new.
 
 ## Key takeaways, recap
 
