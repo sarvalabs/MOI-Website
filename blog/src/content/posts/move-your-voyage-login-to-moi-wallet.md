@@ -91,14 +91,6 @@ The full walkthrough is in the [IOMe seed phrase recovery guide](https://voyage-
 
 Whatever you do, do not create a fresh wallet and hope it reconnects to your old account. It will not. A new wallet is a new key, a new `moi_id`, and a new participant as far as the protocol is concerned.
 
-## Will you lose your account?
-
-No, provided you import the same seed phrase you used before.
-
-Voyage keys your profile, your history and your settings to your `moi_id`. Because that identifier comes from your wallet rather than from a login record, connecting with the same wallet puts you back into the same account. Nothing needs to be moved because nothing moved.
-
-The corollary matters more than the reassurance: a *different* seed phrase gives you a different `moi_id`, and Voyage will treat you as a participant it has never seen. If you find yourself looking at an empty account after logging in, the seed phrase is the first thing to check.
-
 ## Should you use the extension or the mobile app?
 
 Either works. They differ in how you approve things.
