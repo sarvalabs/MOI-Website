@@ -45,7 +45,7 @@ faq:
 draft: false
 ---
 
-**[Voyage](https://voyage.moi.technology) signs you in with MOI Wallet now.** The login it used before has been replaced by wallet authentication, which means you prove who you are by signing a challenge with a key you hold rather than by handing Voyage a credential it stores.
+**[Voyage](https://voyage.moi.technology) signs you in with MOI Wallet now.** The old IOMe login has been replaced.
 
 If you already use Voyage, the move takes about two minutes and your account comes with you.
 
