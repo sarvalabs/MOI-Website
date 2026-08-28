@@ -77,17 +77,11 @@ Five steps.
 
 That is the whole migration. There is no separate account transfer and nothing to file. The same five steps are in the [Voyage wallet authentication docs](https://voyage-docs.moi.technology/docs/wallet-authentication/), with screenshots.
 
-## What if you signed in the old way?
+## If you have logged in with IOMe in the past and do not have your seed phrase
 
-Voyage used to offer three ways in: **Login with IOMe**, **Generate MOI ID**, and **Import MOI ID**. All three have been removed, and all three migrate the same way.
+The old sign-in options, **Login with IOMe**, **Generate MOI ID** and **Import MOI ID**, are gone, but your account is still tied to its original `moi_id`. If you have the seed phrase, the five steps above are the whole job.
 
-Whichever you used, your account is still tied to its original `moi_id`. Nothing was reset. The only thing that changes is where the key lives: Voyage used to hold it on your behalf, and now you hold it yourself.
-
-So the question to answer first is whether you have that account's seed phrase. If you do, the five steps above are the whole job.
-
-### If you have logged in with IOMe in the past and do not have your seed phrase
-
-IOMe is an identity platform, and it still holds your recovery phrase. You can get it back:
+If you signed in through IOMe and do not have it, IOMe is an identity platform and it still holds your recovery phrase. You can get it back:
 
 1. Sign in at [iome.ai](https://iome.ai/login/).
 2. Open the profile menu in the top-right and choose **Settings**.
