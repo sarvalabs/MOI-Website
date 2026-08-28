@@ -114,14 +114,6 @@ Voyage will never ask for it. No step in this migration asks for it outside the 
 
 Two smaller habits close the remaining gaps: install MOI Wallet only from the official stores, and check the address bar says voyage.moi.technology before you connect.
 
-## What else changed in Voyage this month?
-
-Two things that will look like bugs if you have not heard about them.
-
-**The faucet no longer creates accounts.** It funds accounts that already exist on chain. If you try to fund an address that was never registered, you get an error telling you the account does not exist. Register as a participant first, then use the faucet.
-
-**The network is now called Devnet.** Both changes shipped alongside [the August release](https://blog.moi.technology/article/moi-august-2026-release/). It was called babylon, in the network selector and in URL parameters. Any bookmark or shared link still carrying the old value will not resolve to the right place.
-
 ## What if something goes wrong?
 
 Four things account for almost every failed migration. Work through them in order.
