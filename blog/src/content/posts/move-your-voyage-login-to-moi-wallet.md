@@ -77,7 +77,7 @@ Whichever you used, your account is still tied to its original `moi_id`. Nothing
 
 So the question to answer first is whether you have that account's seed phrase. If you do, the five steps above are the whole job.
 
-### If you used Login with IOMe and do not have the seed phrase
+### If you have logged in with IOMe in the past and do not have your seed phrase
 
 IOMe is an identity platform, and it still holds your recovery phrase. You can get it back:
 
