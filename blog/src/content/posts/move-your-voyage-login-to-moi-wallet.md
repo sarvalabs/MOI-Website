@@ -34,12 +34,20 @@ faq:
     a: "The faucet stopped creating accounts. It only funds accounts that already exist on chain, so register as a participant first and then use the faucet."
   - q: "My old Voyage bookmark stopped working."
     a: "The network was renamed from babylon to Devnet in the selector and in URL parameters. Update any saved link that still carries the old value."
+  - q: "I signed in and my account is empty. Is it lost?"
+    a: "No. The seed phrase is wrong, so you are signed in as a participant Voyage has never seen. Log out, check the phrase against the account you had before, and import again."
+  - q: "The signature will not verify."
+    a: "The wrong account was selected. A wallet holding several accounts offers all of them in the modal, and only one of them is the account Voyage knows you by. Go back a step and pick a different one."
+  - q: "The mobile QR code will not connect."
+    a: "Make sure MOI Wallet is unlocked and your phone camera has permission, then scan from the scanner icon in the wallet's top bar. If it still fails, remove any old Voyage session under App Drawer, DApp Connections, and try again."
   - q: "I logged in to Voyage the old way. Does this apply to me?"
     a: "Yes. Voyage previously offered Login with IOMe, Generate MOI ID and Import MOI ID. All three have been removed. Your account is still tied to its original moi_id, so you migrate by importing that account's seed phrase into MOI Wallet. Steps: https://voyage-docs.moi.technology/docs/wallet-authentication/"
   - q: "I used Login with IOMe and do not have my seed phrase."
     a: "IOMe still holds it. Sign in at https://iome.ai/login/, open Settings from the profile menu, find Security Recovery Phrase and click copy seedphrase, then confirm with your IOMe password. The full guide is at https://voyage-docs.moi.technology/docs/wallet-authentication/iome-seed-phrase-recovery"
   - q: "Can I just make a new wallet instead?"
     a: "Not if you want your old account. A new wallet is a new key and a new moi_id, which the protocol treats as a different participant. You would be starting fresh rather than migrating."
+  - q: "None of this fixed it. Now what?"
+    a: "Ask in Discord at https://discord.gg/5gG6efFN4s rather than retrying against a page you are unsure about. Nothing here is fixed by entering your seed phrase somewhere new."
   - q: "Voyage is asking for my seed phrase. Should I enter it?"
     a: "No. Voyage never asks for a seed phrase, and neither does any part of this migration outside MOI Wallet itself. Treat any page that asks as a phishing attempt."
 draft: false
@@ -91,21 +99,6 @@ The full walkthrough is in the [IOMe seed phrase recovery guide](https://voyage-
 
 Whatever you do, do not create a fresh wallet and hope it reconnects to your old account. It will not. A new wallet is a new key, a new `moi_id`, and a new participant as far as the protocol is concerned.
 
-## Should you use the extension or the mobile app?
-
-Either works. They differ in how you approve things.
-
-| | Browser extension | Mobile wallet |
-|---|---|---|
-| Where it runs | Chrome on your computer | Your phone |
-| How you connect | Popup approval | Scan a QR code |
-
-On mobile, connections are managed under **App Drawer → DApp Connections**, which is also where you disconnect Voyage or clear a stuck session.
-
-If you already have one installed, use that one. If you have neither, the extension is slightly less work when you are signing from a desktop, because approval happens in the same place you are already looking.
-
-The mobile route opened when Voyage v0.9.1 added WalletConnect support on its side; the mobile app has managed WalletConnect connections since v1.1.0. What v1.2.0 added is multi-account selection: you can bring several accounts into one connection and choose which to authenticate with.
-
 ## What should you never do?
 
 Type your seed phrase anywhere that is not MOI Wallet.
@@ -113,20 +106,6 @@ Type your seed phrase anywhere that is not MOI Wallet.
 Voyage will never ask for it. No step in this migration asks for it outside the wallet's own import screen. A wallet migration is exactly the moment phishing works, because everyone is expecting to be asked for a seed phrase by something. Anything that asks you outside MOI Wallet is not part of this.
 
 Two smaller habits close the remaining gaps: install MOI Wallet only from the official stores, and check the address bar says voyage.moi.technology before you connect.
-
-## What if something goes wrong?
-
-Four things account for almost every failed migration. Work through them in order.
-
-- **You signed in and the account is empty.** The seed phrase is wrong. Nothing has been lost, you are simply signed in as a participant Voyage has never seen. Log out, check the phrase against the account you had before, and import again.
-
-- **The signature will not verify.** The wrong account was selected. A wallet holding several accounts offers all of them in the modal, and only one of them is the account Voyage knows you by. Go back a step and pick a different one.
-
-- **The mobile QR code will not connect.** Make sure MOI Wallet is unlocked and your phone camera has permission, then scan from the scanner icon in the wallet's top bar. If the connection still fails, remove any old Voyage session under **App Drawer → DApp Connections** and try again.
-
-- **The faucet says your account does not exist.** It is not a migration problem. The faucet stopped creating accounts and only funds ones already registered on chain. Register as a participant first, then come back to it.
-
-If none of that resolves it, ask in [Discord](https://discord.gg/5gG6efFN4s) rather than retrying against a page you are unsure about. Nothing here is fixed by entering your seed phrase somewhere new.
 
 ## Key takeaways, recap
 
