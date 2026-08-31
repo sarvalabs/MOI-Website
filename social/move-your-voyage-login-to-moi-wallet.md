@@ -6,28 +6,6 @@ published: 2026-08-27
 # Discord and Telegram post immediately. X and LinkedIn are queued in
 # Buffer as drafts for you to approve. Empty a channel to skip it.
 
-discord: |
-  **Voyage validators — your login changed.**
-
-  Voyage now signs you in with MOI Wallet. The old login options (IOMe, Generate MOI ID, Import MOI ID) are gone.
-
-  Import the same seed phrase you already used and your account, history and settings come with you. Five steps, about two minutes.
-
-  Used IOMe and lost your seed phrase? It's recoverable from your IOMe settings — the guide covers that too.
-
-  {{link}}
-
-telegram: |
-  Voyage validators — your login changed.
-
-  Voyage now signs you in with MOI Wallet. Import the same seed phrase you already used and your account comes with you: same history, same settings, same moi_id.
-
-  Used IOMe and don't have your seed phrase? It's recoverable from your IOMe settings. The guide covers that path too.
-
-  Voyage will never ask for your seed phrase — only ever enter it inside MOI Wallet itself.
-
-  {{link}}
-
 # X allows 280 characters. The link counts as 23 whatever its length.
 x: |
   Voyage validators: the old login is gone. Voyage now signs you in with MOI Wallet.

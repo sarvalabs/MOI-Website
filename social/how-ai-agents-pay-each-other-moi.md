@@ -1,44 +1,35 @@
 ---
 slug: how-ai-agents-pay-each-other-moi
-title: "How AI Agents Pay Each Other — MOI Webinars VII"
+title: "How AI Agents Pay Each Other \u2014 MOI Webinars VII"
 published: 2026-08-21
-
-# Discord and Telegram post immediately. X and LinkedIn are queued in
-# Buffer as drafts for you to approve. Empty a channel to skip it.
-
-discord: |
-  **How AI Agents Pay Each Other — MOI Webinars VII**
-
-  Two AI agents transact on MOI with no human, no accounts, no payment processor. How agentic payments work: on-chain identity, HTTP 402, and a real settled transaction.
-
-  {{link}}
-
-telegram: |
-  How AI Agents Pay Each Other — MOI Webinars VII
-
-  Two AI agents transact on MOI with no human, no accounts, no payment processor. How agentic payments work: on-chain identity, HTTP 402, and a real settled transaction.
-
-  {{link}}
 
 # X allows 280 characters. The link counts as 23 whatever its length.
 x: |
-  Two AI agents transact on MOI with no human, no accounts, no payment processor. How agentic payments work: on-chain identity, HTTP 402, and a real settled transaction.
+  Two AI agents paid each other on MOI. No accounts, no payment processor, no human. Before spending, the buyer checked the seller's registered wallet on chain.
+
+  The whole payment layer: 713 lines of TypeScript, open source.
 
   {{link}}
 
 linkedin: |
-  How AI Agents Pay Each Other — MOI Webinars VII
+  Two AI agents did business with each other at MOI Builders Session 7. No human approved anything. The buyer had a question it couldn't answer and a wallet of its own. The seller priced its answers itself and got paid.
 
-  Two AI agents transact on MOI with no human, no accounts, no payment processor. How agentic payments work: on-chain identity, HTTP 402, and a real settled transaction.
+  The buyer found the seller through MOI's on-chain agent registry, got billed over HTTP 402, a status code reserved since 1997 that almost nothing has ever used, and paid from its own wallet in a native asset. The seller verified the payment by reading the chain. No accounts, no payment processor.
 
+  The step that matters is one comparison. A payment address tells you where to send money, not whose address it is. So before spending anything, the buyer asks the registry which wallet that seller registered, and refuses to pay if the invoice doesn't match. Identity the agent can read on chain is what lets it pay a stranger.
+
+  The whole payment layer is 713 lines of TypeScript, open source, runnable with one funded devnet wallet. The write-up also covers what we left open on purpose: the buyer's spending limit lives in its own code, so it is a preference, not authority. Moving that limit onto the chain is the next session.
+
+  Full write-up:
   {{link}}
 ---
 
-<!-- {{link}} becomes that channel's tagged URL, so GA4 can tell the channels
-     apart. Move it anywhere in the copy; delete it and the link is
-     appended to the end instead.
+<!-- {{link}} becomes that channel's tagged URL. Move it anywhere in the copy;
+     delete it and the link is appended to the end instead.
 
-     When the copy is ready: Actions -> Distribute a post -> Run workflow.
+     Discord and Telegram are intentionally absent: emptied channels skip.
+     To send: Actions -> Distribute a post -> slug, channels x,linkedin.
 -->
 
-Notes: none yet.
+Notes: X and LinkedIn only, per the 31 Aug decision. Drafted from the post
+content with the house voice rules, stop-slop and humanizer applied.
