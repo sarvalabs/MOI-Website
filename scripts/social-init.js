@@ -20,6 +20,21 @@ if (!all && !slugs.length) {
   process.exit(1);
 }
 
+// --all --force rewrites every copy file on the repo, hand-written words and
+// all, with no diff to review first. The Prepare workflow can reach this by
+// accident: dispatching it with force ticked and the slug left blank resolves
+// to exactly this pair. Overwriting one post's copy is a decision; overwriting
+// every post's is almost never one, so it has to be said out loud.
+if (all && force && !args.includes('--yes-overwrite-all')) {
+  console.error(
+    'Refusing to run --all with --force: that overwrites the copy for every published\n' +
+      'post, including anything already written by hand.\n\n' +
+      '  For one post:   node scripts/social-init.js <slug> --force\n' +
+      '  If you mean it: add --yes-overwrite-all\n'
+  );
+  process.exit(1);
+}
+
 const targets = all ? readPosts().map((p) => p.slug).filter((s) => force || !hasSocialFile(s)) : slugs;
 
 if (!targets.length) {
