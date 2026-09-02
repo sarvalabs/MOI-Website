@@ -563,7 +563,7 @@ export default function HomePage() {
               <h1 className="hero-headline">
                 The Participant Layer
                 <br />
-                of the Internet
+                for AI Agents
               </h1>
               <p className="hero-sub">
                 MOI gives every participant — human or agent — persistent,
