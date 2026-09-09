@@ -1,3 +1,8 @@
+# Content Signals (contentsignals.org): search indexing and AI answer/input
+# use are welcome. The ai-train signal is deliberately unset - set it
+# explicitly once the team decides on a training-use policy.
+Content-Signal: search=yes, ai-input=yes
+
 User-agent: *
 Allow: /
 
