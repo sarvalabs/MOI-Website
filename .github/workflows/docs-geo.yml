@@ -1,6 +1,6 @@
 # GEO checks — enforces DOCS-GEO-STANDARD.md (repo root) on blog content and
 # verifies the build (the prerender script fails loudly if route metadata
-# stops applying). Warn-only lint: delete GEO_LINT_WARN_ONLY to make blocking.
+# stops applying). Blocking lint (legacy findings burned down 2026-09-09).
 name: docs-geo
 on:
   pull_request:
@@ -15,8 +15,6 @@ jobs:
         with:
           node-version: "20"
       - name: Lint blog content against the GEO standard
-        env:
-          GEO_LINT_WARN_ONLY: "1"
         run: node scripts/lint-docs-geo.mjs blog
       - name: Build (prerender assertions fail here if head markup drifts)
         run: npm ci && npm run build
