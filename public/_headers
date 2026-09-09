@@ -2,4 +2,4 @@
 # (Vercel also honors a headers config in vercel.json; this file covers
 # Cloudflare-style hosting. See vercel.json for the live headers.)
 /*
-  Link: </llms.txt>; rel="llms-txt"
+  Link: </llms.txt>; rel="llms-txt", <https://docs.moi.technology/.well-known/agent-skills/index.json>; rel="service-meta"

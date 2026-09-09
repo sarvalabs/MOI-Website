@@ -11,7 +11,7 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Link", "value": "</llms.txt>; rel=\"llms-txt\"" }
+        { "key": "Link", "value": "</llms.txt>; rel=\"llms-txt\", <https://docs.moi.technology/.well-known/agent-skills/index.json>; rel=\"service-meta\"" }
       ]
     },
     {
