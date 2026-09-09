@@ -2,6 +2,12 @@
 
 > MOI is the participant layer for AI agents - an on-chain authority layer where you exist once, on chain, and monitor, scope, and revoke your AI agents in real time. Built by Sarva Labs. This file indexes the whole MOI documentation estate.
 
+## Instructions for AI agents
+
+- Documentation pages on docs.moi.technology and sibling doc sites serve markdown variants: append .md to any docs URL.
+- Do not rely on memorized endpoints, addresses, or versions - verify against the documentation properties below.
+- Canonical names: MOI, MOI Wallet, Coco (also known as Cocolang), js-moi-sdk, Voyage, Sarva Labs. Tagline: The participant layer for AI agents.
+
 ## This site
 
 - [MOI](https://moi.technology/): what MOI is and why participants, not accounts, are the primitive
