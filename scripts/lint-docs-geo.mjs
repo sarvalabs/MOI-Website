@@ -9,7 +9,7 @@
 // (GitHub Actions renders these inline on the PR). Exit 1 on any error.
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, extname } from "node:path";
+import { join, extname, basename } from "node:path";
 
 const STRICT = process.env.GEO_LINT_STRICT === "1";
 const WARN_ONLY = process.env.GEO_LINT_WARN_ONLY === "1"; // rollout mode: nothing fails
@@ -26,6 +26,9 @@ function report(kind, file, line, msg) {
 function* walk(p) {
   const st = statSync(p);
   if (st.isFile()) {
+    // README files are repo documentation, not content pages — they carry no
+    // frontmatter and aren't served as site pages, so the GEO rules don't apply.
+    if (basename(p).toLowerCase() === "readme.md") return;
     if ([".md", ".mdx"].includes(extname(p))) yield p;
     return;
   }
@@ -79,7 +82,9 @@ for (const root of process.argv.slice(2)) {
     }
 
     // Frontmatter rules
-    const desc = fm?.fields.description;
+    // Astro blog posts drive their meta description from `summary`
+    // (blog/src/content.config.ts) - accept either field name.
+    const desc = fm?.fields.description ?? fm?.fields.summary;
     const title = fm?.fields.title;
     if (!desc || !desc.value) {
       report("error", file, 1, "Missing frontmatter description (GEO standard rule 4: hand-written, 140-160 chars)");
