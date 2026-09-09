@@ -37,7 +37,7 @@ const ROUTES = [
     path: "/manifesto",
     title: "The MOI Manifesto",
     description:
-      "You are not a copy. You are the participant. The MOI manifesto on why people and agents deserve persistent, portable existence in computation — one identity, on chain.",
+      "You are not a copy. You are the participant. The MOI manifesto on why people and agents deserve persistent, portable existence in computation.",
     noscript: `
       <h1>You are not a copy. You are the participant.</h1>
       <p>The MOI manifesto: computers have a problem with how they think about
