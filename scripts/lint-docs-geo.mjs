@@ -116,8 +116,10 @@ for (const root of process.argv.slice(2)) {
       report("error", file, h1s[1], `${h1s.length} H1 headings — a page has exactly one H1; demote the rest to ## (rule 1)`);
     }
 
-    // Rule 9: stubs must be noindex
-    if (/coming soon|under development|\bTBD\b/i.test(body) && !/noindex/.test(src)) {
+    // Rule 9: stubs must be noindex. A page merely MENTIONING upcoming docs
+    // isn't a stub - only flag thin pages or explicit Coming Soon admonitions.
+    const stubbish = /:::\w+ Coming Soon|^#?\s*Coming Soon/im.test(body) || (body.length < 400 && /coming soon|under development|\bTBD\b/i.test(body));
+    if (stubbish && !/noindex/.test(src)) {
       const idx = body.search(/coming soon|under development|\bTBD\b/i);
       const line = (fm ? fm.bodyStart : 1) + body.slice(0, idx).split("\n").length - 1;
       report("warning", file, line, 'Looks like a stub ("Coming Soon"/"TBD") without noindex — add <head><meta name="robots" content="noindex" /></head> until it has real content (rule 9)');
