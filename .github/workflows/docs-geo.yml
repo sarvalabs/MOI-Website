@@ -1,0 +1,30 @@
+# GEO checks — enforces DOCS-GEO-STANDARD.md (repo root) on blog content and
+# verifies the build (the prerender script fails loudly if route metadata
+# stops applying). Warn-only lint: delete GEO_LINT_WARN_ONLY to make blocking.
+name: docs-geo
+on:
+  pull_request:
+    paths: ["blog/**", "index.html", "public/**", "scripts/**", "vercel.json", "package.json"]
+
+jobs:
+  geo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Lint blog content against the GEO standard
+        env:
+          GEO_LINT_WARN_ONLY: "1"
+        run: node scripts/lint-docs-geo.mjs blog
+      - name: Build (prerender assertions fail here if head markup drifts)
+        run: npm ci && npm run build
+      - name: Prerendered routes carry their own metadata
+        run: |
+          for r in why-moi manifesto papers; do
+            if cmp -s dist/index.html "dist/$r/index.html"; then
+              echo "::error::dist/$r/index.html is identical to the homepage — prerender did not apply"; exit 1
+            fi
+          done
+          echo "prerendered routes OK"
