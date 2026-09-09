@@ -18,6 +18,7 @@
 - [Coco language docs](https://cocolang.dev/): Coco (Cocolang), the language for writing MOI logics
 - [MOI Wallet docs](https://docs.wallet.moi.technology/): self-custodial wallet app and browser extension
 - [Voyage docs](https://voyage-docs.moi.technology/): the MOI network explorer and developer gateway - devnet endpoints and wallet authentication
+- [Agent Launchpad](https://launchpad.moi.technology/): create personal on-chain AI agents you own and can revoke - docs at https://docs.moi.technology/docs/build/launchpad/
 - [Blog](https://blog.moi.technology/): the MOI blog
 
 ## Company
