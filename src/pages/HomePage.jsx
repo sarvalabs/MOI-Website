@@ -612,8 +612,10 @@ export default function HomePage() {
               <div className="hero-pip">
                 <img
                   className="hero-pip-img"
-                  src="/brand/mascot/pip-smile.png"
+                  src="/brand/mascot/pip-smile.webp"
                   alt="Pip — the MOI participant"
+                  fetchPriority="high"
+                  decoding="async"
                 />
                 <svg
                   className="hero-pip-ring"
