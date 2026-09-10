@@ -25,7 +25,7 @@ faq:
   - q: "How much is 50 anu?"
     a: "Fifty billionths of a KMOI. 1 KMOI is 1,000,000,000 anu, so the minimum fuel price is 0.00000005 KMOI per unit of fuel. Use formatKmoi to display anu amounts and parseKmoi to turn a KMOI string into anu; do not multiply by hand."
   - q: "Why did storage jump from 1 anu to 1,000,000 anu per byte?"
-    a: "Before v0.13.0 the price per byte and the unit were both effectively 1. Pricing in anu gives the protocol a real unit to price in, and 1,000,000 anu per byte puts a kilobyte of persisted state at 1 KMOI. Storage is the ongoing cost; execution is the one-off one, and the two are priced separately."
+    a: "Before v0.13.0 the per-byte price was 1 anu. Pricing in anu gives the protocol a real unit to price in, and 1,000,000 anu per byte puts a kilobyte of persisted state at 1 KMOI. Storage is the ongoing cost; execution is the one-off one, and the two are priced separately."
   - q: "I build interactions by hand. What changes in the participant list?"
     a: "Leave the sender and the fee payer out. The node now derives both from the interaction header and rejects them as redundant participants. Add the fee payer only when it also signs for the operations, as a notary with a mutate lock. If you build through js-moi-sdk 0.9.0-rc2, the SDK already does this."
   - q: "Can KMOI be minted by the manager for an emergency?"
@@ -67,10 +67,11 @@ Two properties make this safer than an allowance. First, the payer signs *each* 
 In js-moi-sdk 0.9.0-rc2 the sequence is three calls. The user's wallet builds a KMOI transfer, names the sponsor as payer, and hands the raw interaction to the sponsor to sign. The sponsor's wallet signs it without needing the sender's key. The user's wallet then sends the interaction with the sponsor's signature attached.
 
 ```ts
-import { MAS0AssetLogic, KMOI_ASSET_ID } from "js-moi-sdk";
+import { MASNAssetLogic } from "js-moi-sdk";
 
-// user side: build the transfer and name the sponsor as fee payer
-const transfer = new MAS0AssetLogic(KMOI_ASSET_ID, userWallet)
+// user side: build a KMOI transfer and name the sponsor as fee payer
+// (MASNAssetLogic is KMOI-only; use MAS0AssetLogic(assetId, wallet) for other assets)
+const transfer = new MASNAssetLogic(userWallet)
   .transfer(recipientId, amount)
   .payer(sponsorId);
 
@@ -89,6 +90,8 @@ await transfer.send({ participantSignatures: sponsorSignatures });
 `signRawInteractionObject` exists for exactly this: it signs an interaction object as-is, without checking the payer field or requiring the sender's key to be on the wallet. `send` refuses an interaction that names a payer but carries no matching signature, so a missing sponsor signature fails on your machine, not on the network.
 
 Where the sponsor lives is up to you. In a web app it is a small service that receives the interaction object, applies whatever policy you want (a per-user budget, an allowlist of logics, a rate limit), signs, and returns the signatures. For a fleet of agents it is a treasury account that funds every agent's fuel from one place, with each agent still signing its own interactions from its own key.
+
+The sponsor pays whether or not the interaction succeeds: a failed interaction still burns the fuel it used, and that fuel comes from the payer. Budget for failed attempts, and put your policy check before the signature.
 
 What a fee payer does not do: it does not pay the value. If the interaction transfers 5 KMOI, those 5 KMOI leave the sender. And it does not appear in the participant list unless it is also a notary; the node rejects a fee payer listed as a plain participant as redundant.
 
@@ -172,7 +175,7 @@ It also adds a payment path for machines. In the [x402 work](https://blog.moi.te
 |---|---|---|
 | moipod | v0.13.0 | Fee payer; KMOI on MASN; anu pricing; header-derived sender and payer |
 | js-moi-sdk | 0.9.0-rc2 | `payer()` on interaction contexts, `signRawInteractionObject`, `participantSignatures`; `KMOI_ASSET_ID`, `MASNAssetLogic`; `parseKmoi`, `formatKmoi`; fuel price default 50 anu |
-| js-polo | 0.1.5 | Serialization support for the new interaction fields |
+| js-polo | 0.1.5 | Named by the release note as the version to pair with the SDK |
 
 ## What to do now
 
