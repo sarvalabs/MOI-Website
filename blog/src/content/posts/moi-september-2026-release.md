@@ -115,7 +115,7 @@ The `fffe` after `0x1080` is the MASN standard; the old id had `0000` there for 
 
 **Fuel and storage prices are now integers in anu, and two of them just moved.** 1 KMOI is 1,000,000,000 anu. The minimum fuel price is 50 anu and storage is 1,000,000 anu per byte, both up from 1 anu before this release. If your code hardcodes either number, it is now wrong.
 
-Anu is to KMOI what wei is to ether: the integer the protocol counts in, so that no amount ever needs a fraction. The release names that unit, fixes it at one billionth of a KMOI, and raises the two floor prices that were set at 1 of it.
+Anu is to KMOI what [wei is to ether](https://ethereum.org/developers/docs/intro-to-ether/): the integer the protocol counts in, so that no amount ever needs a fraction. The release names that unit, fixes it at one billionth of a KMOI, and raises the two floor prices that were set at 1 of it.
 
 The two numbers to know:
 
