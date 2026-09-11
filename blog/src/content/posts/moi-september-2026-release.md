@@ -39,7 +39,7 @@ draft: false
 
 That is the biggest change in this release, but not the only one. KMOI, the MOI token, now has a fixed supply that nobody can change, and with it a new asset id. And the network now prices fuel and storage in anu, the smallest unit of KMOI, which moves two prices your code may depend on.
 
-moipod is the software that runs a MOI node, and version 0.13.0 has been live on [Voyage devnet](https://voyage.moi.technology) since 11 September 2026. The rest of this post takes each change in turn: what it lets you do, and what you need to update. Three of the changes can break existing code, and each one is flagged where it comes up.
+moipod is the software that runs a MOI node, and version 0.13.0 has been live on [Voyage devnet](https://voyage.moi.technology) since 11 September 2026. The rest of this post takes each change in turn: what it lets you do, and what you need to update. Some of these changes may affect existing code, and each one is flagged where it comes up.
 
 Four terms come up throughout:
 
@@ -50,7 +50,7 @@ Four terms come up throughout:
 
 ## What changed in moipod v0.13.0?
 
-Four changes. Three can break existing code.
+Four changes. Some may affect existing code.
 
 | Change | What you get | Can it break your code? |
 |---|---|---|
@@ -69,7 +69,7 @@ This fixes the first-run problem. Before v0.13.0, an account with no KMOI could 
 
 Now your app carries that cost. Your backend holds a sponsor account with KMOI in it. When a user's interaction arrives, the sponsor checks it, signs it as the fee payer, and it goes through. The user never sees fuel.
 
-This is safer than an allowance for two reasons. The sponsor signs each interaction one at a time, so there is no open permission to draw on later. And its signature covers only the fuel. A payer has no say over what the interaction does, and a logic asking who signed does not see it. If you want the sponsor to vouch for the operations too, list it as a *notary*, MOI's word for a required co-signer.
+Does this mean anyone can spend your fuel, with no limit? No. The sponsor signs each interaction one at a time. It approves nothing in advance, and an interaction it has not signed costs it nothing. Its signature also covers only the fuel. A payer has no say over what the interaction does, and a logic asking who signed does not see it. If you want the sponsor to vouch for the operations too, list it as a *notary*, MOI's word for a required co-signer.
 
 In js-moi-sdk 0.9.0-rc2 it takes three calls. The user builds the transfer and names the sponsor. The sponsor signs it without the user's key. The user sends it with the sponsor's signature attached.
 
@@ -198,7 +198,7 @@ If something breaks, the developer docs are at [docs.moi.technology](https://doc
 
 ## Key takeaways, recap
 
-- **A fee payer pays the fuel, not the value.** It signs each interaction it pays for. There is no open allowance.
+- **A fee payer pays the fuel, not the value.** It signs each interaction it pays for. Nobody can spend its fuel without that signature.
 - **Your app can now take on users and agents that hold no KMOI.** A sponsor account and a signing service are the whole setup.
 - **KMOI has a fixed supply and a new id.** Nobody can create or destroy it, the manager included. Use `KMOI_ASSET_ID`.
 - **Everything is priced in anu.** 1 KMOI = 1,000,000,000 anu. Lowest fuel price 50 anu. Storage 1,000,000 anu per byte.
