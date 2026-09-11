@@ -131,7 +131,7 @@ The two numbers to know:
 | Lowest fuel price, per unit of fuel | 1 anu | 50 anu | 0.00000005 |
 | Storage, per byte | 1 anu | 1,000,000 anu | 0.001 |
 
-Storage is the number that bites. Storing 1 KB of data costs 1 KMOI. A logic that saves a 200-byte record per user pays 0.2 KMOI to keep it. This is on purpose, and it follows from [August's storage costing work](https://blog.moi.technology/article/moi-august-2026-release/): running code is a one-time cost, but keeping data around is an ongoing one, and it is now priced that way.
+Storage is the number that bites. Storing 1 KB of data costs 1 KMOI. A logic that saves a 200-byte record per user pays 0.2 KMOI to keep it. This is on purpose. It follows from [August's storage costing work](https://blog.moi.technology/article/moi-august-2026-release/). Running code is a one-time cost. Keeping data around is an ongoing one, and it is now priced that way.
 
 The rule for your code: never work out an anu amount by hand. js-moi-sdk 0.9.0-rc2 has the conversions built in.
 
@@ -152,7 +152,7 @@ Storage is where existing code breaks. If your app funds a new logic or asset ac
 
 The participant list is where an interaction names every account it will touch, so the node can lock those accounts while it runs. The sender was always part of the interaction, so listing it again was harmless filler, and the SDK did it for you. Now that the fee payer is also part of the interaction, the node works out both by itself. The list is for everything else: the accounts you send to, the assets, the logics.
 
-There is one case where the fee payer does go in the list. If the sponsor should sign off on what the interaction does, not only pay for it, so that a logic asking "who signed this?" sees the sponsor too, list it as a notary with a mutate lock. Then it signs for both. A fee payer listed without the notary flag is rejected.
+There is one case where the fee payer does go in the list. Sometimes the sponsor should sign off on what the interaction does, not only pay for it, so that a logic asking "who signed this?" sees the sponsor too. In that case, list it as a notary with a mutate lock. Then it signs for both. A fee payer listed without the notary flag is rejected.
 
 The SDK leaves the sender out and leaves the payer out unless it is a notary. If you build interactions by hand, or with an older SDK, this is the third change that can break your code.
 
@@ -166,7 +166,7 @@ Most code keeps working. Here is what does not, starting with the most likely:
 4. **SDK versions.** `npm i js-moi-sdk@0.9.0-rc2 js-polo@0.1.5`. Older SDKs build the participant list the old way and do not know the new KMOI id.
 5. **Anything that shows amounts.** If you display balances or fees, treat every number from the network as anu and format it with `formatKmoi`.
 
-Using a fee payer is optional. The one change it brings for everyone is item 3: the node now works out the sender and the fee payer itself, so a list built by hand must leave them out.
+Using a fee payer is optional. The one change it brings for everyone is item 3. The node now works out the sender and the fee payer itself, so a list built by hand must leave them out.
 
 ## What does this mean for agents?
 
