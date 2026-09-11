@@ -61,7 +61,7 @@ The matching SDK versions are **js-moi-sdk 0.9.0-rc2** and **js-polo 0.1.5**, th
 
 ## What is fee delegation?
 
-**An interaction can now name another account to pay its fuel.** The sender signs as before. The account named as fee payer signs too, and the network charges it for the fuel. Any value the sender sends still comes from the sender.
+**An interaction can now name another account to pay its fuel.** The sender signs as before. The account named as fee payer signs too, and the network charges it for the fuel. The payer covers only the fuel. If the interaction also transfers KMOI, that KMOI still comes out of the sender's account.
 
 This fixes the first-run problem. Before v0.13.0, an account with no KMOI could do nothing: not save a setting, not call your logic. Every new user had to be funded first. Now your app can hold one funded account and name it as the payer on its users' interactions. The user never sees fuel.
 
