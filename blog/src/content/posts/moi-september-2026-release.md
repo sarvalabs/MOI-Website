@@ -92,7 +92,7 @@ await transfer.send({ participantSignatures: payerSignatures });
 
 `signRawInteractionObject` signs an interaction as it is, without the sender's key. `send` refuses an interaction that names a payer but carries no matching signature, so a missing payer signature fails on your machine, not on the network.
 
-Three things to plan for. The payer pays even when the interaction fails, because failed interactions still use fuel. The payer must be a regular account; the node refuses a logic or asset account. And the payer does not go in the participant list unless it is also a notary; the node rejects a fee payer listed as a plain participant.
+Two things to plan for. The payer pays even when the interaction fails, because failed interactions still use fuel. And the payer does not go in the participant list unless it is also a notary; the node rejects a fee payer listed as a plain participant.
 
 Fee delegation covers fuel only. The storage deposit for the bytes an account uses is charged to that account. An app that wants to cover that too makes a `StorageDeposit` for the user, as described in [August's release](https://blog.moi.technology/article/moi-august-2026-release/).
 
