@@ -43,20 +43,20 @@ Four terms, glossed once. An *interaction* is MOI's transaction: a signed unit o
 
 ## What changed in moipod v0.13.0?
 
-Four things, three of them breaking.
+Four things changed, three of them breaking. The middle column says what each one gives you; the mechanics follow in their own sections.
 
-| Change | What it is | Breaking? |
+| Change | What you get | Breaking? |
 |---|---|---|
-| Fee payer | An interaction can name a second account that co-signs and pays the fuel | No, opt-in |
-| KMOI on MASN | KMOI moves to its own native asset standard; no mint, no burn; new asset id | Yes: the asset id |
-| Pricing in anu | Fuel and storage priced in the smallest unit of KMOI; minimum fuel price 50 anu, storage 1,000,000 anu per byte | Yes: fixed storage amounts |
-| Participant list | Sender and fee payer come from the header, not the list | Yes: hand-built lists |
+| Fee payer | You can fund fuel for users and agents that hold no KMOI | No, opt-in |
+| KMOI on MASN | KMOI's supply cannot change under you: nobody can mint or burn it, the manager included | Yes: the asset id |
+| Pricing in anu | Exact integer prices for fuel and storage, with the SDK doing the conversion | Yes: fixed storage amounts |
+| Participant list | One less thing to hand-build: the node derives the sender and the fee payer itself | Yes: hand-built lists |
 
 The SDK side is **js-moi-sdk 0.9.0-rc2** and **js-polo 0.1.5**, MOI's serialization library. Both are on npm.
 
 ## What can a fee payer do for your app?
 
-**A fee payer lets your app pay the fuel for interactions your users send.** The user signs the interaction as before. A second account, the fee payer, signs the same interaction, and the fuel comes out of that account instead of the sender's. The value being moved still comes from the sender.
+**A fee payer means your users do not need KMOI before they can act.** Your app pays the fuel for the interactions they send. The user signs the interaction as before. A second account, the fee payer, signs the same interaction, and the fuel comes out of that account instead of the sender's. The value being moved still comes from the sender.
 
 The problem this solves is the first-run problem. Before v0.13.0, every account that wanted to do anything on MOI needed KMOI in it first, which meant every new user and every new agent started with a funding step. A wallet with no KMOI could not register a preference or call your logic. Your onboarding flow had to get KMOI into the user's account before the user could touch your product.
 
@@ -97,7 +97,7 @@ What a fee payer does not do: it does not pay the value. If the interaction tran
 
 ## What changed for KMOI?
 
-**KMOI now runs on MASN, a native asset standard for KMOI alone, and its supply is fixed.** Nobody can mint or burn it. That includes the asset manager, the account that administers an asset.
+**KMOI's supply is fixed now, and you can build on that.** It runs on MASN, a native asset standard for KMOI alone, and nobody can mint or burn it, including the asset manager, the account that administers an asset. If your app holds KMOI, prices anything in KMOI, or reasons about total supply, that number cannot move under you. The breaking part is the asset id, below.
 
 Until this release KMOI was a MAS0 asset, the general fungible standard that any developer can create tokens on. MAS0 has a `Mint` and a `Burn` endpoint, and the manager can call them. For a user-created token that is a feature. For the network's own fuel token it is a risk, so MASN removes it in the standard: `Mint`, `MintWithMetadata`, `Burn`, `SetStaticMetadata` and `SetDynamicMetadata` are reserved for protocol code and refused for everyone else.
 
@@ -113,7 +113,7 @@ The `fffe` after `0x1080` is the MASN standard; the old id had `0000` there for 
 
 ## Why price in anu?
 
-**Fuel and storage are now priced in anu, and 1 KMOI is 1,000,000,000 anu.** Two prices changed with the unit: the minimum fuel price is 50 anu, and storage is 1,000,000 anu per byte.
+**Fuel and storage prices are now integers in anu, and two of them just moved.** 1 KMOI is 1,000,000,000 anu. The minimum fuel price is 50 anu and storage is 1,000,000 anu per byte, both up from 1 anu before this release. If your code hardcodes either number, it is now wrong.
 
 Anu is to KMOI what wei is to ether: the integer the protocol counts in, so that no amount ever needs a fraction. The release names that unit, fixes it at one billionth of a KMOI, and raises the two floor prices that were set at 1 of it.
 
@@ -141,13 +141,13 @@ Storage is where existing code breaks. If your application funds a new logic or 
 
 ## What changed in the participant list?
 
-**Do not add the sender or the fee payer to an interaction's participants.** The node reads both from the interaction header and rejects either as a redundant participant.
+**If you build through js-moi-sdk 0.9.0-rc2, you can skip this section: the SDK already handles it.** If you build interactions by hand, do not add the sender or the fee payer to the participant list. The node reads both from the interaction header and rejects either as a redundant participant.
 
 The participant list is where an interaction declares every account it will touch, so the node can lock them for execution. The sender was always in the header; adding it to the list again was harmless boilerplate that the SDK did for you. With the fee payer also in the header, the node now derives both, and the list is for everything else: recipients, assets, logics.
 
 There is one case where the fee payer does go in the list. If the sponsor should sign for the *operations* as well as the fuel, so that a logic asking who signed sees the sponsor too, list it as a notary with a mutate lock. Then it co-signs for both. A fee payer listed without the notary flag is rejected.
 
-If you build interactions with js-moi-sdk 0.9.0-rc2, this is already handled: the SDK drops the sender from the list and drops the payer unless it is a notary. If you build interactions by hand or with an older SDK, this is the third breaking change.
+The SDK drops the sender from the list and drops the payer unless it is a notary. If you build interactions by hand or with an older SDK, this is the third breaking change.
 
 ## What do developers need to change?
 
@@ -159,17 +159,19 @@ Most code keeps working. What does not, in order of how likely it is to bite:
 4. **SDK versions.** `npm i js-moi-sdk@0.9.0-rc2 js-polo@0.1.5`. Older SDKs serialize the participant list the old way and do not know the new KMOI id.
 5. **Anything that decodes amounts.** If you display balances or fees, treat every protocol number as anu and format it with `formatKmoi`.
 
-Nothing in the fee-payer feature requires a change. It is there when you want it.
+Using a fee payer is opt-in. The one change it brings for everyone is item 3: the node now derives the sender and the fee payer from the header, so a hand-built participant list must leave them out.
 
 ## What does this mean for agents?
 
 **An agent no longer needs KMOI of its own to act on MOI.** That removes the step that made agent onboarding awkward: giving a new agent a key was easy, giving it fuel was a funding flow.
 
-With a fee payer, an operator can run a fleet of agents from one funded treasury. Each agent signs its own interactions from its own key, so the record of who did what is intact, and the treasury co-signs for the fuel. The treasury's policy, whatever it is, runs before its signature, so a misbehaving agent stops being sponsored the moment the policy says so. That is a different kind of control from the [access policies](https://blog.moi.technology/article/moi-access-policies-agent-authority/) covered last month: those decide what an agent may write; a fee payer decides what an operator is willing to pay for.
+With a fee payer, an operator can run a fleet of agents from one funded treasury. Each agent signs its own interactions from its own key, so the record of who did what is intact, and the treasury co-signs for the fuel. The treasury's policy, whatever it is, runs before its signature, so a misbehaving agent stops being sponsored the moment the policy says so. That is a different kind of control from the [access policies](https://blog.moi.technology/article/moi-august-2026-release/) covered last month: those decide what an agent may write; a fee payer decides what an operator is willing to pay for.
 
 It also adds a payment path for machines. In the [x402 work](https://blog.moi.technology/article/how-ai-agents-pay-each-other-moi/), the MOI scheme has a buyer pay first from its own account and prove it afterwards, which needs no sponsor. With v0.13.0 a facilitator or app can instead cover an agent's fuel by co-signing as its fee payer, which is the shape x402's authorization flow is built around. The scheme being filed does not depend on that; it means MOI can offer the other flow too.
 
 ## Everything shipped
+
+Match these versions exactly. Older SDK builds do not know the new KMOI id or the fee payer.
 
 | Component | Version | What it carries |
 |---|---|---|
@@ -198,5 +200,5 @@ When something breaks, the developer docs are at [docs.moi.technology](https://d
 - **KMOI has a fixed supply and a new id.** No mint, no burn, manager included. Use `KMOI_ASSET_ID`.
 - **Everything is priced in anu.** 1 KMOI = 1,000,000,000 anu; fuel floor 50 anu; storage 1,000,000 anu per byte.
 - **Fixed storage amounts are now a millionth of what they need to be.** Re-express them with `parseKmoi`.
-- **Leave the sender and fee payer out of the participant list.** The header carries both; the SDK already does this.
+- **Leave the sender and fee payer out of the participant list,** unless the fee payer also notarizes, in which case list it with a mutate lock. The header carries both; the SDK already does this.
 - **Update to js-moi-sdk 0.9.0-rc2 and js-polo 0.1.5** before building against the new network.
