@@ -1,6 +1,6 @@
 ---
 title: "MOI September 2026 Release: fee payers, KMOI on MASN, and pricing in anu"
-summary: "moipod v0.13.0 lets any account pay the fuel for someone else's interaction, moves KMOI to a fixed-supply native standard, and prices fuel and storage in anu. Here is what each change gives you as a developer, and what to update."
+summary: "moipod v0.13.0: any account can pay another's fuel, KMOI moves to a fixed-supply native standard, and fuel and storage are priced in anu. What each change gives you, and what to update."
 date: 2026-09-11
 author:
   name: "Adithya Ganesh"
@@ -58,7 +58,7 @@ The SDK side is **js-moi-sdk 0.9.0-rc2** and **js-polo 0.1.5**, MOI's serializat
 
 **A fee payer means your users do not need KMOI before they can act.** Your app pays the fuel for the interactions they send. The user signs the interaction as before. A second account, the fee payer, signs the same interaction, and the fuel comes out of that account instead of the sender's. The value being moved still comes from the sender.
 
-The problem this solves is the first-run problem. Before v0.13.0, every account that wanted to do anything on MOI needed KMOI in it first, which meant every new user and every new agent started with a funding step. A wallet with no KMOI could not register a preference or call your logic. Your onboarding flow had to get KMOI into the user's account before the user could touch your product.
+The problem this solves is the first-run problem. Before v0.13.0, every account that wanted to do anything on MOI needed KMOI in it first. Every new user and every new agent started with a funding step. A wallet with no KMOI could not register a preference or call your logic. Your onboarding flow had to get KMOI into the user's account before the user could touch your product.
 
 Now the app can carry that cost. Your backend holds a sponsor account with KMOI in it. When a user's interaction arrives, the sponsor checks it, signs it as the fee payer, and the user's interaction goes through with the user's balance untouched. The user never sees fuel.
 
@@ -97,7 +97,7 @@ What a fee payer does not do: it does not pay the value. If the interaction tran
 
 ## What changed for KMOI?
 
-**KMOI's supply is fixed now, and you can build on that.** It runs on MASN, a native asset standard for KMOI alone, and nobody can mint or burn it, including the asset manager, the account that administers an asset. If your app holds KMOI, prices anything in KMOI, or reasons about total supply, that number cannot move under you. The breaking part is the asset id, below.
+**KMOI's supply is fixed now, and you can build on that.** It runs on MASN, a native asset standard for KMOI alone. Nobody can mint or burn it, including the asset manager, the account that administers an asset. If your app holds KMOI, prices anything in KMOI, or reasons about total supply, that number cannot move under you. The breaking part is the asset id, below.
 
 Until this release KMOI was a MAS0 asset, the general fungible standard that any developer can create tokens on. MAS0 has a `Mint` and a `Burn` endpoint, and the manager can call them. For a user-created token that is a feature. For the network's own fuel token it is a risk, so MASN removes it in the standard: `Mint`, `MintWithMetadata`, `Burn`, `SetStaticMetadata` and `SetDynamicMetadata` are reserved for protocol code and refused for everyone else.
 
