@@ -33,7 +33,7 @@ faq:
 draft: false
 ---
 
-**You can now pay fuel for another user.** Until now, whoever sent a transaction paid its fuel themselves. From moipod v0.13.0, a transaction can name a different account to pay the fuel. Your app can be that account, so a new user can start using it without any KMOI.
+**You can now pay fuel for another user.** Until this release, the account that sent an interaction paid its fuel from its own KMOI. moipod v0.13.0 adds fee delegation: an interaction can name another account to pay its fuel. An app can cover that cost for the people who use it, so a new user can start without holding KMOI for fuel.
 
 That is the new capability in this release. Three other changes matter if you already build on MOI. KMOI, the native token, now has a capped supply and a new asset id. Fuel and storage are priced in anu, the smallest unit of KMOI, which moves two prices your code may depend on. And the participant list no longer carries the sender.
 
