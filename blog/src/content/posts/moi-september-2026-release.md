@@ -37,7 +37,7 @@ draft: false
 
 That is the new capability in this release. Outside of that, there are three breaking changes that affect developers. KMOI, the native token, now has a capped supply and a new asset id. Fuel and storage are priced in anu, the smallest unit of KMOI, which moves two prices your code may depend on. And the participant list no longer carries the sender. Each of these is covered in detail later in this post.
 
-moipod is the software that runs a MOI node, and version 0.13.0 has been live on [Voyage devnet](https://voyage.moi.technology) since 11 September 2026. The table below marks what can break existing code.
+moipod is the software that runs a MOI node, and version 0.13.0 has been live on [Voyage devnet](https://voyage.moi.technology) since 11 September 2026.
 
 Four terms come up throughout:
 
@@ -63,9 +63,9 @@ The matching SDK versions are **js-moi-sdk 0.9.0-rc2** and **js-polo 0.1.5**, th
 
 **An interaction can now name another account to pay its fuel.** The sender signs as before. The account named as fee payer signs too, and the network charges it for the fuel. The payer covers only the fuel. If the interaction also transfers KMOI, that KMOI still comes out of the sender's account.
 
-This fixes the first-run problem. Before v0.13.0, an account with no KMOI could do nothing: not save a setting, not call your logic. Every new user had to be funded first. Now your app can hold one funded account and name it as the payer on its users' interactions. The user never sees fuel.
+This fixes the first-run problem. Before v0.13.0, an account with no KMOI could do nothing: not save a setting, not call your logic. You had to fund every new user first. Now your app can hold one funded account and name it as the payer on its users' interactions. The user never sees fuel.
 
-Does this mean anyone can spend your fuel, with no limit? No. The payer signs each interaction one at a time. It approves nothing in advance, and an interaction it has not signed costs it nothing. Its signature also covers only the fuel. A payer has no say over what the interaction does, and a logic asking who signed does not see it. If you want the payer to vouch for the operations too, list it as a *notary*, MOI's word for a co-signer whose signature covers the operations as well as the fuel.
+Nobody can spend the payer's fuel without its signature. The payer signs each interaction one at a time. It approves nothing in advance, and an interaction it has not signed costs it nothing. Its signature also covers only the fuel. A payer has no say over what the interaction does, and a logic asking who signed does not see it. If you want the payer to vouch for the operations too, list it as a *notary*, MOI's word for a co-signer whose signature covers the operations as well as the fuel.
 
 In js-moi-sdk 0.9.0-rc2 it takes three calls. The user builds the interaction and names the payer. The payer signs it without the user's key. The user sends it with the payer's signature attached.
 
@@ -94,7 +94,7 @@ await transfer.send({ participantSignatures: payerSignatures });
 
 Two things to plan for. The payer pays even when the interaction fails, because failed interactions still use fuel. And the payer does not go in the participant list unless it is also a notary; the node rejects a fee payer listed as a plain participant.
 
-Fee delegation covers fuel only. The storage deposit for the bytes an account uses is charged to that account. An app that wants to cover that too makes a `StorageDeposit` for the user, as described in [August's release](https://blog.moi.technology/article/moi-august-2026-release/).
+Fee delegation covers fuel only. The account that uses the bytes pays the storage deposit. An app that wants to cover that too makes a `StorageDeposit` for the user, as described in [August's release](https://blog.moi.technology/article/moi-august-2026-release/).
 
 If you build agents, an agent no longer needs to hold KMOI for its fuel. The [Sponsor Interactions tutorial](https://docs.moi.technology/docs/build/tutorials/sponsored-ix-tutorial) walks through the whole flow end to end.
 
@@ -116,7 +116,7 @@ The `fffe` after `0x1080` means MASN. The old id had `0000` there, for MAS0. Rep
 
 ## Why price in anu?
 
-KMOI is the native token of the MOI network, like ETH on Ethereum. Fuel and storage deposits are paid in it, and it is measured in anu, its smallest unit, the way ETH is measured in [wei](https://ethereum.org/developers/docs/intro-to-ether/).
+KMOI is the native token of the MOI network, like ETH on Ethereum. You pay fuel and storage deposits in KMOI, and the network counts it in anu, its smallest unit, the way Ethereum counts ETH in [wei](https://ethereum.org/developers/docs/intro-to-ether/).
 
 Until this release KMOI had no decimal places. The smallest amount the network could count was 1, and every price was a whole number.
 
@@ -131,9 +131,9 @@ Two prices that were 1 have moved. The table applies the new unit to the old num
 
 Fuel needs nothing from you unless you hardcoded a price. The SDK's default fuel price is 50 anu, the lowest a node accepts by default, so an interaction sent without a price goes through. A `fuel_price` written into your code below 50 anu is now rejected.
 
-Storage is what breaks. A byte now costs a million anu, so 1 KB is 1 KMOI, and a logic that keeps a 200-byte record per user puts down 0.2 KMOI for each one. The deposit comes back when the data is withdrawn, so it locks up KMOI rather than spending it. That is the model from [August's storage costing work](https://blog.moi.technology/article/moi-august-2026-release/).
+Storage is what breaks. A byte now costs a million anu, so 1 KB is 1 KMOI, and a logic that keeps a 200-byte record per user puts down 0.2 KMOI for each one. The deposit comes back when you withdraw the data, so it locks up KMOI rather than spending it. That is the model from [August's storage costing work](https://blog.moi.technology/article/moi-august-2026-release/).
 
-If your code funds a new logic or asset account with a fixed number, that number was written when a byte cost 1. It now buys a millionth of the bytes it used to. The SDK's `DEFAULT_STORAGE_FUND` is 10,000,000,000 anu, which is 10 KMOI, about ten thousand bytes. The smallest deposit the network accepts is 1,000,000 anu, one byte. Go through every `storageFund` and `StorageDeposit` in your code.
+If your code funds a new logic or asset account with a fixed number, you wrote that number when a byte cost 1. It now buys a millionth of the bytes it used to. The SDK's `DEFAULT_STORAGE_FUND` is 10,000,000,000 anu, which is 10 KMOI, about ten thousand bytes. The smallest deposit the network accepts is 1,000,000 anu, one byte. Go through every `storageFund` and `StorageDeposit` in your code.
 
 Never work out an anu amount by hand. Write the KMOI amount and let the SDK convert it:
 
@@ -148,9 +148,9 @@ formatKmoi(1_500_000_000n);  // "1.5"       (KMOI)
 
 **If you use js-moi-sdk 0.9.0-rc2, skip this section. The SDK handles it.** If you build interactions by hand, leave the sender and the fee payer out of the participant list. The node reads both from the interaction itself and rejects a list that repeats them.
 
-The participant list names every account an interaction will touch, so the node can lock them while it runs. The sender always had to be listed, even though the node already knew it from the interaction. Now the node fills in the sender and the fee payer itself. The list is only for everything else: recipients, assets, logics.
+The participant list names every account an interaction will touch, so the node can lock them while it runs. You always had to list the sender, even though the node already knew it from the interaction. Now the node fills in the sender and the fee payer itself. The list is only for everything else: recipients, assets, logics.
 
-One exception. If the payer should also sign off on the operations, list it as a notary with a mutate lock, the flag that says the interaction may change that account's state. A fee payer listed without the notary flag is rejected.
+One exception. If the payer should also sign off on the operations, list it as a notary with a mutate lock, the flag that says the interaction may change that account's state. The node rejects a fee payer listed without the notary flag.
 
 ## What do developers need to change?
 
@@ -159,7 +159,7 @@ Most code keeps working. Five things break, starting with the most likely, then 
 1. **Hardcoded KMOI asset ids.** Replace them with `KMOI_ASSET_ID` from js-moi-sdk 0.9.0-rc2. Search your code for `0x108000004cd973c4` to find every copy of the old one.
 2. **Fixed storage amounts.** Any number you pass as `storageFund` or send in a `StorageDeposit` is now far too small. Write it in KMOI with `parseKmoi`, and check it against 1,000,000 anu per byte.
 3. **Participant lists built by hand.** Remove the sender and the fee payer. Keep the fee payer only as a notary, and only when it should sign off on the operations too.
-4. **Hardcoded fuel prices.** Anything below 50 anu is rejected. Leave `fuel_price` unset and the SDK uses 50.
+4. **Hardcoded fuel prices.** The node rejects anything below 50 anu. Leave `fuel_price` unset and the SDK uses 50.
 5. **Assets created with max supply 0 or more than 18 decimals.** The node now rejects both. Set a real cap and at most 18 decimals.
 6. **SDK versions.** `npm i js-moi-sdk@0.9.0-rc2 js-polo@0.1.5`. Older SDKs build the participant list the old way and do not know the new KMOI id.
 7. **Anything that shows amounts.** Treat every number from the network as anu and format it with `formatKmoi`.
