@@ -35,13 +35,13 @@ faq:
 draft: false
 ---
 
-**Your app can now pay fuel for its users.** Before this release, anyone who wanted to use an app on MOI needed KMOI in their own account first. moipod v0.13.0 removes that step.
+**Your app can now pay fuel for its users.** Until this release, anyone who wanted to use an app on MOI first needed KMOI in their own account, because every action on the network costs fuel and the account taking the action had to pay it. moipod v0.13.0 changes that. An app can now cover the fuel for the people and agents that use it, so a new user can start without holding any KMOI.
 
-Two more changes ship with it. KMOI, the MOI token, now has a fixed supply and a new id. Fuel and storage are now priced in anu, the smallest unit of KMOI.
+That is the biggest change in this release, but not the only one. KMOI, the MOI token, now has a fixed supply that nobody can change, and with it a new asset id. And the network now prices fuel and storage in anu, the smallest unit of KMOI, which moves two prices your code may depend on.
 
-moipod is the software that runs a MOI node. Version 0.13.0 went live on [Voyage devnet](https://voyage.moi.technology) on 11 September 2026. This post says what each change lets you do and what to update. Three changes can break existing code. Each is flagged where it comes up.
+moipod is the software that runs a MOI node, and version 0.13.0 has been live on [Voyage devnet](https://voyage.moi.technology) since 11 September 2026. The rest of this post takes each change in turn: what it lets you do, and what you need to update. Three of the changes can break existing code, and each one is flagged where it comes up.
 
-Four terms:
+Four terms come up throughout:
 
 - *Interaction*: MOI's word for a transaction. A signed request to change one or more accounts.
 - *Fuel*: the fee for running an interaction, paid in KMOI.
