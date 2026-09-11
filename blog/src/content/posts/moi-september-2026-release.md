@@ -90,13 +90,13 @@ const payerSignatures = await payerWallet.signRawInteractionObject(
 await transfer.send({ participantSignatures: payerSignatures });
 ```
 
-`signRawInteractionObject` signs an interaction as it is, without the sender's key. `send` refuses an interaction that names a payer but carries no matching signature, so a missing payer signature fails on your machine, not on the network. The [Sponsor Interactions tutorial](https://docs.moi.technology/docs/build/tutorials/sponsored-ix-tutorial) walks through the same transfer end to end.
+`signRawInteractionObject` signs an interaction as it is, without the sender's key. `send` refuses an interaction that names a payer but carries no matching signature, so a missing payer signature fails on your machine, not on the network.
 
 Three things to plan for. The payer pays even when the interaction fails, because failed interactions still use fuel. The payer must be a regular account; the node refuses a logic or asset account. And the payer does not go in the participant list unless it is also a notary; the node rejects a fee payer listed as a plain participant.
 
 Fee delegation covers fuel only. The storage deposit for the bytes an account uses is charged to that account. An app that wants to cover that too makes a `StorageDeposit` for the user, as described in [August's release](https://blog.moi.technology/article/moi-august-2026-release/).
 
-If you build agents, an agent no longer needs to hold KMOI for its fuel. The [Sponsor Interactions tutorial](https://docs.moi.technology/docs/build/tutorials/sponsored-ix-tutorial) shows the flow.
+If you build agents, an agent no longer needs to hold KMOI for its fuel. The [Sponsor Interactions tutorial](https://docs.moi.technology/docs/build/tutorials/sponsored-ix-tutorial) walks through the whole flow end to end.
 
 ## What changed for KMOI?
 
