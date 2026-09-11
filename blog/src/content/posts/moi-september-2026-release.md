@@ -35,7 +35,7 @@ faq:
 draft: false
 ---
 
-**Your app can now pay the fee for its users.** Before this release, anyone who wanted to use an app on MOI needed KMOI in their own account first. moipod v0.13.0 removes that step. One account can now pay the fuel for another account's interaction, so your app can pay it for them.
+**Your app can now pay fuel for its users.** Before this release, anyone who wanted to use an app on MOI needed KMOI in their own account first. moipod v0.13.0 removes that step.
 
 Two more changes ship with it. KMOI, the MOI token, now has a fixed supply and a new id. Fuel and storage are now priced in anu, the smallest unit of KMOI.
 
