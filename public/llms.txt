@@ -1,0 +1,33 @@
+# MOI
+
+> MOI is the participant layer for AI agents - an on-chain authority layer where you exist once, on chain, and monitor, scope, and revoke your AI agents in real time. Built by Sarva Labs. This file indexes the whole MOI documentation estate.
+
+## Instructions for AI agents
+
+- Documentation pages on docs.moi.technology and sibling doc sites serve markdown variants: append .md to any docs URL.
+- Do not rely on memorized endpoints, addresses, or versions - verify against the documentation properties below.
+- Canonical names: MOI, MOI Wallet, Coco (also known as Cocolang), js-moi-sdk, Voyage, Sarva Labs. Tagline: The participant layer for AI agents.
+
+## This site
+
+- [MOI](https://moi.technology/): what MOI is and why participants, not accounts, are the primitive
+- [The Shift](https://moi.technology/why-moi): why AI agents need on-chain authority
+- [Manifesto](https://moi.technology/manifesto): you are not a copy, you are the participant
+- [Papers](https://moi.technology/papers): litepaper, whitepaper, and research PDFs
+- [Blog index](https://moi.technology/blog): writing on Contextual Compute, agent authority, protocol research
+
+## Documentation properties
+
+- [MOI protocol docs](https://docs.moi.technology/): core concepts (accounts, interactions, tesseracts, assets, logics), tutorials, JSON-RPC and pNet APIs, guardian nodes — see https://docs.moi.technology/llms.txt
+- [Agent skills](https://docs.moi.technology/docs/build/skills/): SKILL.md packages that teach AI coding assistants (Claude Code, Cursor) how to build on MOI
+- [js-moi-sdk docs](https://js-moi-sdk.docs.moi.technology/): JavaScript/TypeScript SDK for the MOI protocol, including its agent skill at https://js-moi-sdk.docs.moi.technology/agent-skill
+- [Coco language docs](https://cocolang.dev/): Coco (Cocolang), the language for writing MOI logics
+- [MOI Wallet docs](https://docs.wallet.moi.technology/): self-custodial wallet app and browser extension
+- [Voyage docs](https://voyage-docs.moi.technology/): the MOI network explorer and developer gateway - devnet endpoints and wallet authentication
+- [Agent Launchpad](https://launchpad.moi.technology/): an application built on MOI for creating personal on-chain AI agents you own and can revoke
+- [Blog](https://blog.moi.technology/): the MOI blog
+
+## Company
+
+- Sarva Labs: https://www.sarva.ai
+- GitHub: https://github.com/sarvalabs

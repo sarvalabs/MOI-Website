@@ -12,6 +12,55 @@
       name="description"
       content="You exist once, on chain. Monitor, scope, and revoke your AI agents in real time."
     />
+    <link rel="canonical" href="https://moi.technology/" />
+    <!-- Social/link-preview cards. scripts/prerender-routes.js rewrites these
+         (and title/description/canonical) per route at build time, so keep the
+         values here in sync with the "/" entry in that script's route table. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://moi.technology/" />
+    <meta property="og:title" content="MOI — The participant layer for AI agents" />
+    <meta property="og:description" content="You exist once, on chain. Monitor, scope, and revoke your AI agents in real time." />
+    <meta property="og:image" content="https://moi.technology/brand/social-card.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@moi_tech" />
+    <!-- Entity schema: ties moi.technology and the docs properties to one
+         Organization node that search and AI answer engines can resolve. The
+         docs sites reference this same @id as their publisher. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://moi.technology/#organization",
+            "name": "MOI",
+            "legalName": "Sarva Labs Inc",
+            "url": "https://moi.technology",
+            "logo": "https://moi.technology/brand/logos/PNG/Default%20-%20Light%20-%20400px.png",
+            "description": "MOI is the participant layer for AI agents - an on-chain authority layer where you monitor, scope, and revoke your AI agents in real time.",
+            "sameAs": [
+              "https://github.com/sarvalabs",
+              "https://twitter.com/moi_tech",
+              "https://t.me/moi_tech",
+              "https://discord.com/invite/4mUq3GeBMx",
+              "https://medium.com/moi-technology",
+              "https://www.youtube.com/channel/UCit7h30bhrwxBd1Yt_bmPvg",
+              "https://www.linkedin.com/company/moi-tech",
+              "https://www.sarva.ai",
+              "https://blog.moi.technology",
+              "https://docs.moi.technology"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://moi.technology/#website",
+            "name": "MOI",
+            "url": "https://moi.technology",
+            "publisher": { "@id": "https://moi.technology/#organization" }
+          }
+        ]
+      }
+    </script>
     <!-- Google Tag Manager. GA4 lives as a tag inside the container, so
          tracking can change without a code change and a deploy. The hostname
          guard is a trigger condition in GTM, not here — the noscript iframe
@@ -39,7 +88,7 @@
         <a href="/papers">Papers</a>
         <a href="/blog">Blog</a>
       </nav>
-      <h1>MOI — The participant layer for the internet</h1>
+      <h1>MOI — The participant layer for AI agents</h1>
       <p>
         MOI gives every participant — human or agent — persistent, portable
         existence in computation. On-chain authority for the agentic economy.

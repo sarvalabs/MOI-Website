@@ -7,7 +7,7 @@
     "dev": "node scripts/build-blog-index.js && vite",
     "dev:client": "vite",
     "dev:server": "npm start --prefix server",
-    "build": "node scripts/build-blog-index.js && vite build",
+    "build": "node scripts/build-blog-index.js && vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/ssg.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "ingest": "node scripts/ingest.js",
