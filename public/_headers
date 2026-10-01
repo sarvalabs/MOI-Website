@@ -1,5 +1,7 @@
 # Agent discovery: advertise the llms.txt index on every response.
-# (Vercel also honors a headers config in vercel.json; this file covers
-# Cloudflare-style hosting. See vercel.json for the live headers.)
+# This file only takes effect on Cloudflare Pages (the PR previews).
+# moi.technology itself is served by nginx on the VM, which ignores it — the
+# same two relations are declared as <link> elements in index.html, and the
+# response header there needs an add_header line in the VM's nginx config.
 /*
   Link: </llms.txt>; rel="llms-txt", <https://docs.moi.technology/.well-known/agent-skills/index.json>; rel="service-meta"
