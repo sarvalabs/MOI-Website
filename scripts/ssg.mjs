@@ -59,7 +59,9 @@ function mustReplace(html, pattern, replacement, label, routePath) {
         `the built template has changed; update scripts/ssg.mjs`
     );
   }
-  return html.replace(pattern, replacement);
+  // A function replacer, so "$" in the replacement (prices in the page copy,
+  // the inline guard's regex) is never read as a replacement pattern.
+  return html.replace(pattern, () => replacement);
 }
 
 const { render } = await import(
@@ -104,8 +106,25 @@ for (const route of ROUTES) {
     "noscript summary removal",
     route.path
   );
-  // Inject the rendered app into the mount point.
-  html = mustReplace(html, '<div id="root"></div>', `<div id="root">${appHtml}</div>`, "root injection", route.path);
+  // Inject the rendered app into the mount point, tagged with the route it
+  // was rendered for.
+  //
+  // dist/index.html doubles as the server's fallback for every URL that is
+  // not prerendered (/admin/*, /how-it-works, unknown paths), and there the
+  // homepage markup must not show. The inline guard empties #root before
+  // first paint when the URL is not this file's route; src/main.jsx then
+  // mounts from empty instead of hydrating.
+  const guard =
+    '<script>(function(){var r=document.getElementById("root"),' +
+    'p=location.pathname.replace(/\\/+$/,"")||"/";' +
+    'if(r.getAttribute("data-ssg-path")!==p)r.textContent=""})()</script>';
+  html = mustReplace(
+    html,
+    '<div id="root"></div>',
+    `<div id="root" data-ssg-path="${route.path}">${appHtml}</div>${guard}`,
+    "root injection",
+    route.path
+  );
 
   const outDir = route.path === "/" ? DIST : join(DIST, route.path.slice(1));
   mkdirSync(outDir, { recursive: true });
