@@ -70,6 +70,12 @@ const { render } = await import(
 
 const shell = readFileSync(join(DIST, "index.html"), "utf8");
 
+// Time-dependent components (the community calendar) must render the same
+// thing here and on the browser's first render. They read this moment from
+// globalThis during the build and from #root's data-ssg-now in the browser.
+const builtAt = Date.now();
+globalThis.__SSG_NOW__ = builtAt;
+
 for (const route of ROUTES) {
   const url = ORIGIN + route.path;
   const appHtml = render(route.path);
@@ -121,7 +127,7 @@ for (const route of ROUTES) {
   html = mustReplace(
     html,
     '<div id="root"></div>',
-    `<div id="root" data-ssg-path="${route.path}">${appHtml}</div>${guard}`,
+    `<div id="root" data-ssg-path="${route.path}" data-ssg-now="${builtAt}">${appHtml}</div>${guard}`,
     "root injection",
     route.path
   );

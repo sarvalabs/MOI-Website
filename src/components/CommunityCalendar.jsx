@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 
 const CATEGORY_COLORS = {
   dev_call: { bg: "rgba(75, 23, 229, 0.15)", text: "#4B17E5", label: "Community Call" },
@@ -12,6 +12,8 @@ const MONTH_ABBR = [
   "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
 ];
+
+const WEEKDAY_ABBR = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const MAX_EVENTS = 16;
 const COLLAPSED_COUNT = 4;
@@ -80,9 +82,48 @@ function hasUsableLink(link) {
 
 const API_URL = import.meta.env.VITE_CHATBOT_API || "";
 
+// The prerendered homepage and the browser's first render must produce the
+// same markup, or hydration fails. "Now" and the timezone differ between the
+// build server and every visitor, so the first render uses the moment the
+// page was prerendered (scripts/ssg.mjs stamps it on #root) and UTC. Once
+// hydrated, the component switches to the visitor's own clock and timezone.
+const subscribeToNothing = () => () => {};
+
+function prerenderTime() {
+  if (typeof document === "undefined") return globalThis.__SSG_NOW__ ?? Date.now();
+  const stamp = Number(document.getElementById("root")?.dataset.ssgNow);
+  return stamp > 0 ? stamp : Date.now();
+}
+
+// Assembled by hand rather than with toLocale*: engines disagree on the
+// space before AM/PM, which would be a hydration mismatch of its own.
+function utcParts(d) {
+  const h = d.getUTCHours();
+  const minutes = String(d.getUTCMinutes()).padStart(2, "0");
+  return {
+    month: MONTH_ABBR[d.getUTCMonth()],
+    day: d.getUTCDate(),
+    weekday: WEEKDAY_ABBR[d.getUTCDay()],
+    time: `${h % 12 || 12}:${minutes} ${h < 12 ? "AM" : "PM"} UTC`,
+  };
+}
+
+function localParts(d) {
+  return {
+    month: MONTH_ABBR[d.getMonth()],
+    day: d.getDate(),
+    weekday: d.toLocaleDateString("en-US", { weekday: "short" }),
+    time: d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+  };
+}
+
 export default function CommunityCalendar({ variant = "list", limit }) {
   const [events, setEvents] = useState(buildScheduledEvents());
   const [expanded, setExpanded] = useState(false);
+  // false on the server and during hydration, true from the next render on.
+  const hydrated = useSyncExternalStore(subscribeToNothing, () => true, () => false);
+  const [mountedAt] = useState(() => Date.now());
+  const now = hydrated ? mountedAt : prerenderTime();
   const isCompact = variant === "compact";
   const collapsedCount = limit ?? (isCompact ? 3 : COLLAPSED_COUNT);
 
@@ -93,7 +134,7 @@ export default function CommunityCalendar({ variant = "list", limit }) {
       .catch(() => {});
   }, []);
 
-  const cutoff = Date.now() - 60 * 60 * 1000;
+  const cutoff = now - 60 * 60 * 1000;
   const upcoming = events
     .filter((e) => new Date(e.date).getTime() >= cutoff)
     .sort((a, b) => new Date(a.date) - new Date(b.date))
@@ -127,14 +168,13 @@ export default function CommunityCalendar({ variant = "list", limit }) {
           visible.map((evt) => {
             const d = new Date(evt.date);
             const cat = CATEGORY_COLORS[evt.category] || CATEGORY_COLORS.dev_call;
-            const weekday = d.toLocaleDateString("en-US", { weekday: "short" });
-            const time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+            const { month, day, weekday, time } = hydrated ? localParts(d) : utcParts(d);
             const linkable = hasUsableLink(evt.meeting_link);
             return (
               <div key={evt.id} className="cc-row">
                 <div className="cc-date-chip">
-                  <span className="cc-date-month">{MONTH_ABBR[d.getMonth()]}</span>
-                  <span className="cc-date-day">{d.getDate()}</span>
+                  <span className="cc-date-month">{month}</span>
+                  <span className="cc-date-day">{day}</span>
                 </div>
 
                 <div className="cc-row-main">
