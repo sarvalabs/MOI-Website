@@ -76,11 +76,11 @@ function TrustChain() {
           <span className="problem-tag-num">01</span>
           <span className="problem-tag-word">Propagation</span>
         </p>
-        <h2 className="headline gs">
+        <h1 className="headline gs">
           When agents delegate,
           <br />
           trust breaks down
-        </h2>
+        </h1>
         <p className="subline gs">
           Alice asks her agent to book a flight. It delegates to a flight agent,
           which delegates to payment, which delegates to the bank. Watch what

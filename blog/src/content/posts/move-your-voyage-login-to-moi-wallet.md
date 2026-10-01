@@ -1,6 +1,6 @@
 ---
 title: "How to move your Voyage login to MOI Wallet"
-summary: "Voyage now signs you in with MOI Wallet. Import the same seed phrase you already use and your account, history and settings come with you."
+summary: "Voyage now signs you in with MOI Wallet. Import the same seed phrase you already use, and your account, history, and settings all come with you unchanged."
 date: 2026-08-27
 author:
   name: "Sarva Labs"
