@@ -563,7 +563,7 @@ export default function HomePage() {
               <h1 className="hero-headline">
                 The Participant Layer
                 <br />
-                of the Internet
+                for AI Agents
               </h1>
               <p className="hero-sub">
                 MOI gives every participant — human or agent — persistent,
@@ -612,8 +612,10 @@ export default function HomePage() {
               <div className="hero-pip">
                 <img
                   className="hero-pip-img"
-                  src="/brand/mascot/pip-smile.png"
+                  src="/brand/mascot/pip-smile.webp"
                   alt="Pip — the MOI participant"
+                  fetchPriority="high"
+                  decoding="async"
                 />
                 <svg
                   className="hero-pip-ring"
