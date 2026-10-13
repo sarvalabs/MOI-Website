@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import LandingFooter from "../components/LandingFooter";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
-import CommunityCalendar from "../components/CommunityCalendar";
+import CommunityCalls, { communityCallsEnabled } from "../components/CommunityCalls";
 import { WHITEPAPER_URL } from "../phases/constants.js";
 import {
   stripMarkdown,
@@ -781,23 +781,12 @@ me.agent("claw-12")
           </section>
         )}
 
-        {/* Community — calendar + socials, between chatbot and CTA */}
-        <section className="s-community">
-          <div className="community-inner">
-            <div className="community-header">
-              <p className="community-eyebrow">
-                <span className="community-eyebrow-dot" />
-                Community
-              </p>
-              <h2 className="community-title">Join the network.</h2>
-              <p className="community-sub">
-                Upcoming calls, AMAs, and the channels we live in.
-              </p>
-            </div>
-
-            <CommunityCalendar variant="compact" limit={3} />
-          </div>
-        </section>
+        {/* Community calls — off until content/community-calls.json has a Luma link */}
+        {communityCallsEnabled && (
+          <section className="s-community">
+            <CommunityCalls />
+          </section>
+        )}
 
         {/* Closing CTA — "Not your Context, Not your KitKat." */}
         <section className="s-kitcta">

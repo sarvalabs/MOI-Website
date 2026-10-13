@@ -275,3 +275,21 @@ Posts with `draft: true` are excluded from the build, the index, RSS, the
 sitemap, and llms.txt — so an unfinished post can sit on `main` safely.
 
 Posts go live on merge to `main`.
+
+## Community calls on the home page
+
+The home page has a community calls block that is off by default. It turns on
+when `content/community-calls.json` holds the Luma calendar link:
+
+```json
+{
+  "lumaUrl": "https://lu.ma/<the MOI calendar>",
+  "nextCall": { "date": "2026-11-18T14:00:00Z", "title": "Community Call", "url": "https://lu.ma/<event>" }
+}
+```
+
+- `lumaUrl` empty, missing or not an http(s) link: no community section on the home page.
+- `nextCall` is optional. With it, the block shows a "Next call" line until that time
+  passes; a date with no time counts for the whole UTC day. `title` and `url` are optional.
+- The file is read at build time, so a change goes live on merge to `main`. A broken
+  file never fails the build; it just leaves the block off.
