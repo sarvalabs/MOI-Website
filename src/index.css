@@ -2147,6 +2147,38 @@ body {
   margin: 0;
 }
 
+/* Community calls block — the Luma button and, optionally, the next call */
+.community-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.community-next {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: clamp(15px, 1.1vw, 17px);
+  line-height: 1.5;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.72);
+}
+.community-next-label {
+  margin-right: 10px;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #BCA6FF;
+}
+.community-next a {
+  color: #FFFFFF;
+  text-decoration: underline;
+  text-decoration-color: rgba(188, 166, 255, 0.6);
+  text-underline-offset: 3px;
+}
+.community-next a:hover { text-decoration-color: #FFFFFF; }
+
 /* Compact calendar override — 3-up card row on a dark band */
 .cc-wrap--compact {
   padding: 0;
