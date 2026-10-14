@@ -201,7 +201,7 @@ jobs:
           token: ${{ secrets.TELEPORT_JOIN_TOKEN }}
           certificate-ttl: 2h
 
-      - name: Remove previews
+      - name: Remove previewss
         run: |
           tsh ssh "${VM_USER}@${VM_HOST}" \
             "rm -rf '${PREVIEW_ROOT}/pr-${PR_NUMBER}' '${BLOG_PREVIEW_ROOT}/pr-${PR_NUMBER}'"
