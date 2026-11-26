@@ -16,7 +16,8 @@ jobs:
       - name: Install Teleport CLI
         uses: teleport-actions/setup@v1
         with:
-          version: 16.2.1
+          version: auto
+          proxy: ${{ secrets.TELEPORT_PROXY }}
 
       - name: Authenticate via Machine ID
         uses: teleport-actions/auth@v2
